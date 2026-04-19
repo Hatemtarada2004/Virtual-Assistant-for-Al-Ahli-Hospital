@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯ Ã¢â‚¬â€ Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="../public/assets/css/main.css" rel="stylesheet">
+  <link href="../public/assets/css/chatbot.css" rel="stylesheet">
+</head>
+<body>
+
+<header class="ahli-navbar">
+  <a href="index.html" class="brand"><i class="fas fa-hospital-alt"></i> Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </a>
+  <nav class="nav-links">
+    <a href="index.html">Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â¦Ã™Å Ã˜Â³Ã™Å Ã˜Â©</a>
+    <a href="dashboard.html">Ã™â€žÃ™Ë†Ã˜Â­Ã˜Â© Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™Æ’Ã™â€¦</a>
+    <a href="doctors.html">Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â·Ã˜Â¨Ã˜Â§Ã˜Â¡</a>
+    <a href="departments.html">Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦</a>
+    <a href="appointments.html" class="active">Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</a>
+    <a href="patients.html">Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã˜Â¶Ã™â€°</a>
+  </nav>
+</header>
+
+<main class="page-container">
+  <div class="page-header">
+    <div>
+      <h1><i class="fas fa-calendar-alt" style="color:var(--primary)"></i> Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯ Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â¨Ã™Å Ã˜Â©</h1>
+      <p id="appt-count">Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€žÃ¢â‚¬Â¦</p>
+    </div>
+  </div>
+
+  <!-- Ã˜Â¥Ã˜Â­Ã˜ÂµÃ˜Â§Ã˜Â¦Ã™Å Ã˜Â§Ã˜Âª Ã˜Â³Ã˜Â±Ã™Å Ã˜Â¹Ã˜Â© -->
+  <div class="kpi-grid" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));margin-bottom:20px" id="appt-kpi"></div>
+
+  <div class="search-bar">
+    <input type="text" class="search-input" id="search" placeholder="Ã˜Â§Ã˜Â¨Ã˜Â­Ã˜Â« Ã˜Â¨Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã™Å Ã˜Â¶ Ã˜Â£Ã™Ë† Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â¨Ã™Å Ã˜Â¨ Ã˜Â£Ã™Ë† Ã˜Â§Ã™â€žÃ™â€šÃ˜Â³Ã™â€¦Ã¢â‚¬Â¦" oninput="filter()">
+    <button class="filter-btn active" onclick="setStatus('')">Ã˜Â§Ã™â€žÃ™Æ’Ã™â€ž</button>
+    <button class="filter-btn" onclick="setStatus('Booked')">Ã™â€¦Ã˜Â­Ã˜Â¬Ã™Ë†Ã˜Â²Ã˜Â©</button>
+    <button class="filter-btn" onclick="setStatus('Completed')">Ã™â€¦Ã™Æ’Ã˜ÂªÃ™â€¦Ã™â€žÃ˜Â©</button>
+    <button class="filter-btn" onclick="setStatus('Cancelled')">Ã™â€¦Ã™â€žÃ˜ÂºÃ˜Â§Ã˜Â©</button>
+    <button class="filter-btn" onclick="setStatus('NoShow')">Ã™â€žÃ™â€¦ Ã™Å Ã˜Â­Ã˜Â¶Ã˜Â±</button>
+  </div>
+
+  <div class="data-table-card">
+    <div class="data-table-header">
+      <span><i class="fas fa-list-alt" style="color:var(--primary);margin-left:6px"></i> Ã™â€šÃ˜Â§Ã˜Â¦Ã™â€¦Ã˜Â© Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</span>
+      <span id="show-count" style="font-size:12px;color:var(--muted)"></span>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã™Å Ã˜Â¶</th>
+            <th>Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â¨Ã™Å Ã˜Â¨</th>
+            <th>Ã˜Â§Ã™â€žÃ™â€šÃ˜Â³Ã™â€¦</th>
+            <th>Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â§Ã˜Â±Ã™Å Ã˜Â® Ã™Ë†Ã˜Â§Ã™â€žÃ™Ë†Ã™â€šÃ˜Âª</th>
+            <th>Ã˜Â§Ã™â€žÃ˜Â³Ã˜Â¨Ã˜Â¨</th>
+            <th>Ã˜Â§Ã™â€žÃ˜Â­Ã˜Â§Ã™â€žÃ˜Â©</th>
+          </tr>
+        </thead>
+        <tbody id="appt-tbody">
+          <tr><td colspan="7" style="text-align:center;padding:28px;color:var(--muted)">
+            <div class="spinner" style="margin:0 auto 8px"></div> Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€žÃ¢â‚¬Â¦
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+const API_BASE = (() => {
+  const m = location.pathname.match(/^(\/[^/]+\/)/);
+  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/Hospital/public';
+})();
+
+let allAppts = [], statusFilter = '';
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+const STATUS = {
+  Booked:    { label:'Ã™â€¦Ã˜Â­Ã˜Â¬Ã™Ë†Ã˜Â²',    cls:'badge-booked'    },
+  Completed: { label:'Ã™â€¦Ã™Æ’Ã˜ÂªÃ™â€¦Ã™â€ž',    cls:'badge-completed' },
+  Cancelled: { label:'Ã™â€¦Ã™â€žÃ˜ÂºÃ™Å ',     cls:'badge-cancelled' },
+  NoShow:    { label:'Ã™â€žÃ™â€¦ Ã™Å Ã˜Â­Ã˜Â¶Ã˜Â±', cls:'badge-noshow'    },
+};
+
+function setStatus(s) {
+  statusFilter = s;
+  document.querySelectorAll('.filter-btn').forEach(b=>{
+    b.classList.toggle('active', b.textContent.trim() === (s===''?'Ã˜Â§Ã™â€žÃ™Æ’Ã™â€ž':STATUS[s]?.label||s));
+  });
+  filter();
+}
+
+function filter() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const list = allAppts.filter(a =>
+    (!statusFilter || a.status === statusFilter) &&
+    (!q || a.patient_name.toLowerCase().includes(q) ||
+          a.doctor_name.toLowerCase().includes(q) ||
+          (a.department_name||'').toLowerCase().includes(q))
+  );
+  render(list);
+}
+
+function render(list) {
+  document.getElementById('show-count').textContent = `${list.length} Ã™â€¦Ã™Ë†Ã˜Â¹Ã˜Â¯`;
+  const tbody = document.getElementById('appt-tbody');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px">Ã™â€žÃ˜Â§ Ã˜ÂªÃ™Ë†Ã˜Â¬Ã˜Â¯ Ã™â€ Ã˜ÂªÃ˜Â§Ã˜Â¦Ã˜Â¬</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map((a,i) => {
+    const st = STATUS[a.status] || { label:a.status, cls:'' };
+    const dt = new Date(a.appointment_datetime);
+    const dtStr = dt.toLocaleDateString('ar-SA',{year:'numeric',month:'2-digit',day:'2-digit'}) + ' ' +
+                  dt.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+    return `<tr>
+      <td>${i+1}</td>
+      <td><b>${esc(a.patient_name)}</b></td>
+      <td>${esc(a.doctor_name)}</td>
+      <td><span style="font-size:11.5px">${esc(a.department_name||'')}</span></td>
+      <td style="font-size:12px;white-space:nowrap">${dtStr}</td>
+      <td style="font-size:12px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a.reason||'Ã¢â‚¬â€')}</td>
+      <td><span class="badge ${st.cls}">${st.label}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+fetch(`${API_BASE}/api/appointments`).then(r=>r.json()).then(j=>{
+  if(!j.success) throw new Error(j.message);
+  allAppts = j.data;
+
+  const counts = { Booked:0, Completed:0, Cancelled:0, NoShow:0 };
+  allAppts.forEach(a=>{ if(counts[a.status]!==undefined) counts[a.status]++; });
+
+  document.getElementById('appt-count').textContent = `${allAppts.length} Ã™â€¦Ã™Ë†Ã˜Â¹Ã˜Â¯ Ã˜Â¥Ã˜Â¬Ã™â€¦Ã˜Â§Ã™â€žÃ˜Â§Ã™â€¹`;
+  document.getElementById('appt-kpi').innerHTML = [
+    { val:allAppts.length,    label:'Ã˜Â¥Ã˜Â¬Ã™â€¦Ã˜Â§Ã™â€žÃ™Å  Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯', ic:'bg-blue',   cls:'' },
+    { val:counts.Booked,      label:'Ã™â€¦Ã˜Â­Ã˜Â¬Ã™Ë†Ã˜Â²Ã˜Â©',           ic:'bg-sky',    cls:'kpi-info' },
+    { val:counts.Completed,   label:'Ã™â€¦Ã™Æ’Ã˜ÂªÃ™â€¦Ã™â€žÃ˜Â©',           ic:'bg-green',  cls:'kpi-success' },
+    { val:counts.Cancelled,   label:'Ã™â€¦Ã™â€žÃ˜ÂºÃ˜Â§Ã˜Â©',            ic:'bg-red',    cls:'kpi-danger' },
+    { val:counts.NoShow,      label:'Ã™â€žÃ™â€¦ Ã™Å Ã˜Â­Ã˜Â¶Ã˜Â±Ã™Ë†Ã˜Â§',        ic:'bg-orange', cls:'kpi-warning' },
+  ].map(c=>`
+    <div class="kpi-card ${c.cls}">
+      <div class="kpi-icon ${c.ic}"><i class="fas fa-calendar"></i></div>
+      <div class="kpi-body"><span class="kpi-value">${c.val}</span><span class="kpi-label">${c.label}</span></div>
+    </div>`).join('');
+
+  render(allAppts);
+}).catch(e=>{
+  document.getElementById('appt-tbody').innerHTML = `<tr><td colspan="7" style="color:var(--danger);text-align:center;padding:24px">Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž: ${e.message}</td></tr>`;
+  document.getElementById('appt-count').textContent = 'Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž';
+});
+</script>
+  <script src="../public/assets/js/chatbot.js?v=20260416-page-session-reset"></script>
+</body>
+</html>

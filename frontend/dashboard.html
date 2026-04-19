@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ã™â€žÃ™Ë†Ã˜Â­Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â¥Ã˜Â­Ã˜ÂµÃ˜Â§Ã˜Â¦Ã™Å Ã˜Â§Ã˜Âª Ã¢â‚¬â€ Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="../public/assets/css/main.css" rel="stylesheet">
+  <link href="../public/assets/css/chatbot.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .two-col { display:grid; grid-template-columns:2fr 1fr; gap:20px; }
+    @media(max-width:900px){ .two-col { grid-template-columns:1fr; } }
+    .dept-list { list-style:none; padding:0; margin:0; }
+    .dept-item { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-bottom:1px solid var(--border); font-size:13px; }
+    .dept-item:last-child { border-bottom:none; }
+    .dept-item span { color:var(--muted); font-size:12px; }
+    .revenue-big { font-size:32px; font-weight:900; color:var(--success); }
+    .revenue-sub { font-size:13px; color:var(--muted); margin-top:4px; }
+    .outstanding-big { font-size:20px; font-weight:700; color:var(--danger); }
+    .stat-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); font-size:13px; }
+    .stat-row:last-child { border-bottom:none; }
+    .stat-row b { font-size:15px; }
+    .refresh-btn { padding:7px 16px; background:var(--primary); color:#fff; border:none; border-radius:20px; font-family:inherit; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
+    .refresh-btn:hover { background:var(--primary-dark); }
+  </style>
+</head>
+<body>
+
+<!-- Ã¢â€â‚¬Ã¢â€â‚¬ Ã˜Â§Ã™â€žÃ˜Â´Ã˜Â±Ã™Å Ã˜Â· Ã˜Â§Ã™â€žÃ˜Â¹Ã™â€žÃ™Ë†Ã™Å  Ã¢â€â‚¬Ã¢â€â‚¬ -->
+<header class="ahli-navbar">
+  <a href="index.html" class="brand"><i class="fas fa-hospital-alt"></i> Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </a>
+  <nav class="nav-links">
+    <a href="index.html">Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â¦Ã™Å Ã˜Â³Ã™Å Ã˜Â©</a>
+    <a href="dashboard.html" class="active">Ã™â€žÃ™Ë†Ã˜Â­Ã˜Â© Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™Æ’Ã™â€¦</a>
+    <a href="doctors.html">Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â·Ã˜Â¨Ã˜Â§Ã˜Â¡</a>
+    <a href="departments.html">Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦</a>
+    <a href="appointments.html">Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</a>
+    <a href="patients.html">Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã˜Â¶Ã™â€°</a>
+  </nav>
+</header>
+
+<!-- Ã¢â€â‚¬Ã¢â€â‚¬ Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â­Ã˜ÂªÃ™Ë†Ã™â€° Ã¢â€â‚¬Ã¢â€â‚¬ -->
+<main class="page-container">
+
+  <div class="page-header">
+    <div>
+      <h1><i class="fas fa-chart-pie" style="color:var(--primary)"></i> Ã™â€žÃ™Ë†Ã˜Â­Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â¥Ã˜Â­Ã˜ÂµÃ˜Â§Ã˜Â¦Ã™Å Ã˜Â§Ã˜Âª Ã™Ë†Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€žÃ™Å Ã™â€žÃ˜Â§Ã˜Âª</h1>
+      <p id="last-update">Ã™Å Ã˜ÂªÃ™â€¦ Ã˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â¨Ã™Å Ã˜Â§Ã™â€ Ã˜Â§Ã˜ÂªÃ¢â‚¬Â¦</p>
+    </div>
+    <button class="refresh-btn" onclick="loadStats()">
+      <i class="fas fa-sync-alt"></i> Ã˜ÂªÃ˜Â­Ã˜Â¯Ã™Å Ã˜Â«
+    </button>
+  </div>
+
+  <!-- Ã¢â€â‚¬Ã¢â€â‚¬ Ã˜Â¨Ã˜Â·Ã˜Â§Ã™â€šÃ˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â¤Ã˜Â´Ã˜Â±Ã˜Â§Ã˜Âª Ã¢â€â‚¬Ã¢â€â‚¬ -->
+  <div class="kpi-grid" id="kpi-grid">
+    <div class="loading"><div class="spinner"></div> Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€žÃ¢â‚¬Â¦</div>
+  </div>
+
+  <!-- Ã¢â€â‚¬Ã¢â€â‚¬ Ã™â€ Ã˜Â³Ã˜Â¨Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â¥Ã˜Â´Ã˜ÂºÃ˜Â§Ã™â€ž Ã¢â€â‚¬Ã¢â€â‚¬ -->
+  <div class="occupancy-card" id="occupancy-card" style="display:none">
+    <div class="occupancy-header">
+      <span class="occupancy-label"><i class="fas fa-bed" style="color:var(--primary);margin-left:6px"></i> Ã™â€ Ã˜Â³Ã˜Â¨Ã˜Â© Ã˜Â¥Ã˜Â´Ã˜ÂºÃ˜Â§Ã™â€ž Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</span>
+      <span class="occupancy-pct" id="occ-pct">0%</span>
+    </div>
+    <div class="occupancy-bar"><div class="occupancy-fill" id="occ-fill" style="width:0%"></div></div>
+    <p class="occupancy-desc">Ã˜Â¨Ã™â€ Ã˜Â§Ã˜Â¡Ã™â€¹ Ã˜Â¹Ã™â€žÃ™â€° Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯ Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â­Ã˜Â¬Ã™Ë†Ã˜Â²Ã˜Â© Ã™â€¦Ã˜Â³Ã˜ÂªÃ™â€šÃ˜Â¨Ã™â€žÃ˜Â§Ã™â€¹ Ã™â€¦Ã™â€šÃ˜Â§Ã˜Â±Ã™â€ Ã˜Â©Ã™â€¹ Ã˜Â¨Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â§Ã™â€šÃ˜Â© Ã˜Â§Ã™â€žÃ˜Â§Ã˜Â³Ã˜ÂªÃ™Å Ã˜Â¹Ã˜Â§Ã˜Â¨Ã™Å Ã˜Â© Ã™â€žÃ™â€žÃ˜Â£Ã˜Â·Ã˜Â¨Ã˜Â§Ã˜Â¡ (5 Ã™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯/Ã˜Â·Ã˜Â¨Ã™Å Ã˜Â¨/Ã™Å Ã™Ë†Ã™â€¦).</p>
+  </div>
+
+  <!-- Ã¢â€â‚¬Ã¢â€â‚¬ Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â³Ã™Ë†Ã™â€¦ Ã˜Â§Ã™â€žÃ˜Â¨Ã™Å Ã˜Â§Ã™â€ Ã™Å Ã˜Â© Ã¢â€â‚¬Ã¢â€â‚¬ -->
+  <div class="chart-grid" id="chart-grid" style="display:none">
+    <div class="chart-card">
+      <div class="chart-title"><i class="fas fa-calendar-check" style="color:#1565c0"></i> Ã˜Â­Ã˜Â§Ã™â€žÃ˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</div>
+      <div class="chart-canvas-wrap"><canvas id="apptChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title"><i class="fas fa-file-invoice-dollar" style="color:#2e7d32"></i> Ã˜Â­Ã˜Â§Ã™â€žÃ˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ™ÂÃ™Ë†Ã˜Â§Ã˜ÂªÃ™Å Ã˜Â±</div>
+      <div class="chart-canvas-wrap"><canvas id="invChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title"><i class="fas fa-flask" style="color:#e65100"></i> Ã˜Â­Ã˜Â§Ã™â€žÃ˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã˜Â§Ã™â€žÃ™Å Ã™â€ž</div>
+      <div class="chart-canvas-wrap"><canvas id="labChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Ã¢â€â‚¬Ã¢â€â‚¬ Ã™â€¦Ã™â€žÃ˜Â®Ã˜Âµ Ã˜Â§Ã™â€žÃ™ÂÃ™Ë†Ã˜Â§Ã˜ÂªÃ™Å Ã˜Â± + Ã˜Â¬Ã˜Â¯Ã™Ë†Ã™â€ž Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯ Ã¢â€â‚¬Ã¢â€â‚¬ -->
+  <div class="two-col" id="bottom-section" style="display:none">
+
+    <!-- Ã˜Â¬Ã˜Â¯Ã™Ë†Ã™â€ž Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯ Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â®Ã™Å Ã˜Â±Ã˜Â© -->
+    <div class="data-table-card">
+      <div class="data-table-header">
+        <span><i class="fas fa-calendar-alt" style="color:var(--primary);margin-left:6px"></i> Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯ Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â®Ã™Å Ã˜Â±Ã˜Â©</span>
+        <a href="appointments.html" style="font-size:12px;color:var(--primary)">Ã˜Â¹Ã˜Â±Ã˜Â¶ Ã˜Â§Ã™â€žÃ™Æ’Ã™â€ž Ã¢â€ Â</a>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã™Å Ã˜Â¶</th>
+              <th>Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â¨Ã™Å Ã˜Â¨</th>
+              <th>Ã˜Â§Ã™â€žÃ™â€šÃ˜Â³Ã™â€¦</th>
+              <th>Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â§Ã˜Â±Ã™Å Ã˜Â®</th>
+              <th>Ã˜Â§Ã™â€žÃ˜Â­Ã˜Â§Ã™â€žÃ˜Â©</th>
+            </tr>
+          </thead>
+          <tbody id="appt-tbody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€žÃ¢â‚¬Â¦</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Ã™â€¦Ã™â€žÃ˜Â®Ã˜Âµ Ã™â€¦Ã˜Â§Ã™â€žÃ™Å  -->
+    <div>
+      <div class="chart-card" style="margin-bottom:20px">
+        <div class="chart-title"><i class="fas fa-coins" style="color:#f39c12"></i> Ã˜Â§Ã™â€žÃ™â€¦Ã™â€žÃ˜Â®Ã˜Âµ Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â§Ã™â€žÃ™Å </div>
+        <div class="revenue-big" id="rev-big">Ã¢â‚¬â€</div>
+        <div class="revenue-sub">Ã˜Â¥Ã˜Â¬Ã™â€¦Ã˜Â§Ã™â€žÃ™Å  Ã˜Â§Ã™â€žÃ˜Â¥Ã™Å Ã˜Â±Ã˜Â§Ã˜Â¯Ã˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â­Ã˜ÂµÃ™â€˜Ã™â€žÃ˜Â© (Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â©)</div>
+        <hr style="margin:14px 0;border-color:var(--border)">
+        <div class="outstanding-big" id="out-big">Ã¢â‚¬â€</div>
+        <div class="revenue-sub" style="color:var(--danger)">Ã™â€¦Ã˜Â¨Ã˜Â§Ã™â€žÃ˜Âº Ã˜ÂºÃ™Å Ã˜Â± Ã™â€¦Ã˜Â­Ã˜ÂµÃ™â€˜Ã™â€žÃ˜Â© (Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â­Ã™â€šÃ˜Â©)</div>
+        <hr style="margin:14px 0;border-color:var(--border)">
+        <div class="stat-row"><span>Ã˜Â¥Ã˜Â¬Ã™â€¦Ã˜Â§Ã™â€žÃ™Å  Ã˜Â§Ã™â€žÃ™ÂÃ™Ë†Ã˜Â§Ã˜ÂªÃ™Å Ã˜Â±</span> <b id="inv-total">Ã¢â‚¬â€</b></div>
+        <div class="stat-row"><span>Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â©</span>          <b id="inv-paid" style="color:var(--success)">Ã¢â‚¬â€</b></div>
+        <div class="stat-row"><span>Ã˜ÂºÃ™Å Ã˜Â± Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â©</span>      <b id="inv-unpaid" style="color:var(--danger)">Ã¢â‚¬â€</b></div>
+        <div class="stat-row"><span>Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â© Ã˜Â¬Ã˜Â²Ã˜Â¦Ã™Å Ã˜Â§Ã™â€¹</span>   <b id="inv-partial" style="color:var(--warning)">Ã¢â‚¬â€</b></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-title"><i class="fas fa-info-circle" style="color:var(--info)"></i> Ã™â€¦Ã™â€žÃ˜Â®Ã˜Âµ Ã˜Â³Ã˜Â±Ã™Å Ã˜Â¹</div>
+        <div class="stat-row"><span>Ã™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯ Ã˜Â§Ã™â€žÃ™Å Ã™Ë†Ã™â€¦</span>    <b id="s-today"   style="color:var(--primary)">Ã¢â‚¬â€</b></div>
+        <div class="stat-row"><span>Ã˜ÂªÃ˜Â­Ã˜Â§Ã™â€žÃ™Å Ã™â€ž Ã˜Â¬Ã˜Â§Ã™â€¡Ã˜Â²Ã˜Â©</span>   <b id="s-ready"   style="color:var(--success)">Ã¢â‚¬â€</b></div>
+        <div class="stat-row"><span>Ã˜ÂªÃ˜Â­Ã˜Â§Ã™â€žÃ™Å Ã™â€ž Ã˜Â¨Ã˜Â§Ã™â€ Ã˜ÂªÃ˜Â¸Ã˜Â§Ã˜Â±</span> <b id="s-pending" style="color:var(--warning)">Ã¢â‚¬â€</b></div>
+        <div class="stat-row"><span>Ã™â€¦Ã™â€žÃ˜Â§Ã˜Â­Ã˜Â¸Ã˜Â§Ã˜Âª Ã™Ë†Ã˜Â´Ã™Æ’Ã˜Â§Ã™Ë†Ã™â€°</span> <b id="s-feed"    style="color:var(--info)">Ã¢â‚¬â€</b></div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+const API_BASE = (() => {
+  const m = location.pathname.match(/^(\/[^/]+\/)/);
+  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/Hospital/public';
+})();
+
+const STATUS_MAP = {
+  Booked:    { label:'Ã™â€¦Ã˜Â­Ã˜Â¬Ã™Ë†Ã˜Â²',       cls:'badge-booked'    },
+  Completed: { label:'Ã™â€¦Ã™Æ’Ã˜ÂªÃ™â€¦Ã™â€ž',       cls:'badge-completed' },
+  Cancelled: { label:'Ã™â€¦Ã™â€žÃ˜ÂºÃ™Å ',        cls:'badge-cancelled' },
+  NoShow:    { label:'Ã™â€žÃ™â€¦ Ã™Å Ã˜Â­Ã˜Â¶Ã˜Â±',    cls:'badge-noshow'    },
+};
+
+let apptChart, invChart, labChart;
+
+async function loadStats() {
+  try {
+    const r = await fetch(`${API_BASE}/api/stats`);
+    const j = await r.json();
+    if (!j.success) throw new Error(j.message);
+    renderKPI(j.data);
+    renderCharts(j.data);
+    renderFinancial(j.data);
+    loadRecentAppointments();
+    document.getElementById('last-update').textContent =
+      'Ã˜Â¢Ã˜Â®Ã˜Â± Ã˜ÂªÃ˜Â­Ã˜Â¯Ã™Å Ã˜Â«: ' + new Date().toLocaleTimeString('ar-SA');
+  } catch(e) {
+    document.getElementById('kpi-grid').innerHTML =
+      `<div style="grid-column:1/-1;color:var(--danger);padding:20px;text-align:center">
+         <i class="fas fa-exclamation-triangle"></i> Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â¨Ã™Å Ã˜Â§Ã™â€ Ã˜Â§Ã˜Âª: ${e.message}
+       </div>`;
+  }
+}
+
+function renderKPI(d) {
+  const ov = d.overview, ap = d.appointments, inv = d.invoices;
+  const cards = [
+    { val:ov.doctors,     label:'Ã˜Â·Ã˜Â¨Ã™Å Ã˜Â¨',           icon:'fa-user-md',       cls:'kpi-card',            ic:'bg-blue'   },
+    { val:ov.patients,    label:'Ã™â€¦Ã˜Â±Ã™Å Ã˜Â¶',            icon:'fa-procedures',    cls:'kpi-card kpi-success', ic:'bg-green'  },
+    { val:ov.departments, label:'Ã™â€šÃ˜Â³Ã™â€¦ Ã˜Â·Ã˜Â¨Ã™Å ',         icon:'fa-hospital',      cls:'kpi-card kpi-info',    ic:'bg-sky'    },
+    { val:ap.today,       label:'Ã™â€¦Ã™Ë†Ã˜Â¹Ã˜Â¯ Ã˜Â§Ã™â€žÃ™Å Ã™Ë†Ã™â€¦',      icon:'fa-calendar-day',  cls:'kpi-card kpi-warning', ic:'bg-orange' },
+    { val:ap.booked,      label:'Ã™â€¦Ã™Ë†Ã˜Â¹Ã˜Â¯ Ã™â€¦Ã˜Â­Ã˜Â¬Ã™Ë†Ã˜Â²',      icon:'fa-calendar-check',cls:'kpi-card',             ic:'bg-blue'   },
+    { val:inv.paid,       label:'Ã™ÂÃ˜Â§Ã˜ÂªÃ™Ë†Ã˜Â±Ã˜Â© Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â©',   icon:'fa-check-circle',  cls:'kpi-card kpi-success', ic:'bg-green'  },
+    { val:inv.unpaid,     label:'Ã™ÂÃ˜Â§Ã˜ÂªÃ™Ë†Ã˜Â±Ã˜Â© Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â­Ã™â€šÃ˜Â©',   icon:'fa-exclamation',   cls:'kpi-card kpi-danger',  ic:'bg-red'    },
+    { val:ov.services,    label:'Ã˜Â®Ã˜Â¯Ã™â€¦Ã˜Â© Ã˜Â·Ã˜Â¨Ã™Å Ã˜Â©',       icon:'fa-stethoscope',   cls:'kpi-card kpi-secondary',ic:'bg-teal'  },
+  ];
+  document.getElementById('kpi-grid').innerHTML = cards.map(c =>
+    `<div class="${c.cls}">
+       <div class="kpi-icon ${c.ic}"><i class="fas ${c.icon}"></i></div>
+       <div class="kpi-body">
+         <span class="kpi-value">${c.val}</span>
+         <span class="kpi-label">${c.label}</span>
+       </div>
+     </div>`
+  ).join('');
+
+  // occupancy
+  const occ = d.occupancy_rate;
+  document.getElementById('occ-pct').textContent  = occ + '%';
+  document.getElementById('occ-fill').style.width = occ + '%';
+  document.getElementById('occupancy-card').style.display = 'block';
+}
+
+function renderCharts(d) {
+  const ap = d.appointments, inv = d.invoices, lab = d.lab_tests;
+  document.getElementById('chart-grid').style.display = 'grid';
+
+  const opts = { plugins:{ legend:{ position:'bottom', labels:{ font:{family:'Cairo',size:12}, padding:14 } } }, maintainAspectRatio:false };
+
+  if (apptChart) apptChart.destroy();
+  apptChart = new Chart(document.getElementById('apptChart'), {
+    type:'doughnut',
+    data:{
+      labels:['Ã™â€¦Ã™Æ’Ã˜ÂªÃ™â€¦Ã™â€žÃ˜Â©','Ã™â€¦Ã˜Â­Ã˜Â¬Ã™Ë†Ã˜Â²Ã˜Â©','Ã™â€¦Ã™â€žÃ˜ÂºÃ˜Â§Ã˜Â©','Ã™â€žÃ™â€¦ Ã™Å Ã˜Â­Ã˜Â¶Ã˜Â±'],
+      datasets:[{ data:[ap.completed, ap.booked, ap.cancelled, ap.noshow],
+        backgroundColor:['#27ae60','#1565c0','#e74c3c','#f39c12'], borderWidth:2, borderColor:'#fff' }]
+    },
+    options:opts
+  });
+
+  if (invChart) invChart.destroy();
+  invChart = new Chart(document.getElementById('invChart'), {
+    type:'doughnut',
+    data:{
+      labels:['Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â©','Ã˜ÂºÃ™Å Ã˜Â± Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â©','Ã˜Â¬Ã˜Â²Ã˜Â¦Ã™Å Ã˜Â©'],
+      datasets:[{ data:[inv.paid, inv.unpaid, inv.partial],
+        backgroundColor:['#27ae60','#e74c3c','#f39c12'], borderWidth:2, borderColor:'#fff' }]
+    },
+    options:opts
+  });
+
+  if (labChart) labChart.destroy();
+  labChart = new Chart(document.getElementById('labChart'), {
+    type:'doughnut',
+    data:{
+      labels:['Ã˜Â¬Ã˜Â§Ã™â€¡Ã˜Â²Ã˜Â©','Ã˜Â¨Ã˜Â§Ã™â€ Ã˜ÂªÃ˜Â¸Ã˜Â§Ã˜Â±'],
+      datasets:[{ data:[lab.ready, lab.pending],
+        backgroundColor:['#27ae60','#f39c12'], borderWidth:2, borderColor:'#fff' }]
+    },
+    options:opts
+  });
+}
+
+function renderFinancial(d) {
+  const inv = d.invoices, ap = d.appointments, lab = d.lab_tests;
+  document.getElementById('rev-big').textContent   = fmt(inv.revenue)    + ' Ã¢â€šÂª';
+  document.getElementById('out-big').textContent   = fmt(inv.outstanding) + ' Ã¢â€šÂª';
+  document.getElementById('inv-total').textContent = inv.total;
+  document.getElementById('inv-paid').textContent  = inv.paid;
+  document.getElementById('inv-unpaid').textContent= inv.unpaid;
+  document.getElementById('inv-partial').textContent=inv.partial;
+  document.getElementById('s-today').textContent   = ap.today;
+  document.getElementById('s-ready').textContent   = lab.ready;
+  document.getElementById('s-pending').textContent = lab.pending;
+  document.getElementById('s-feed').textContent    = d.overview.feedbacks;
+  document.getElementById('bottom-section').style.display = 'grid';
+}
+
+async function loadRecentAppointments() {
+  try {
+    const r  = await fetch(`${API_BASE}/api/appointments`);
+    const j  = await r.json();
+    const rows = (j.data || []).slice(0, 8);
+    const s  = STATUS_MAP;
+    document.getElementById('appt-tbody').innerHTML = rows.length ? rows.map((a, i) => {
+      const st = s[a.status] || { label: a.status, cls:'' };
+      const dt = new Date(a.appointment_datetime).toLocaleString('ar-SA', { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+      return `<tr>
+        <td>${i+1}</td>
+        <td><b>${esc(a.patient_name)}</b></td>
+        <td>${esc(a.doctor_name)}</td>
+        <td><span style="font-size:11px">${esc(a.department_name)}</span></td>
+        <td style="font-size:12px;white-space:nowrap">${dt}</td>
+        <td><span class="badge ${st.cls}">${st.label}</span></td>
+      </tr>`;
+    }).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Ã™â€žÃ˜Â§ Ã˜ÂªÃ™Ë†Ã˜Â¬Ã˜Â¯ Ã™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</td></tr>';
+  } catch(e) {
+    document.getElementById('appt-tbody').innerHTML =
+      '<tr><td colspan="6" style="color:var(--danger);text-align:center;padding:16px">Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</td></tr>';
+  }
+}
+
+function fmt(n) { return Number(n).toLocaleString('ar-SA', { minimumFractionDigits:0, maximumFractionDigits:0 }); }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+loadStats();
+</script>
+  <script src="../public/assets/js/chatbot.js?v=20260416-page-session-reset"></script>
+</body>
+</html>

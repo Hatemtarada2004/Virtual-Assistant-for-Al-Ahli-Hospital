@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦ Ã¢â‚¬â€ Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="../public/assets/css/main.css" rel="stylesheet">
+  <link href="../public/assets/css/chatbot.css" rel="stylesheet">
+</head>
+<body>
+
+<header class="ahli-navbar">
+  <a href="index.html" class="brand"><i class="fas fa-hospital-alt"></i> Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </a>
+  <nav class="nav-links">
+    <a href="index.html">Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â¦Ã™Å Ã˜Â³Ã™Å Ã˜Â©</a>
+    <a href="dashboard.html">Ã™â€žÃ™Ë†Ã˜Â­Ã˜Â© Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™Æ’Ã™â€¦</a>
+    <a href="doctors.html">Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â·Ã˜Â¨Ã˜Â§Ã˜Â¡</a>
+    <a href="departments.html" class="active">Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦</a>
+    <a href="appointments.html">Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</a>
+    <a href="patients.html">Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã˜Â¶Ã™â€°</a>
+  </nav>
+</header>
+
+<main class="page-container">
+  <div class="page-header">
+    <div>
+      <h1><i class="fas fa-hospital" style="color:var(--primary)"></i> Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦ Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â¨Ã™Å Ã˜Â©</h1>
+      <p id="dept-count">Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€žÃ¢â‚¬Â¦</p>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" class="search-input" id="search" placeholder="Ã˜Â§Ã˜Â¨Ã˜Â­Ã˜Â« Ã˜Â¨Ã˜Â§Ã˜Â³Ã™â€¦ Ã˜Â§Ã™â€žÃ™â€šÃ˜Â³Ã™â€¦ Ã˜Â£Ã™Ë† Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã™â€šÃ˜Â¹Ã¢â‚¬Â¦" oninput="filter()">
+  </div>
+
+  <div class="cards-grid" id="depts-grid">
+    <div class="loading"><div class="spinner"></div> Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦Ã¢â‚¬Â¦</div>
+  </div>
+
+  <!-- Ã˜Â§Ã™â€žÃ˜Â®Ã˜Â¯Ã™â€¦Ã˜Â§Ã˜Âª -->
+  <div class="section" style="margin-top:32px">
+    <h2 class="section-title"><i class="fas fa-stethoscope" style="color:var(--primary)"></i> Ã˜Â§Ã™â€žÃ˜Â®Ã˜Â¯Ã™â€¦Ã˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â¨Ã™Å Ã˜Â© Ã˜Â§Ã™â€žÃ™â€¦Ã˜ÂªÃ˜Â§Ã˜Â­Ã˜Â©</h2>
+    <div class="cards-grid" id="services-grid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">
+      <div class="loading"><div class="spinner"></div> Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€žÃ¢â‚¬Â¦</div>
+    </div>
+  </div>
+</main>
+
+<script>
+const API_BASE = (() => {
+  const m = location.pathname.match(/^(\/[^/]+\/)/);
+  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/Hospital/public';
+})();
+
+let allDepts = [];
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+const DEPT_ICONS = ['fa-heart','fa-baby','fa-ambulance','fa-x-ray','fa-flask','fa-cut','fa-bone','fa-eye'];
+
+function renderDepts(list) {
+  const g = document.getElementById('depts-grid');
+  if(!list.length){ g.innerHTML='<div class="empty-state"><i class="fas fa-search"></i><p>Ã™â€žÃ˜Â§ Ã˜ÂªÃ™Ë†Ã˜Â¬Ã˜Â¯ Ã™â€ Ã˜ÂªÃ˜Â§Ã˜Â¦Ã˜Â¬</p></div>'; return; }
+  g.innerHTML = list.map((d,i) => `
+    <div class="info-card">
+      <div class="avatar" style="background:linear-gradient(135deg,${['#0075a7','#27ae60','#e74c3c','#8e44ad','#e67e22','#1abc9c','#2980b9','#c0392b'][i%8]},${['#00a8e8','#2ecc71','#c0392b','#9b59b6','#f39c12','#16a085','#3498db','#e74c3c'][i%8]})">
+        <i class="fas ${DEPT_ICONS[i%8]}"></i>
+      </div>
+      <h3>${esc(d.name)}</h3>
+      <p class="sub"><i class="fas fa-map-marker-alt"></i> ${esc(d.location||'')}</p>
+      <p class="sub"><i class="fas fa-clock"></i> ${esc(d.working_hours||'')}</p>
+    </div>`).join('');
+}
+
+function filter() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  renderDepts(allDepts.filter(d =>
+    d.name.toLowerCase().includes(q) || (d.location||'').toLowerCase().includes(q)
+  ));
+}
+
+fetch(`${API_BASE}/api/departments`).then(r=>r.json()).then(j=>{
+  if(!j.success) throw new Error(j.message);
+  allDepts = j.data;
+  document.getElementById('dept-count').textContent = `${allDepts.length} Ã™â€šÃ˜Â³Ã™â€¦ Ã˜Â·Ã˜Â¨Ã™Å  Ã™â€¦Ã˜ÂªÃ˜Â§Ã˜Â­`;
+  renderDepts(allDepts);
+}).catch(e=>{
+  document.getElementById('depts-grid').innerHTML = `<div style="color:var(--danger);padding:24px;text-align:center"><i class="fas fa-exclamation-triangle"></i> Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž</div>`;
+  document.getElementById('dept-count').textContent = 'Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž';
+});
+
+fetch(`${API_BASE}/api/services`).then(r=>r.json()).then(j=>{
+  const g = document.getElementById('services-grid');
+  if(!j.success||!j.data.length){ g.innerHTML='<p style="color:var(--muted)">Ã™â€žÃ˜Â§ Ã˜ÂªÃ™Ë†Ã˜Â¬Ã˜Â¯ Ã˜Â®Ã˜Â¯Ã™â€¦Ã˜Â§Ã˜Âª</p>'; return; }
+  g.innerHTML = j.data.map(s=>`
+    <div class="service-card">
+      <h4>${esc(s.name)}</h4>
+      <p class="sub" style="display:block;margin-top:4px;font-size:12px">${esc(s.department_name||'')}</p>
+      ${s.description ? `<p style="font-size:12px;color:var(--muted);margin-top:6px">${esc(s.description.substring(0,80))}Ã¢â‚¬Â¦</p>` : ''}
+      <div class="service-cost">${Number(s.base_cost).toLocaleString('ar-SA')} Ã¢â€šÂª</div>
+    </div>`).join('');
+}).catch(()=>{ document.getElementById('services-grid').innerHTML='<p style="color:var(--danger)">Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž</p>'; });
+</script>
+  <script src="../public/assets/js/chatbot.js?v=20260416-page-session-reset"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â·Ã˜Â¨Ã˜Â§Ã˜Â¡ Ã¢â‚¬â€ Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="../public/assets/css/main.css" rel="stylesheet">
+  <link href="../public/assets/css/chatbot.css" rel="stylesheet">
+</head>
+<body>
+
+<header class="ahli-navbar">
+  <a href="index.html" class="brand"><i class="fas fa-hospital-alt"></i> Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </a>
+  <nav class="nav-links">
+    <a href="index.html">Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â¦Ã™Å Ã˜Â³Ã™Å Ã˜Â©</a>
+    <a href="dashboard.html">Ã™â€žÃ™Ë†Ã˜Â­Ã˜Â© Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™Æ’Ã™â€¦</a>
+    <a href="doctors.html" class="active">Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â·Ã˜Â¨Ã˜Â§Ã˜Â¡</a>
+    <a href="departments.html">Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦</a>
+    <a href="appointments.html">Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</a>
+    <a href="patients.html">Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã˜Â¶Ã™â€°</a>
+  </nav>
+</header>
+
+<main class="page-container">
+  <div class="page-header">
+    <div>
+      <h1><i class="fas fa-user-md" style="color:var(--primary)"></i> Ã˜Â§Ã™â€žÃ™Æ’Ã™Ë†Ã˜Â§Ã˜Â¯Ã˜Â± Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â¨Ã™Å Ã˜Â©</h1>
+      <p id="doc-count">Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€žÃ¢â‚¬Â¦</p>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" class="search-input" id="search" placeholder="Ã˜Â§Ã˜Â¨Ã˜Â­Ã˜Â« Ã˜Â¨Ã˜Â§Ã˜Â³Ã™â€¦ Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â¨Ã™Å Ã˜Â¨ Ã˜Â£Ã™Ë† Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â®Ã˜ÂµÃ˜ÂµÃ¢â‚¬Â¦" oninput="filterDocs()">
+    <select id="dept-filter" class="filter-btn" style="border-radius:24px;padding:9px 16px" onchange="filterDocs()">
+      <option value="">Ã™Æ’Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦</option>
+    </select>
+  </div>
+
+  <div class="cards-grid" id="docs-grid">
+    <div class="loading"><div class="spinner"></div> Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â·Ã˜Â¨Ã˜Â§Ã˜Â¡Ã¢â‚¬Â¦</div>
+  </div>
+</main>
+
+<script>
+const API_BASE = (() => {
+  const m = location.pathname.match(/^(\/[^/]+\/)/);
+  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/Hospital/public';
+})();
+
+let allDocs = [];
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderDocs(docs) {
+  const grid = document.getElementById('docs-grid');
+  if (!docs.length) { grid.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>Ã™â€žÃ˜Â§ Ã˜ÂªÃ™Ë†Ã˜Â¬Ã˜Â¯ Ã™â€ Ã˜ÂªÃ˜Â§Ã˜Â¦Ã˜Â¬</p></div>'; return; }
+  grid.innerHTML = docs.map(d => `
+    <div class="info-card">
+      <div class="avatar"><i class="fas fa-user-md"></i></div>
+      <h3>${esc(d.full_name)}</h3>
+      <p class="sub"><i class="fas fa-stethoscope"></i> ${esc(d.specialty||'')}</p>
+      <p class="sub"><i class="fas fa-hospital"></i> ${esc(d.department_name||'')}</p>
+      ${d.phone ? `<p class="sub"><i class="fas fa-phone"></i> ${esc(d.phone)}</p>` : ''}
+      ${d.email ? `<p class="sub"><i class="fas fa-envelope"></i> ${esc(d.email)}</p>` : ''}
+    </div>`).join('');
+}
+
+function filterDocs() {
+  const q    = document.getElementById('search').value.trim().toLowerCase();
+  const dept = document.getElementById('dept-filter').value;
+  const filtered = allDocs.filter(d =>
+    (!q    || d.full_name.toLowerCase().includes(q) || (d.specialty||'').toLowerCase().includes(q)) &&
+    (!dept || String(d.department_id) === dept)
+  );
+  renderDocs(filtered);
+}
+
+fetch(`${API_BASE}/api/doctors`).then(r=>r.json()).then(j=>{
+  if(!j.success) throw new Error(j.message);
+  allDocs = j.data;
+  document.getElementById('doc-count').textContent = `${allDocs.length} Ã˜Â·Ã˜Â¨Ã™Å Ã˜Â¨ Ã™â€¦Ã˜ÂªÃ˜Â®Ã˜ÂµÃ˜Âµ Ã™ÂÃ™Å  Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€°`;
+
+  // Ã˜Â¨Ã™â€ Ã˜Â§Ã˜Â¡ Ã™ÂÃ™â€žÃ˜ÂªÃ˜Â± Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦
+  const depts = [...new Map(allDocs.map(d=>[d.department_id, d.department_name])).entries()];
+  const sel = document.getElementById('dept-filter');
+  depts.forEach(([id, name]) => {
+    const opt = document.createElement('option');
+    opt.value = id; opt.textContent = name;
+    sel.appendChild(opt);
+  });
+
+  renderDocs(allDocs);
+}).catch(e=>{
+  document.getElementById('docs-grid').innerHTML =
+    `<div style="color:var(--danger);padding:24px;text-align:center">
+       <i class="fas fa-exclamation-triangle"></i> Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž: ${e.message}
+     </div>`;
+  document.getElementById('doc-count').textContent = 'Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž';
+});
+</script>
+  <script src="../public/assets/js/chatbot.js?v=20260416-page-session-reset"></script>
+</body>
+</html>

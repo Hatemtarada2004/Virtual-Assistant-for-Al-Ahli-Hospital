@@ -1,0 +1,39 @@
+# ============================================================
+# public/.htaccess
+# Hospital Chatbot API — Apache URL Rewriting
+# يعمل على XAMPP مع mod_rewrite
+# ============================================================
+
+# تفعيل mod_rewrite
+Options -Indexes
+RewriteEngine On
+
+# -------------------------------------------------------
+# السماح للملفات والمجلدات الموجودة فعلاً بالمرور مباشرة
+# (صور، CSS، JS إن وُجدت في public/)
+# -------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# -------------------------------------------------------
+# توجيه كل طلب آخر إلى index.php
+# -------------------------------------------------------
+RewriteRule ^ index.php [QSA,L]
+
+# -------------------------------------------------------
+# إعداد PHP لـ XAMPP
+# -------------------------------------------------------
+# زيادة حجم الـ POST المسموح به (للرسائل الطويلة)
+php_value post_max_size 10M
+php_value upload_max_filesize 10M
+
+# ضبط المنطقة الزمنية
+php_value date.timezone Asia/Riyadh
+
+# -------------------------------------------------------
+# Headers الأمان الأساسية
+# -------------------------------------------------------
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+</IfModule>

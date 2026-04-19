@@ -1,0 +1,37 @@
+# Local environment and secrets
+app/config/env.php
+.env
+.env.*
+!.env.example
+
+# Python virtual environments and caches
+.venv/
+.venv-*/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Rasa archive/offline artifacts
+.rasa/
+rasa/
+
+# Generated RAG/runtime data
+storage/logs/
+storage/sessions/
+storage/backups/
+storage/rag/chroma/
+storage/rag/*.json
+storage/*.jsonl
+storage/*_extracted.txt
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.claude/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
