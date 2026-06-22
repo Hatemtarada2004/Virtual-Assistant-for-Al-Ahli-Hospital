@@ -17,6 +17,14 @@ An Arabic-language AI receptionist chatbot for Al-Ahli Hospital, built with PHP 
 
 ---
 
+## Screenshots
+
+| Symptom Detection | Appointment Booking |
+|---|---|
+| ![Symptom Detection](docs/screenshots/chat-demo-1.png) | ![Appointment Booking](docs/screenshots/chat-demo-2.png) |
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
