@@ -1,51 +1,256 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â·Ã˜Â¨Ã˜Â§Ã˜Â¡ Ã¢â‚¬â€ Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </title>
+  <title>الأطباء — المستشفى الأهلي</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <link href="../public/assets/css/main.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link href="../public/assets/css/ahli-site.css" rel="stylesheet">
   <link href="../public/assets/css/chatbot.css" rel="stylesheet">
+  <style>
+    body { background: #f5f7fa; }
+    .page-content { max-width: 1200px; margin: 0 auto; padding: 36px 20px 60px; }
+
+    /* شريط البحث */
+    .search-bar {
+      background: #fff; border-radius: 12px; padding: 18px 20px;
+      box-shadow: 0 2px 12px rgba(0,43,91,.08); margin-bottom: 28px;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .search-input {
+      flex: 1; min-width: 220px; border: 1px solid #dde8f0; border-radius: 8px;
+      padding: 10px 14px; font-family: 'Cairo',sans-serif; font-size: 14px;
+      outline: none; transition: border .2s;
+    }
+    .search-input:focus { border-color: #0062a7; }
+    .dept-select {
+      border: 1px solid #dde8f0; border-radius: 8px; padding: 10px 14px;
+      font-family: 'Cairo',sans-serif; font-size: 14px; outline: none;
+      background: #fff; cursor: pointer; transition: border .2s; min-width: 180px;
+    }
+    .dept-select:focus { border-color: #0062a7; }
+    #doc-count { font-size: 13px; color: #6b7a8d; white-space: nowrap; }
+
+    /* شبكة الأطباء */
+    .docs-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;
+    }
+    .doc-card {
+      background: #fff; border-radius: 14px; overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,43,91,.09); transition: all .25s; text-align: center;
+    }
+    .doc-card:hover { transform: translateY(-5px); box-shadow: 0 10px 32px rgba(0,43,91,.15); }
+    .doc-photo-wrap {
+      background: linear-gradient(135deg, #0062a7 0%, #002b5b 100%);
+      padding: 24px 0 16px; position: relative;
+    }
+    .doc-photo {
+      width: 88px; height: 88px; border-radius: 50%;
+      border: 3px solid rgba(255,255,255,.6);
+      margin: 0 auto; object-fit: cover; display: block;
+    }
+    .doc-avatar {
+      width: 88px; height: 88px; border-radius: 50%;
+      background: rgba(255,255,255,.2); border: 3px solid rgba(255,255,255,.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; color: #fff; margin: 0 auto;
+    }
+    .doc-body { padding: 16px 14px 18px; }
+    .doc-name { font-size: 14px; font-weight: 700; color: #002b5b; margin-bottom: 6px; }
+    .doc-badge {
+      display: inline-block; background: #f0f6ff; color: #0062a7;
+      font-size: 11px; font-weight: 700; padding: 3px 12px; border-radius: 20px; margin-bottom: 8px;
+    }
+    .doc-dept { font-size: 12px; color: #6b7a8d; display: flex; align-items: center; justify-content: center; gap: 4px; margin-bottom: 4px; }
+    .doc-contact { font-size: 12px; color: #6b7a8d; display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 3px; direction: ltr; }
+    .doc-contact a { color: #0062a7; transition: color .2s; }
+    .doc-contact a:hover { color: #e87a1e; }
+
+    .empty-state, .loading-state {
+      grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #6b7a8d;
+    }
+    .empty-state i, .loading-state i { font-size: 40px; margin-bottom: 14px; display: block; color: #b0bec5; }
+    .loading-state i { color: #0062a7; }
+  </style>
 </head>
 <body>
 
-<header class="ahli-navbar">
-  <a href="index.html" class="brand"><i class="fas fa-hospital-alt"></i> Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </a>
-  <nav class="nav-links">
-    <a href="index.html">Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â¦Ã™Å Ã˜Â³Ã™Å Ã˜Â©</a>
-    <a href="dashboard.html">Ã™â€žÃ™Ë†Ã˜Â­Ã˜Â© Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™Æ’Ã™â€¦</a>
-    <a href="doctors.html" class="active">Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â·Ã˜Â¨Ã˜Â§Ã˜Â¡</a>
-    <a href="departments.html">Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦</a>
-    <a href="appointments.html">Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</a>
-    <a href="patients.html">Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã˜Â¶Ã™â€°</a>
-  </nav>
-</header>
-
-<main class="page-container">
-  <div class="page-header">
-    <div>
-      <h1><i class="fas fa-user-md" style="color:var(--primary)"></i> Ã˜Â§Ã™â€žÃ™Æ’Ã™Ë†Ã˜Â§Ã˜Â¯Ã˜Â± Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â¨Ã™Å Ã˜Â©</h1>
-      <p id="doc-count">Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€žÃ¢â‚¬Â¦</p>
+<!-- ── شريط علوي ── -->
+<div class="topbar">
+  <div class="container inner">
+    <div class="tb-info">
+      <span><i class="fas fa-phone"></i> +970-2-2229247</span>
+      <span><i class="fas fa-calendar-check"></i> حجز: 1700200400</span>
+      <span><i class="fas fa-envelope"></i> info@ahli.org</span>
+    </div>
+    <div class="tb-social">
+      <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
     </div>
   </div>
+</div>
+
+<!-- ── رأس الصفحة ── -->
+<header class="site-header">
+  <div class="container inner">
+    <a href="index.html" class="site-logo">
+      <div class="logo-icon"><i class="fas fa-hospital-alt"></i></div>
+      <div class="logo-text">
+        <h1>المستشفى الأهلي</h1>
+        <p>Al-Ahli Hospital | الخليل، فلسطين</p>
+      </div>
+    </a>
+    <div class="header-contact">
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-phone-alt"></i></div>
+        <div class="hc-text"><p>هاتف المستشفى</p><p>+970-2-2229247</p></div>
+      </div>
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-calendar-alt"></i></div>
+        <div class="hc-text"><p>حجز العيادات</p><p>1700200400</p></div>
+      </div>
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-clock"></i></div>
+        <div class="hc-text"><p>الطوارئ</p><p>24 ساعة / 7 أيام</p></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── شريط التنقل ── -->
+<nav class="main-nav">
+  <div class="container inner">
+    <ul class="nav-links-main">
+      <li><a href="index.html">الرئيسية</a></li>
+      <li><a href="about.html">من نحن</a></li>
+      <li><a href="departments.html">الأقسام والوحدات الطبية</a></li>
+      <li><a href="doctors.html" class="active">الأطباء</a></li>
+      <li><a href="news.html">الأخبار</a></li>
+      <li><a href="donations.html">المشاريع والتبرعات</a></li>
+      <li><a href="visitor.html">للزائر والمريض</a></li>
+      <li><a href="education.html">التعليم والتدريب</a></li>
+    </ul>
+    <a href="#" class="nav-btn" onclick="document.getElementById('ahli-chat-btn')?.click();return false;">
+      <i class="fas fa-comments"></i> المساعد الذكي
+    </a>
+  </div>
+</nav>
+
+<!-- ── بانر الصفحة ── -->
+<div class="page-banner">
+  <div class="container inner">
+    <div class="pb-icon"><i class="fas fa-user-md"></i></div>
+    <div class="pb-text">
+      <h1>الكوادر الطبية</h1>
+      <p id="doc-count-banner">كادر طبي من أفضل الكفاءات الطبية الفلسطينية</p>
+    </div>
+    <div class="pb-breadcrumb">
+      <a href="index.html">الرئيسية</a>
+      <span class="sep"><i class="fas fa-chevron-left"></i></span>
+      <span>الأطباء</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── المحتوى ── -->
+<div class="page-content">
 
   <div class="search-bar">
-    <input type="text" class="search-input" id="search" placeholder="Ã˜Â§Ã˜Â¨Ã˜Â­Ã˜Â« Ã˜Â¨Ã˜Â§Ã˜Â³Ã™â€¦ Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â¨Ã™Å Ã˜Â¨ Ã˜Â£Ã™Ë† Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â®Ã˜ÂµÃ˜ÂµÃ¢â‚¬Â¦" oninput="filterDocs()">
-    <select id="dept-filter" class="filter-btn" style="border-radius:24px;padding:9px 16px" onchange="filterDocs()">
-      <option value="">Ã™Æ’Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦</option>
+    <input type="text" class="search-input" id="search" placeholder="ابحث باسم الطبيب أو التخصص…" oninput="filterDocs()">
+    <select id="dept-filter" class="dept-select" onchange="filterDocs()">
+      <option value="">كل الأقسام</option>
     </select>
+    <span id="doc-count"></span>
   </div>
 
-  <div class="cards-grid" id="docs-grid">
-    <div class="loading"><div class="spinner"></div> Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â·Ã˜Â¨Ã˜Â§Ã˜Â¡Ã¢â‚¬Â¦</div>
+  <div class="docs-grid" id="docs-grid">
+    <div class="loading-state">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>جارٍ تحميل الأطباء…</p>
+    </div>
   </div>
-</main>
+</div>
+
+<!-- ── شريط التواصل ── -->
+<div class="contact-strip">
+  <div class="container">
+    <div class="inner">
+      <div class="cs-item">
+        <div class="cs-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="cs-text"><p>عنوان المستشفى</p><p>الخليل، فرش الهوى — فلسطين</p></div>
+      </div>
+      <div class="cs-item">
+        <div class="cs-icon"><i class="fas fa-phone-alt"></i></div>
+        <div class="cs-text"><p>هاتف المستشفى</p><p>+970-2-2229247</p></div>
+      </div>
+      <div class="cs-item">
+        <div class="cs-icon"><i class="fas fa-calendar-check"></i></div>
+        <div class="cs-text"><p>حجز العيادات الخارجية</p><p>1700200400</p></div>
+      </div>
+      <div class="cs-item">
+        <div class="cs-icon"><i class="fas fa-envelope"></i></div>
+        <div class="cs-text"><p>البريد الإلكتروني</p><p>info@ahli.org</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── فوتر ── -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><i class="fas fa-hospital-alt"></i><span>المستشفى الأهلي</span></div>
+        <p>المستشفى الأهلي في الخليل — فلسطين. نقدم رعاية صحية شاملة بأعلى المعايير منذ عام 1978، بكادر طبي متخصص من أكثر من 77 طبيباً في 21 قسماً.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>روابط سريعة</h4>
+        <ul>
+          <li><a href="index.html">الرئيسية</a></li>
+          <li><a href="departments.html">الأقسام الطبية</a></li>
+          <li><a href="doctors.html">الأطباء</a></li>
+          <li><a href="#" onclick="document.getElementById('ahli-chat-btn')?.click();return false;">حجز موعد</a></li>
+          <li><a href="patients.html">المرضى</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>الأقسام الرئيسية</h4>
+        <ul>
+          <li><a href="departments.html">مركز القلب والشرايين</a></li>
+          <li><a href="departments.html">قسم الطوارئ</a></li>
+          <li><a href="departments.html">النسائية والتوليد</a></li>
+          <li><a href="departments.html">الأطفال والمواليد</a></li>
+          <li><a href="departments.html">الأعصاب وجراحتها</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>خدمات أخرى</h4>
+        <ul>
+          <li><a href="lab-login.html">المختبر</a></li>
+          <li><a href="admin-login.html">لوحة الإدارة</a></li>
+          <li><a href="doctor-login.html">بوابة الطبيب</a></li>
+          <li><a href="dashboard.html">الإحصائيات</a></li>
+      <li><a href="news.html">الأخبار</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 المستشفى الأهلي — جمعية أصدقاء المريض. جميع الحقوق محفوظة. | الخليل، فلسطين</p>
+    </div>
+  </div>
+</footer>
 
 <script>
 const API_BASE = (() => {
   const m = location.pathname.match(/^(\/[^/]+\/)/);
-  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/Hospital/public';
+  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/hospital-chatbot/public';
 })();
 
 let allDocs = [];
@@ -54,16 +259,27 @@ function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
 
 function renderDocs(docs) {
   const grid = document.getElementById('docs-grid');
-  if (!docs.length) { grid.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>Ã™â€žÃ˜Â§ Ã˜ÂªÃ™Ë†Ã˜Â¬Ã˜Â¯ Ã™â€ Ã˜ÂªÃ˜Â§Ã˜Â¦Ã˜Â¬</p></div>'; return; }
-  grid.innerHTML = docs.map(d => `
-    <div class="info-card">
-      <div class="avatar"><i class="fas fa-user-md"></i></div>
-      <h3>${esc(d.full_name)}</h3>
-      <p class="sub"><i class="fas fa-stethoscope"></i> ${esc(d.specialty||'')}</p>
-      <p class="sub"><i class="fas fa-hospital"></i> ${esc(d.department_name||'')}</p>
-      ${d.phone ? `<p class="sub"><i class="fas fa-phone"></i> ${esc(d.phone)}</p>` : ''}
-      ${d.email ? `<p class="sub"><i class="fas fa-envelope"></i> ${esc(d.email)}</p>` : ''}
-    </div>`).join('');
+  if (!docs.length) {
+    grid.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>لا توجد نتائج</p></div>';
+    return;
+  }
+  grid.innerHTML = docs.map(d => {
+    const photo = d.photo_url
+      ? `<img src="${esc(d.photo_url)}" alt="${esc(d.full_name)}" class="doc-photo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      + `<div class="doc-avatar" style="display:none"><i class="fas fa-user-md"></i></div>`
+      : `<div class="doc-avatar"><i class="fas fa-user-md"></i></div>`;
+    return `
+    <div class="doc-card">
+      <div class="doc-photo-wrap">${photo}</div>
+      <div class="doc-body">
+        <div class="doc-name">${esc(d.full_name)}</div>
+        <div class="doc-badge">${esc(d.specialty||'')}</div>
+        <div class="doc-dept"><i class="fas fa-hospital"></i> ${esc(d.department_name||'')}</div>
+        ${d.phone ? `<div class="doc-contact"><i class="fas fa-phone"></i> <a href="tel:${esc(d.phone)}">${esc(d.phone)}</a></div>` : ''}
+        ${d.email ? `<div class="doc-contact"><i class="fas fa-envelope"></i> <a href="mailto:${esc(d.email)}">${esc(d.email)}</a></div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function filterDocs() {
@@ -73,15 +289,16 @@ function filterDocs() {
     (!q    || d.full_name.toLowerCase().includes(q) || (d.specialty||'').toLowerCase().includes(q)) &&
     (!dept || String(d.department_id) === dept)
   );
+  document.getElementById('doc-count').textContent = `${filtered.length} طبيب`;
   renderDocs(filtered);
 }
 
 fetch(`${API_BASE}/api/doctors`).then(r=>r.json()).then(j=>{
   if(!j.success) throw new Error(j.message);
   allDocs = j.data;
-  document.getElementById('doc-count').textContent = `${allDocs.length} Ã˜Â·Ã˜Â¨Ã™Å Ã˜Â¨ Ã™â€¦Ã˜ÂªÃ˜Â®Ã˜ÂµÃ˜Âµ Ã™ÂÃ™Å  Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€°`;
+  document.getElementById('doc-count-banner').textContent = `${allDocs.length} طبيب متخصص في المستشفى`;
+  document.getElementById('doc-count').textContent = `${allDocs.length} طبيب`;
 
-  // Ã˜Â¨Ã™â€ Ã˜Â§Ã˜Â¡ Ã™ÂÃ™â€žÃ˜ÂªÃ˜Â± Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦
   const depts = [...new Map(allDocs.map(d=>[d.department_id, d.department_name])).entries()];
   const sel = document.getElementById('dept-filter');
   depts.forEach(([id, name]) => {
@@ -93,12 +310,10 @@ fetch(`${API_BASE}/api/doctors`).then(r=>r.json()).then(j=>{
   renderDocs(allDocs);
 }).catch(e=>{
   document.getElementById('docs-grid').innerHTML =
-    `<div style="color:var(--danger);padding:24px;text-align:center">
-       <i class="fas fa-exclamation-triangle"></i> Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž: ${e.message}
-     </div>`;
-  document.getElementById('doc-count').textContent = 'Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž';
+    `<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:#e74c3c"></i><p>تعذّر التحميل: ${e.message}</p></div>`;
+  document.getElementById('doc-count-banner').textContent = 'تعذّر التحميل';
 });
 </script>
-  <script src="../public/assets/js/chatbot.js?v=20260416-page-session-reset"></script>
+<script src="../public/assets/js/chatbot.js?v=20260518-no-auth"></script>
 </body>
 </html>

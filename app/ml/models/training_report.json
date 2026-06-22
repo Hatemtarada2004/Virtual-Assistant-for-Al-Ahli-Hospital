@@ -1,0 +1,8 @@
+{
+  "accuracy": 99.88,
+  "total_samples": 10736,
+  "train_samples": 9125,
+  "test_samples": 1611,
+  "departments": 22,
+  "trained_at": "2026-05-26 18:25:00"
+}

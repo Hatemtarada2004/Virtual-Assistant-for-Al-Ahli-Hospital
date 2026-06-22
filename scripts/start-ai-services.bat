@@ -1,5 +1,6 @@
 @echo off
-cd /d C:\xampp\htdocs\Hospital
+set "PROJECT_ROOT=%~dp0.."
+cd /d "%PROJECT_ROOT%"
 
 echo Starting Ahli chatbot AI services...
 echo.

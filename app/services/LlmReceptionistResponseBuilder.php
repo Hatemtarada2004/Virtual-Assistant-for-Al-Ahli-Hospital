@@ -23,14 +23,14 @@ class LlmReceptionistResponseBuilder
             $draftReply = 'تمام، احكيلي شو المطلوب بالضبط حتى أساعدك.';
         }
 
-        if (!$allowLlm || !($this->config['llm_receptionist_enabled'] ?? true)) {
+        if (!$allowLlm || !($this->config['llm_receptionist_enabled'] ?? true) || getenv('CHATBOT_TEST_DISABLE_LLM') === '1') {
             return $draftReply;
         }
 
         try {
             $ai = new OpenAIService();
             $messages = $this->prompts->buildMessages($userMessage, $draftReply, $context);
-            $reply = $ai->chat($messages, 220, (float) ($this->config['llm_receptionist_temperature'] ?? 0.65));
+            $reply = $ai->chat($messages, 420, (float) ($this->config['llm_receptionist_temperature'] ?? 0.65));
             $reply = trim($reply);
             if ($reply === '' || $this->looksUnsafeRewrite($reply)) {
                 return $draftReply;

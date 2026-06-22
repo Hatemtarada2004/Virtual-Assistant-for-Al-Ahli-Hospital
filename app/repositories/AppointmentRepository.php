@@ -182,4 +182,44 @@ class AppointmentRepository
 
         return $stmt->rowCount();
     }
+
+    public function cancel(int $appointmentId, int $patientId): array
+    {
+        $sql    = 'UPDATE Appointment SET status = :status WHERE appointment_id = :id';
+        $params = [':status' => Appointment::STATUS_CANCELLED, ':id' => $appointmentId];
+
+        if ($patientId > 0) {
+            $sql .= ' AND patient_id = :patient_id';
+            $params[':patient_id'] = $patientId;
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+
+        if ($stmt->rowCount() === 0) {
+            throw new RuntimeException("لم يتم العثور على الموعد رقم {$appointmentId} أو لا يمكن إلغاؤه.");
+        }
+
+        return ['cancelled' => true, 'appointment_id' => $appointmentId];
+    }
+
+    public function reschedule(int $appointmentId, int $patientId, string $datetime): array
+    {
+        $sql    = 'UPDATE Appointment SET appointment_datetime = :datetime WHERE appointment_id = :id';
+        $params = [':datetime' => $datetime, ':id' => $appointmentId];
+
+        if ($patientId > 0) {
+            $sql .= ' AND patient_id = :patient_id';
+            $params[':patient_id'] = $patientId;
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+
+        if ($stmt->rowCount() === 0) {
+            throw new RuntimeException("لم يتم العثور على الموعد رقم {$appointmentId} أو لا يمكن تعديله.");
+        }
+
+        return ['rescheduled' => true, 'appointment_id' => $appointmentId, 'datetime' => $datetime];
+    }
 }

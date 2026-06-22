@@ -71,6 +71,8 @@ class ReceptionistStateManager
             'memory_summary' => '',
             'turns' => [],
             'booking' => $this->defaultBooking(),
+            'lab_result' => $this->defaultLabResult(),
+            'appointment_action' => $this->defaultAppointmentAction(),
         ];
     }
 
@@ -84,10 +86,16 @@ class ReceptionistStateManager
             'candidate_doctors' => [],
             'selected_date' => null,
             'selected_time' => null,
+            'desired_period' => null,
             'patient_name' => null,
             'patient_phone' => null,
             'patient_email' => null,
+            'patient_national_id' => null,
+            'new_patient_requested' => false,
+            'verified_patient' => null,
             'reason' => null,
+            'pending_specialty_alias' => null,
+            'pending_specialty_label' => null,
             'verification_status' => 'not_started',
             'otp_hash' => null,
             'otp_expires_at' => null,
@@ -95,12 +103,48 @@ class ReceptionistStateManager
             'last_missing_field' => null,
             'last_slots' => [],
             'appointment' => null,
+            'booked_at' => null,
+        ];
+    }
+
+    public function defaultLabResult(): array
+    {
+        return [
+            'active' => false,
+            'stage' => 'idle',
+            'requested_test_name' => null,
+            'requested_status' => null,
+            'patient_national_id' => null,
+            'verified_patient' => null,
+            'patient_email' => null,
+            'selected_tests' => [],
+            'verification_status' => 'not_started',
+            'otp_hash' => null,
+            'otp_expires_at' => null,
+            'otp_attempts' => 0,
+        ];
+    }
+
+    public function defaultAppointmentAction(): array
+    {
+        return [
+            'active' => false,
+            'type' => null,
+            'stage' => 'idle',
+            'selected_appointment' => null,
+            'candidate_appointments' => [],
+            'requested_date' => null,
+            'requested_time' => null,
+            'last_missing_field' => null,
+            'patient' => null,
+            'appointment_id_hint' => null,
         ];
     }
 
     private function buildRollingSummary(array $state): string
     {
         $booking = $state['booking'] ?? [];
+        $appointmentAction = $state['appointment_action'] ?? [];
         $facts = [];
 
         if (($booking['active'] ?? false) === true) {
@@ -120,6 +164,12 @@ class ReceptionistStateManager
         }
         if (!empty($booking['patient_email'])) {
             $facts[] = 'الإيميل موجود';
+        }
+        if (($appointmentAction['active'] ?? false) === true) {
+            $facts[] = 'المستخدم داخل مسار ' . (($appointmentAction['type'] ?? '') === 'reschedule' ? 'تعديل موعد' : 'إلغاء موعد');
+        }
+        if (!empty($appointmentAction['selected_appointment']['appointment_id'])) {
+            $facts[] = 'موعد مختار: #' . $appointmentAction['selected_appointment']['appointment_id'];
         }
 
         $recent = array_slice($state['turns'] ?? [], -4);

@@ -38,6 +38,62 @@
   var isSessionResetting = true;
   var chatPageId = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
 
+  // ── Persistent memory ──────────────────────────────────────────────────────
+  var MEMORY_KEY = 'ahli_chat_v2';
+  var MEMORY_TTL = 7 * 24 * 3600 * 1000; // 7 days in ms
+
+  function memoryKey() {
+    return MEMORY_KEY + (authPatient ? '_p' + authPatient.patient_id : '_guest');
+  }
+
+  function saveMemory(msgs) {
+    try {
+      localStorage.setItem(memoryKey(), JSON.stringify({ ts: Date.now(), msgs: msgs.slice(-30) }));
+    } catch (e) {}
+  }
+
+  function loadMemory() {
+    try {
+      var raw = localStorage.getItem(memoryKey());
+      if (!raw) return [];
+      var obj = JSON.parse(raw);
+      if (!obj || !Array.isArray(obj.msgs) || Date.now() - (obj.ts || 0) > MEMORY_TTL) {
+        localStorage.removeItem(memoryKey());
+        return [];
+      }
+      return obj.msgs;
+    } catch (e) { return []; }
+  }
+
+  function clearMemory() {
+    try {
+      Object.keys(localStorage).forEach(function(k) {
+        if (k.indexOf(MEMORY_KEY) === 0) localStorage.removeItem(k);
+      });
+    } catch (e) {}
+  }
+
+  function collectMessages() {
+    var msgs = [];
+    var nodes = document.querySelectorAll('#ahli-chat-messages .chat-msg');
+    nodes.forEach(function(n) {
+      var bubble = n.querySelector('.msg-bubble');
+      if (!bubble) return;
+      msgs.push({ role: n.classList.contains('bot') ? 'bot' : 'user', text: bubble.textContent || '' });
+    });
+    return msgs;
+  }
+
+  function restoreMemory() {
+    var msgs = loadMemory();
+    if (!msgs.length) return;
+    var container = document.getElementById('ahli-chat-messages');
+    if (!container) return;
+    msgs.forEach(function(m) { addMessage(m.role, m.text, true); });
+    hasWelcomed = true;
+  }
+  // ──────────────────────────────────────────────────────────────────────────
+
   function buildUI() {
     var container = document.createElement('div');
     container.innerHTML = [
@@ -73,27 +129,13 @@
     var box = document.getElementById('ahli-auth-box');
     if (!box) return;
     if (authPatient) {
-      box.innerHTML = '<span style="font-size:12px;font-weight:700;color:#fff">' + esc(authPatient.username || authPatient.full_name || 'Patient') + '</span><button id="ahli-logout-btn" style="border:none;background:rgba(255,255,255,.18);color:#fff;border-radius:999px;padding:6px 10px;cursor:pointer">' + T.logout + '</button>';
-      document.getElementById('ahli-logout-btn').onclick = function () {
-        request(API_BASE + '/api/auth/logout', { method: 'POST', body: '{}' }).then(function () {
-          isSessionResetting = true;
-          return resetServerConversation().then(function () {
-            isSessionResetting = false;
-            clearPageConversation();
-            return refreshAuth();
-          }, function () {
-            isSessionResetting = false;
-            clearPageConversation();
-            return refreshAuth();
-          });
-        });
-      };
+      box.innerHTML = '<span style="font-size:12px;font-weight:700;color:#fff">' + esc(authPatient.username || authPatient.full_name || 'Patient') + '</span>';
     } else {
-      box.innerHTML = '<a href="' + PAGES_BASE + '/login.html" style="color:#fff;font-size:12px;font-weight:700">' + T.login + '</a><a href="' + PAGES_BASE + '/register.html" style="color:#dff7ff;font-size:12px">' + T.register + '</a>';
+      box.innerHTML = '';
     }
   }
 
-  function addMessage(type, text) {
+  function addMessage(type, text, skipSave) {
     var msgs = document.getElementById('ahli-chat-messages');
     var wrap = document.createElement('div');
     wrap.className = 'chat-msg ' + type;
@@ -103,10 +145,33 @@
     wrap.appendChild(body);
     msgs.appendChild(wrap);
     msgs.scrollTop = msgs.scrollHeight;
+    if (!skipSave) saveMemory(collectMessages());
+  }
+
+  function clearQuickReplies() {
+    var el = document.getElementById('ahli-quick-replies');
+    if (el) el.remove();
   }
 
   function addQuickReplies(items) {
-    return;
+    clearQuickReplies();
+    if (!items || !items.length) return;
+    var msgs = document.getElementById('ahli-chat-messages');
+    var bar = document.createElement('div');
+    bar.id = 'ahli-quick-replies';
+    bar.className = 'quick-replies';
+    items.slice(0, 6).forEach(function (item) {
+      var btn = document.createElement('button');
+      btn.className = 'quick-reply-btn';
+      btn.textContent = item;
+      btn.addEventListener('click', function () {
+        clearQuickReplies();
+        handleUserMessage(item);
+      });
+      bar.appendChild(btn);
+    });
+    msgs.appendChild(bar);
+    msgs.scrollTop = msgs.scrollHeight;
   }
 
   function showTypingIndicator() {
@@ -141,6 +206,7 @@
   function handleUserMessage(text) {
     if (!text || !text.trim() || isLoading || isSessionResetting) return;
     var trimmed = text.trim();
+    clearQuickReplies();
     addMessage('user', trimmed);
     document.getElementById('ahli-chat-input').value = '';
     isLoading = true;
@@ -157,6 +223,7 @@
   function clearPageConversation() {
     var msgs = document.getElementById('ahli-chat-messages');
     var win = document.getElementById('ahli-chat-window');
+    clearMemory();
     if (msgs) msgs.innerHTML = '';
     hasWelcomed = false;
     if (win && win.classList.contains('visible')) {
@@ -167,8 +234,20 @@
 
   function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
+  function isPageReload() {
+    try {
+      var nav = performance.getEntriesByType('navigation')[0];
+      return nav ? nav.type === 'reload' : false;
+    } catch (e) { return false; }
+  }
+
   function init() {
     buildUI();
+    if (isPageReload()) {
+      clearMemory();
+    } else {
+      restoreMemory();
+    }
     var btn = document.getElementById('ahli-chat-btn');
     var win = document.getElementById('ahli-chat-window');
     var input = document.getElementById('ahli-chat-input');

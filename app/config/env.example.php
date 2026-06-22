@@ -44,6 +44,23 @@ return [
     // Mail / email verification
     'mail_from' => 'no-reply@ahli-hospital.local',
 
+    // SMTP (recommended for local XAMPP). Example for Gmail:
+    // - Enable 2FA on the account
+    // - Create an "App password"
+    // - Use smtp.gmail.com with STARTTLS (587)
+    'smtp_enabled'  => true,
+    'smtp_host'     => 'smtp.gmail.com',
+    'smtp_port'     => 587,
+    'smtp_secure'   => 'tls', // 'tls' (STARTTLS) or 'ssl' (465) or '' (plain)
+    'smtp_user'     => 'your-email@gmail.com',
+    'smtp_password' => 'PUT_YOUR_APP_PASSWORD_HERE',
+    'smtp_from'     => 'your-email@gmail.com',
+    'smtp_timeout'  => 15,
+
+    // Debug: reveal OTP in chat only when email sending fails (local development).
+    // Keep this FALSE for real usage.
+    'otp_debug_code_enabled' => true,
+
     // Logging
     'log_path' => __DIR__ . '/../../storage/logs/app.log',
 ];

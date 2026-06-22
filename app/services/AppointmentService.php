@@ -229,13 +229,17 @@ class AppointmentService
      * @return array  الموعد بعد الإلغاء
      * @throws InvalidArgumentException
      */
-    public function cancel(int $appointmentId): array
+    public function cancel(int $appointmentId, ?int $patientId = null): array
     {
         // جلب الموعد أولاً
         $appointment = $this->appointmentRepo->findById($appointmentId);
 
         if ($appointment === null) {
             throw new InvalidArgumentException("الموعد بالمعرّف {$appointmentId} غير موجود.");
+        }
+
+        if ($patientId !== null && (int) $appointment->patient_id !== $patientId) {
+            throw new InvalidArgumentException("لا يمكنك إلغاء موعد لا يخص ملفك.");
         }
 
         // التحقق من أن الموعد قابل للإلغاء

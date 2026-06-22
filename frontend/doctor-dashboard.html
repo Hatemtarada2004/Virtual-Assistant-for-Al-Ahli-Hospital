@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة الطبيب - المستشفى الأهلي</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="../public/assets/css/main.css" rel="stylesheet">
+  <style>
+    body { background: #f0f4f8; }
+    .dash-layout { display: flex; min-height: calc(100vh - 70px); }
+    .sidebar { width: 240px; background: #1a2e4a; color: #fff; padding: 1.5rem 0; flex-shrink: 0; }
+    .sidebar .doctor-info { text-align: center; padding: 0 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,.15); }
+    .sidebar .doctor-info .avatar { width: 70px; height: 70px; background: #0d6efd; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto .7rem; font-size: 2rem; }
+    .sidebar .doctor-info h3 { font-size: .95rem; margin: 0 0 .2rem; }
+    .sidebar .doctor-info p { font-size: .8rem; color: #aab; margin: 0; }
+    .sidebar nav a { display: flex; align-items: center; gap: .6rem; padding: .75rem 1.5rem; color: rgba(255,255,255,.8); text-decoration: none; font-size: .93rem; transition: all .2s; }
+    .sidebar nav a:hover, .sidebar nav a.active { background: rgba(255,255,255,.1); color: #fff; border-right: 3px solid #0d6efd; }
+    .sidebar nav a i { width: 18px; text-align: center; }
+    .main-content { flex: 1; padding: 2rem; overflow-y: auto; }
+    .page-title { font-size: 1.4rem; font-weight: 700; color: #1a2e4a; margin-bottom: 1.5rem; }
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card { background: #fff; border-radius: 12px; padding: 1.2rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .stat-card .num { font-size: 2rem; font-weight: 700; color: #0d6efd; }
+    .stat-card .lbl { font-size: .85rem; color: #6c757d; margin-top: .3rem; }
+    .section-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.07); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .section-card h2 { font-size: 1.1rem; color: #1a2e4a; margin: 0 0 1rem; border-bottom: 2px solid #e9ecef; padding-bottom: .5rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th { background: #f8f9fa; padding: .7rem; text-align: right; color: #495057; font-weight: 600; }
+    td { padding: .7rem; border-bottom: 1px solid #f0f0f0; color: #333; }
+    tr:hover td { background: #f8f9fa; }
+    .badge { padding: .25rem .6rem; border-radius: 20px; font-size: .78rem; font-weight: 600; }
+    .badge-booked { background: #cfe2ff; color: #084298; }
+    .badge-completed { background: #d1e7dd; color: #0f5132; }
+    .badge-cancelled { background: #f8d7da; color: #842029; }
+    .badge-noshow { background: #fff3cd; color: #664d03; }
+    .filter-row { display: flex; gap: .7rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+    .filter-row select, .filter-row input { padding: .4rem .8rem; border: 1.5px solid #dee2e6; border-radius: 8px; font-family: inherit; font-size: .9rem; }
+    .btn-sm { padding: .35rem .8rem; border: none; border-radius: 6px; cursor: pointer; font-size: .85rem; font-weight: 600; }
+    .btn-primary { background: #0d6efd; color: #fff; }
+    .btn-danger { background: #dc3545; color: #fff; }
+    .change-pass-form { display: none; }
+    .change-pass-form.visible { display: block; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: .4rem; color: #344; }
+    .form-group input { width: 100%; padding: .6rem .9rem; border: 1.5px solid #dee2e6; border-radius: 8px; font-family: inherit; box-sizing: border-box; }
+    .alert { padding: .6rem 1rem; border-radius: 8px; margin-top: .8rem; font-size: .88rem; }
+    .alert-danger { background: #f8d7da; color: #842029; }
+    .alert-success { background: #d1e7dd; color: #0f5132; }
+    .hidden { display: none; }
+    .btn-logout { background: none; border: 1px solid rgba(255,255,255,.4); color: rgba(255,255,255,.8); padding: .5rem 1rem; border-radius: 6px; cursor: pointer; margin: 1rem 1.5rem 0; width: calc(100% - 3rem); font-family: inherit; }
+    .btn-logout:hover { background: rgba(255,255,255,.1); }
+  </style>
+</head>
+<body>
+  <header class="ahli-navbar">
+    <a href="index.html" class="brand"><i class="fas fa-hospital-alt"></i> المستشفى الأهلي</a>
+    <nav class="nav-links">
+      <a href="index.html">الرئيسية</a>
+      <span id="nav-doctor-name" style="color:#fff;font-weight:600"></span>
+    </nav>
+  </header>
+
+  <div class="dash-layout">
+    <aside class="sidebar">
+      <div class="doctor-info">
+        <div class="avatar"><i class="fas fa-user-md"></i></div>
+        <h3 id="sidebar-name">جاري التحميل...</h3>
+        <p id="sidebar-specialty"></p>
+      </div>
+      <nav>
+        <a href="#" class="active" data-tab="overview" onclick="showTab('overview',this)"><i class="fas fa-tachometer-alt"></i> نظرة عامة</a>
+        <a href="#" data-tab="appointments" onclick="showTab('appointments',this)"><i class="fas fa-calendar-check"></i> مواعيدي</a>
+        <a href="#" data-tab="profile" onclick="showTab('profile',this)"><i class="fas fa-user-cog"></i> تغيير كلمة المرور</a>
+      </nav>
+      <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+    </aside>
+
+    <main class="main-content">
+      <!-- Overview Tab -->
+      <div id="tab-overview" class="tab-content">
+        <div class="page-title"><i class="fas fa-tachometer-alt" style="color:#0d6efd"></i> نظرة عامة</div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="num" id="cnt-total">-</div><div class="lbl">إجمالي المواعيد</div></div>
+          <div class="stat-card"><div class="num" id="cnt-booked" style="color:#084298">-</div><div class="lbl">مواعيد محجوزة</div></div>
+          <div class="stat-card"><div class="num" id="cnt-completed" style="color:#0f5132">-</div><div class="lbl">مكتملة</div></div>
+          <div class="stat-card"><div class="num" id="cnt-today" style="color:#e67e22">-</div><div class="lbl">مواعيد اليوم</div></div>
+        </div>
+        <div class="section-card">
+          <h2><i class="fas fa-calendar-day" style="color:#0d6efd"></i> مواعيد اليوم</h2>
+          <table id="today-table">
+            <thead><tr><th>المريض</th><th>الوقت</th><th>الحالة</th><th>السبب</th></tr></thead>
+            <tbody id="today-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Appointments Tab -->
+      <div id="tab-appointments" class="tab-content hidden">
+        <div class="page-title"><i class="fas fa-calendar-check" style="color:#0d6efd"></i> جميع مواعيدي</div>
+        <div class="filter-row">
+          <select id="filter-status" onchange="loadAppointments()">
+            <option value="">كل الحالات</option>
+            <option value="Booked">محجوز</option>
+            <option value="Completed">مكتمل</option>
+            <option value="Cancelled">ملغي</option>
+            <option value="NoShow">لم يحضر</option>
+          </select>
+          <input type="date" id="filter-date" onchange="loadAppointments()" placeholder="تاريخ">
+          <button class="btn-sm btn-primary" onclick="loadAppointments()"><i class="fas fa-sync"></i> تحديث</button>
+        </div>
+        <div class="section-card">
+          <table>
+            <thead><tr><th>المريض</th><th>الهاتف</th><th>التاريخ والوقت</th><th>الحالة</th><th>السبب</th></tr></thead>
+            <tbody id="appt-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Profile Tab -->
+      <div id="tab-profile" class="tab-content hidden">
+        <div class="page-title"><i class="fas fa-user-cog" style="color:#0d6efd"></i> تغيير كلمة المرور</div>
+        <div class="section-card" style="max-width:400px">
+          <div class="form-group">
+            <label>كلمة المرور الحالية</label>
+            <input type="password" id="cp-current" placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label>كلمة المرور الجديدة</label>
+            <input type="password" id="cp-new" placeholder="6 أحرف على الأقل">
+          </div>
+          <div class="form-group">
+            <label>تأكيد كلمة المرور الجديدة</label>
+            <input type="password" id="cp-confirm" placeholder="••••••••">
+          </div>
+          <button class="btn-sm btn-primary" onclick="changePassword()"><i class="fas fa-save"></i> حفظ كلمة المرور</button>
+          <div id="cp-msg" class="alert" style="display:none"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const BASE = (location.pathname.match(/^(\/[^/]+\/)/) || [,''])[1] + 'public';
+    let doctor = null;
+
+    async function init() {
+      try {
+        const res  = await fetch(BASE + '/api/doctor/me', {credentials:'include'});
+        const data = await res.json();
+        if (!data.success) { location.href = 'doctor-login.html'; return; }
+        doctor = data.data;
+        document.getElementById('sidebar-name').textContent = doctor.full_name;
+        document.getElementById('sidebar-specialty').textContent = doctor.specialty;
+        document.getElementById('nav-doctor-name').textContent = 'د. ' + doctor.full_name;
+        await loadAppointments();
+        buildStats();
+      } catch { location.href = 'doctor-login.html'; }
+    }
+
+    let allAppts = [];
+
+    async function loadAppointments() {
+      const status = document.getElementById('filter-status')?.value || '';
+      const date   = document.getElementById('filter-date')?.value   || '';
+      let url = BASE + '/api/doctor/appointments';
+      const params = [];
+      if (status) params.push('status=' + status);
+      if (date)   params.push('date=' + date);
+      if (params.length) url += '?' + params.join('&');
+
+      const res  = await fetch(url, {credentials:'include'});
+      const data = await res.json();
+      if (!data.success) return;
+      allAppts = data.data || [];
+      renderAppointments(allAppts);
+      buildStats();
+      renderToday();
+    }
+
+    function renderAppointments(rows) {
+      const tbody = document.getElementById('appt-tbody');
+      if (!rows.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#6c757d;padding:1.5rem">لا توجد مواعيد</td></tr>'; return; }
+      tbody.innerHTML = rows.map(a => `
+        <tr>
+          <td><strong>${a.patient_name}</strong></td>
+          <td>${a.patient_phone || '-'}</td>
+          <td>${formatDT(a.appointment_datetime)}</td>
+          <td>${badge(a.status)}</td>
+          <td>${a.reason || '-'}</td>
+        </tr>`).join('');
+    }
+
+    function renderToday() {
+      const today = new Date().toISOString().slice(0,10);
+      const rows  = allAppts.filter(a => a.appointment_datetime?.startsWith(today));
+      const tbody = document.getElementById('today-tbody');
+      if (!rows.length) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6c757d;padding:1rem">لا مواعيد اليوم</td></tr>'; return; }
+      tbody.innerHTML = rows.map(a => `
+        <tr>
+          <td><strong>${a.patient_name}</strong></td>
+          <td>${a.appointment_datetime?.slice(11,16) || ''}</td>
+          <td>${badge(a.status)}</td>
+          <td>${a.reason || '-'}</td>
+        </tr>`).join('');
+    }
+
+    function buildStats() {
+      const today = new Date().toISOString().slice(0,10);
+      document.getElementById('cnt-total').textContent     = allAppts.length;
+      document.getElementById('cnt-booked').textContent    = allAppts.filter(a => a.status === 'Booked').length;
+      document.getElementById('cnt-completed').textContent = allAppts.filter(a => a.status === 'Completed').length;
+      document.getElementById('cnt-today').textContent     = allAppts.filter(a => a.appointment_datetime?.startsWith(today)).length;
+    }
+
+    function badge(status) {
+      const map = {Booked:'badge-booked محجوز', Completed:'badge-completed مكتمل', Cancelled:'badge-cancelled ملغي', NoShow:'badge-noshow لم يحضر'};
+      const [cls, lbl] = (map[status] || 'badge-secondary ' + status).split(' ');
+      return `<span class="badge ${cls}">${lbl}</span>`;
+    }
+
+    function formatDT(dt) {
+      if (!dt) return '-';
+      return dt.replace('T', ' ').slice(0,16);
+    }
+
+    function showTab(tab, el) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+      document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.remove('hidden');
+      el.classList.add('active');
+      return false;
+    }
+
+    async function changePassword() {
+      const current  = document.getElementById('cp-current').value;
+      const newPass  = document.getElementById('cp-new').value;
+      const confirm  = document.getElementById('cp-confirm').value;
+      const msg      = document.getElementById('cp-msg');
+      msg.style.display = 'none';
+
+      if (newPass !== confirm) { msg.className = 'alert alert-danger'; msg.textContent = 'كلمتا المرور غير متطابقتين'; msg.style.display = 'block'; return; }
+      if (newPass.length < 6) { msg.className = 'alert alert-danger'; msg.textContent = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'; msg.style.display = 'block'; return; }
+
+      const res  = await fetch(BASE + '/api/doctor/change-password', {
+        method: 'POST', credentials: 'include',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({current_password: current, new_password: newPass})
+      });
+      const data = await res.json();
+      msg.className = data.success ? 'alert alert-success' : 'alert alert-danger';
+      msg.textContent = data.message;
+      msg.style.display = 'block';
+      if (data.success) { document.getElementById('cp-current').value = ''; document.getElementById('cp-new').value = ''; document.getElementById('cp-confirm').value = ''; }
+    }
+
+    async function logout() {
+      await fetch(BASE + '/api/doctor/logout', {method:'POST', credentials:'include'});
+      location.href = 'doctor-login.html';
+    }
+
+    init();
+  </script>
+</body>
+</html>

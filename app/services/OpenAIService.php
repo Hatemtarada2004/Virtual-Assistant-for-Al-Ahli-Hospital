@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../config/env.php';
+require_once __DIR__ . '/../config/load_env.php';
 
 /**
  * OpenAIService
@@ -20,7 +20,7 @@ class OpenAIService
 
     public function __construct()
     {
-        $config        = require __DIR__ . '/../config/env.php';
+        $config        = require __DIR__ . '/../config/load_env.php';
         $this->apiKey  = $config['openai_api_key'];
         $this->apiUrl  = (string) ($config['openai_api_url'] ?? self::DEFAULT_API_URL);
         $this->model   = $config['openai_model'];
@@ -131,7 +131,7 @@ class OpenAIService
     {
         if (empty($this->apiKey) || $this->apiKey === 'PUT_YOUR_OPENAI_KEY_HERE') {
             throw new RuntimeException(
-                'OpenAI API key is not configured. Please set openai_api_key in app/config/env.php'
+                'OpenAI API key is not configured. Please set openai_api_key in app/config/env.local.php or app/config/env.php'
             );
         }
     }

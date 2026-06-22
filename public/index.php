@@ -16,6 +16,13 @@ mb_internal_encoding('UTF-8');
 define('APP_ROOT', dirname(__DIR__));
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
+    $sessionPath = APP_ROOT . '/storage/sessions';
+    if (!is_dir($sessionPath)) {
+        @mkdir($sessionPath, 0775, true);
+    }
+    if (is_dir($sessionPath) && is_writable($sessionPath)) {
+        session_save_path($sessionPath);
+    }
     session_name('AHLI_PATIENT_SESSION');
     session_start();
 }
@@ -72,6 +79,11 @@ if ($path !== '/' && str_ends_with($path, '/')) {
 }
 
 $method = strtoupper($_SERVER['REQUEST_METHOD']);
+
+if (($_SERVER['HTTP_X_CHATBOT_TEST_DISABLE_LLM'] ?? '') === '1'
+    && in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1'], true)) {
+    putenv('CHATBOT_TEST_DISABLE_LLM=1');
+}
 
 // -------------------------------------------------------
 // 5. تحميل المسارات وتنفيذ الـ Controller

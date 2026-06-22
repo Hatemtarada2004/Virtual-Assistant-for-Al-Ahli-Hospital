@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بوابة الموظفين - المستشفى الأهلي</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="../public/assets/css/main.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0d6efd0d, #6f42c10d, #1987540d);
+      min-height: 100vh;
+    }
+    .portal-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 70px);
+      padding: 2.5rem 1rem;
+    }
+    .portal-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .portal-header h1 {
+      font-size: 1.9rem;
+      color: #1a2e4a;
+      margin-bottom: .4rem;
+    }
+    .portal-header p {
+      color: #6c757d;
+      font-size: 1rem;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 780px;
+    }
+    .portal-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 6px 28px rgba(0,0,0,.09);
+      padding: 2.2rem 1.5rem 1.8rem;
+      text-align: center;
+      text-decoration: none;
+      color: inherit;
+      transition: transform .2s, box-shadow .2s;
+      border-top: 4px solid transparent;
+      display: block;
+    }
+    .portal-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 36px rgba(0,0,0,.15);
+    }
+    .portal-card .card-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.1rem;
+    }
+    .portal-card .card-icon i {
+      font-size: 2rem;
+      color: #fff;
+    }
+    .portal-card h2 {
+      font-size: 1.2rem;
+      color: #1a2e4a;
+      margin-bottom: .4rem;
+    }
+    .portal-card p {
+      color: #6c757d;
+      font-size: .88rem;
+      margin-bottom: 1.4rem;
+      line-height: 1.5;
+    }
+    .portal-card .btn-enter {
+      display: inline-block;
+      padding: .55rem 1.5rem;
+      border-radius: 8px;
+      font-size: .92rem;
+      font-weight: 600;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* أدمن — بنفسجي */
+    .card-admin { border-top-color: #6f42c1; }
+    .card-admin .card-icon { background: linear-gradient(135deg, #6f42c1, #9b59b6); }
+    .card-admin .btn-enter { background: #6f42c1; }
+    .card-admin:hover .btn-enter { background: #5a32a3; }
+
+    /* طبيب — أزرق */
+    .card-doctor { border-top-color: #0d6efd; }
+    .card-doctor .card-icon { background: linear-gradient(135deg, #0d6efd, #3d8bfd); }
+    .card-doctor .btn-enter { background: #0d6efd; }
+    .card-doctor:hover .btn-enter { background: #0b5ed7; }
+
+    /* مختبر — أخضر */
+    .card-lab { border-top-color: #198754; }
+    .card-lab .card-icon { background: linear-gradient(135deg, #198754, #28a745); }
+    .card-lab .btn-enter { background: #198754; }
+    .card-lab:hover .btn-enter { background: #146c43; }
+  </style>
+</head>
+<body>
+  <header class="ahli-navbar"></header>
+
+  <div class="portal-wrap">
+    <div class="portal-header">
+      <h1><i class="fa-solid fa-hospital-user" style="color:#0d6efd;margin-left:.4rem"></i>بوابة الموظفين</h1>
+      <p>اختر البوابة المناسبة لتسجيل الدخول</p>
+    </div>
+
+    <div class="cards-grid">
+
+      <a href="admin-login.html" class="portal-card card-admin">
+        <div class="card-icon">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h2>الإدارة</h2>
+        <p>لوحة تحكم الأدمن، إدارة المواعيد والأطباء والمرضى والإحصائيات</p>
+        <span class="btn-enter">دخول الأدمن</span>
+      </a>
+
+      <a href="doctor-login.html" class="portal-card card-doctor">
+        <div class="card-icon">
+          <i class="fa-solid fa-user-doctor"></i>
+        </div>
+        <h2>الأطباء</h2>
+        <p>لوحة الطبيب، مواعيد اليوم، ملفات المرضى، ونتائج الفحوصات</p>
+        <span class="btn-enter">دخول الطبيب</span>
+      </a>
+
+      <a href="lab-login.html" class="portal-card card-lab">
+        <div class="card-icon">
+          <i class="fa-solid fa-flask-vial"></i>
+        </div>
+        <h2>المختبر</h2>
+        <p>إدارة نتائج الفحوصات المخبرية وتحديث حالة التحاليل</p>
+        <span class="btn-enter">دخول المختبر</span>
+      </a>
+
+    </div>
+  </div>
+
+  <script src="../public/assets/js/navbar.js"></script>
+</body>
+</html>

@@ -13,6 +13,7 @@ class Doctor
     public string  $specialty;
     public ?string $phone;
     public ?string $email;
+    public ?string $photo_url;
     public int     $department_id;
 
     /**
@@ -26,8 +27,9 @@ class Doctor
         $this->doctor_id      = (int)    $row['doctor_id'];
         $this->full_name      = (string) $row['full_name'];
         $this->specialty      = (string) $row['specialty'];
-        $this->phone          = isset($row['phone'])  ? (string) $row['phone']  : null;
-        $this->email          = isset($row['email'])  ? (string) $row['email']  : null;
+        $this->phone          = isset($row['phone'])     ? (string) $row['phone']     : null;
+        $this->email          = isset($row['email'])     ? (string) $row['email']     : null;
+        $this->photo_url      = isset($row['photo_url']) ? (string) $row['photo_url'] : null;
         $this->department_id  = (int)    $row['department_id'];
 
         // يُعبأ عند الاستعلام مع JOIN
@@ -44,6 +46,7 @@ class Doctor
             'specialty'     => $this->specialty,
             'phone'         => $this->phone,
             'email'         => $this->email,
+            'photo_url'     => $this->photo_url,
             'department_id' => $this->department_id,
         ];
 

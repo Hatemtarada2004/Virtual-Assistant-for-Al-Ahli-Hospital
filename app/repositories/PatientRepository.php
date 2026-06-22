@@ -170,4 +170,34 @@ class PatientRepository
 
         return (int) $this->pdo->lastInsertId();
     }
+
+    public function createFromChatBooking(string $email, ?string $fullName = null, ?string $nationalId = null, ?string $phone = null): int
+    {
+        $email = mb_strtolower(trim($email), 'UTF-8');
+        $name = trim((string) $fullName);
+        if ($name === '') {
+            $name = 'مريض عبر الشات';
+        }
+
+        $nationalId = trim((string) $nationalId);
+        $realPhone = $phone !== null ? trim($phone) : '';
+        $phoneSeed = $email . '|' . $nationalId;
+        if ($realPhone !== '' && $this->phoneExists($realPhone)) {
+            $realPhone = '';
+        }
+        $phone = $realPhone !== '' ? $realPhone : 'chat-' . substr(hash('sha256', $phoneSeed), 0, 20);
+
+        $stmt = $this->pdo->prepare('
+            INSERT INTO Patient (full_name, national_id, phone, email, date_of_birth, gender)
+            VALUES (:full_name, :national_id, :phone, :email, NULL, NULL)
+        ');
+        $stmt->execute([
+            ':full_name' => $name,
+            ':national_id' => $nationalId !== '' ? $nationalId : null,
+            ':phone' => $phone,
+            ':email' => $email !== '' ? $email : null,
+        ]);
+
+        return (int) $this->pdo->lastInsertId();
+    }
 }

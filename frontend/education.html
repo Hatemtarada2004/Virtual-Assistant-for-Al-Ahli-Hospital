@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>التعليم والتدريب — المستشفى الأهلي</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link href="../public/assets/css/chatbot.css" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--navy:#002b5b;--blue:#0062a7;--blue2:#1a7bbf;--orange:#e87a1e;--white:#ffffff;--light:#f0f6ff;--gray:#f5f7fa;--text:#2c3e50;--muted:#6b7a8d;--border:#dde8f0;--radius:12px}
+    body{font-family:'Cairo',sans-serif;background:var(--white);color:var(--text);direction:rtl}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+    .topbar{background:var(--navy);color:rgba(255,255,255,.85);font-size:13px;padding:7px 0}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+    .topbar .tb-info{display:flex;gap:20px;align-items:center}
+    .topbar .tb-info span{display:flex;align-items:center;gap:6px}
+    .topbar .tb-info i{color:var(--orange)}
+    .topbar .tb-social{display:flex;gap:10px}
+    .topbar .tb-social a{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px}
+    .topbar .tb-social a:hover{background:var(--orange)}
+
+    .site-header{background:var(--white);padding:14px 0;border-bottom:2px solid var(--border)}
+    .site-header .inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .site-logo{display:flex;align-items:center;gap:14px}
+    .logo-icon{width:60px;height:60px;background:linear-gradient(135deg,var(--blue),var(--navy));border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;flex-shrink:0}
+    .logo-text h1{font-size:22px;font-weight:900;color:var(--navy);line-height:1.2}
+    .logo-text p{font-size:12px;color:var(--muted);margin-top:2px}
+    .header-contact{display:flex;gap:18px}
+    .hc-item{display:flex;align-items:center;gap:8px}
+    .hc-icon{width:38px;height:38px;border-radius:50%;background:var(--light);display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:14px;flex-shrink:0}
+    .hc-text p:first-child{font-size:11px;color:var(--muted)}
+    .hc-text p:last-child{font-size:13px;font-weight:700;color:var(--navy);direction:ltr}
+
+    .main-nav{background:var(--blue);position:sticky;top:0;z-index:1000;box-shadow:0 3px 12px rgba(0,98,167,.35)}
+    .main-nav .inner{display:flex;align-items:center;justify-content:space-between}
+    .nav-links{display:flex;list-style:none}
+    .nav-links li a{display:block;padding:15px 18px;color:rgba(255,255,255,.88);font-size:14px;font-weight:600;transition:background .2s,color .2s;white-space:nowrap;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+    .nav-links li a:hover,.nav-links li a.active{background:rgba(255,255,255,.15);color:#fff}
+    .nav-links li a.active{border-bottom:3px solid var(--orange)}
+    .nav-btn{background:var(--orange);color:#fff !important;border-radius:6px;padding:8px 18px !important;margin:8px 0;font-weight:700 !important}
+    .nav-btn:hover{background:#d06a10 !important}
+
+    .page-hero{background:linear-gradient(135deg,#1a3a1a 0%,#27ae60 100%);padding:60px 0;color:#fff;text-align:center}
+    .page-hero h2{font-size:38px;font-weight:900;margin-bottom:12px}
+    .page-hero p{font-size:16px;color:rgba(255,255,255,.85);max-width:600px;margin:0 auto}
+    .breadcrumb{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,.7)}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb i{font-size:10px}
+
+    .section{padding:60px 0}
+    .section.gray{background:var(--gray)}
+    .section-hd{text-align:center;margin-bottom:40px}
+    .section-hd .tag{display:inline-block;background:var(--light);color:var(--blue);font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;margin-bottom:10px}
+    .section-hd h2{font-size:28px;font-weight:900;color:var(--navy);margin-bottom:10px}
+    .section-hd p{font-size:14px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+    .line{width:60px;height:4px;background:var(--orange);border-radius:2px;margin:14px auto 0}
+
+    /* بطل البرامج */
+    .edu-hero{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+    .edu-hero-img{border-radius:20px;overflow:hidden;height:360px;background:linear-gradient(135deg,var(--navy),var(--blue));display:flex;align-items:center;justify-content:center;font-size:80px;color:rgba(255,255,255,.3)}
+    .edu-hero-text h3{font-size:26px;font-weight:900;color:var(--navy);margin-bottom:16px}
+    .edu-hero-text p{font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:14px}
+
+    /* برامج التدريب */
+    .programs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .prog-card{background:var(--white);border-radius:16px;padding:28px;box-shadow:0 4px 20px rgba(0,43,91,.08);border:1px solid var(--border);text-align:center;transition:transform .2s}
+    .prog-card:hover{transform:translateY(-4px)}
+    .prog-ico{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px}
+    .prog-card h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:10px}
+    .prog-card p{font-size:13px;color:var(--muted);line-height:1.7}
+
+    /* التخصصات */
+    .specs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .spec-item{background:var(--white);border-radius:var(--radius);padding:18px;border:1px solid var(--border);display:flex;align-items:center;gap:12px;transition:border-color .2s}
+    .spec-item:hover{border-color:var(--blue)}
+    .spec-num{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--navy));color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .spec-name{font-size:13px;font-weight:600;color:var(--navy)}
+
+    /* المركز */
+    .center-card{background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:20px;padding:50px;color:#fff;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+    .center-text h3{font-size:24px;font-weight:900;margin-bottom:16px}
+    .center-text p{font-size:14px;color:rgba(255,255,255,.8);line-height:1.8}
+    .center-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .cstat{background:rgba(255,255,255,.1);border-radius:12px;padding:20px;text-align:center}
+    .cstat .num{font-size:32px;font-weight:900;color:var(--orange)}
+    .cstat .lbl{font-size:12px;color:rgba(255,255,255,.75);margin-top:4px}
+
+    /* فوتر */
+    .site-footer{background:var(--navy);color:rgba(255,255,255,.8);padding:50px 0 0}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+    .footer-brand .logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:900;color:#fff;margin-bottom:14px}
+    .footer-brand .logo i{color:var(--orange)}
+    .footer-brand p{font-size:13px;line-height:1.8;color:rgba(255,255,255,.65)}
+    .socials{display:flex;gap:10px;margin-top:16px}
+    .socials a{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;transition:background .2s}
+    .socials a:hover{background:var(--orange)}
+    .footer-col h4{font-size:14px;font-weight:700;color:#fff;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid rgba(255,255,255,.1)}
+    .footer-col ul{list-style:none}
+    .footer-col ul li{margin-bottom:8px}
+    .footer-col ul li a{font-size:13px;color:rgba(255,255,255,.65);transition:color .2s}
+    .footer-col ul li a:hover{color:var(--orange)}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:18px 0;text-align:center;font-size:12px;color:rgba(255,255,255,.5)}
+
+    @media(max-width:768px){
+      .edu-hero,.center-card{grid-template-columns:1fr}
+      .programs-grid,.specs-grid{grid-template-columns:repeat(2,1fr)}
+      .footer-grid{grid-template-columns:1fr 1fr}
+      .header-contact{display:none}
+      .nav-links li a{padding:15px 10px;font-size:12px}
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="container inner">
+    <div class="tb-info">
+      <span><i class="fas fa-phone"></i> +970-2-2229247</span>
+      <span><i class="fas fa-calendar-check"></i> حجز: 1700200400</span>
+      <span><i class="fas fa-envelope"></i> info@ahli.org</span>
+    </div>
+    <div class="tb-social">
+      <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container inner">
+    <a href="index.html" class="site-logo">
+      <div class="logo-icon"><i class="fas fa-hospital-alt"></i></div>
+      <div class="logo-text">
+        <h1>المستشفى الأهلي</h1>
+        <p>Al-Ahli Hospital | الخليل، فلسطين</p>
+      </div>
+    </a>
+    <div class="header-contact">
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-phone-alt"></i></div>
+        <div class="hc-text"><p>هاتف المستشفى</p><p>+970-2-2229247</p></div>
+      </div>
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-calendar-alt"></i></div>
+        <div class="hc-text"><p>حجز العيادات</p><p>1700200400</p></div>
+      </div>
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-clock"></i></div>
+        <div class="hc-text"><p>الطوارئ</p><p>24 ساعة / 7 أيام</p></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="main-nav">
+  <div class="container inner">
+    <ul class="nav-links">
+      <li><a href="index.html">الرئيسية</a></li>
+      <li><a href="about.html">من نحن</a></li>
+      <li><a href="departments.html">الأقسام والوحدات الطبية</a></li>
+      <li><a href="doctors.html">الأطباء</a></li>
+      <li><a href="news.html">الأخبار</a></li>
+      <li><a href="donations.html">المشاريع والتبرعات</a></li>
+      <li><a href="visitor.html">للزائر والمريض</a></li>
+      <li><a href="education.html" class="active">التعليم والتدريب</a></li>
+    </ul>
+    <a href="#" class="nav-btn" onclick="document.getElementById('ahli-chat-btn')?.click();return false;">
+      <i class="fas fa-comments"></i> المساعد الذكي
+    </a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <h2><i class="fas fa-graduation-cap" style="margin-left:12px"></i>التعليم والتدريب</h2>
+  <p>المستشفى الأهلي — مستشفى تعليمي بامتياز منذ عام 1993</p>
+  <div class="breadcrumb">
+    <a href="index.html">الرئيسية</a>
+    <i class="fas fa-chevron-left"></i>
+    <span>التعليم والتدريب</span>
+  </div>
+</div>
+
+<!-- مستشفى تعليمي -->
+<section class="section">
+  <div class="container">
+    <div class="edu-hero">
+      <div class="edu-hero-img" style="padding:0;display:block">
+        <img src="https://ahli.org/images/%D9%85%D8%B1%D9%83%D8%B2-%D8%A7%D9%84%D8%AA%D8%B9%D9%84%D9%8A%D9%85-%D9%88%D8%A7%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%A8.webp" style="width:100%;height:360px;object-fit:cover;border-radius:20px;display:block" alt="مركز التعليم والتدريب" onerror="this.src='https://ahli.org/images/%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89%20%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%8A.webp';this.onerror=function(){this.parentElement.removeAttribute('style');this.parentElement.innerHTML='<i class=\'fas fa-university\'></i>'}">
+      </div>
+      <div class="edu-hero-text">
+        <div style="display:inline-block;background:var(--light);color:var(--blue);font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;margin-bottom:12px">مستشفى تعليمي معتمد</div>
+        <h3>مستشفى تعليمي بامتياز</h3>
+        <p>يُولي المستشفى الأهلي اهتماماً بالغاً بالتعليم الطبي والطبي المساعد والإداري منذ افتتاحه عام 1993، وقد تطور هذا الاهتمام عبر مراحل متعاقبة:</p>
+        <p>بدأ بدورات الإسعاف الأولي للعاملين والمؤسسات المجتمعية، ثم توسّع ليشمل برامج تدريبية لطلاب الطب والتمريض من داخل فلسطين وخارجها، وصولاً إلى برامج الإقامة التخصصية المعتمدة من المجلس الطبي الفلسطيني.</p>
+        <p>يوفر المستشفى اليوم بيئة تعليمية متكاملة تضم أحدث وسائل التعليم الطبي عن بُعد وأساليب التدريب العالمية الحديثة.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- دائرة التعليم والتدريب -->
+<section class="section gray">
+  <div class="container">
+    <div class="section-hd">
+      <div class="tag">دائرة التعليم</div>
+      <h2>دائرة التعليم والتدريب الطبي</h2>
+      <p>تتابع الدائرة عدة برامج تعليمية وتدريبية متخصصة لتأهيل الكوادر الطبية</p>
+      <div class="line"></div>
+    </div>
+    <div class="programs-grid">
+      <div class="prog-card">
+        <div class="prog-ico" style="background:#e8f4fb;color:var(--blue)"><i class="fas fa-user-md"></i></div>
+        <h3>برنامج الإقامة التخصصي</h3>
+        <p>برنامج معتمد من المجلس الطبي الفلسطيني يمتد لعدة سنوات، يُتيح للأطباء الحصول على تخصصهم الطبي في 13 تخصصاً رئيسياً وفرعياً.</p>
+      </div>
+      <div class="prog-card">
+        <div class="prog-ico" style="background:#e8f5e9;color:#27ae60"><i class="fas fa-stethoscope"></i></div>
+        <h3>برنامج أطباء الامتياز</h3>
+        <p>برنامج تدريبي يمتد لعامين للأطباء الخريجين، يشمل التدريب السريري في مختلف الأقسام الطبية بإشراف كادر طبي متخصص.</p>
+      </div>
+      <div class="prog-card">
+        <div class="prog-ico" style="background:#fff3e0;color:var(--orange)"><i class="fas fa-laptop-medical"></i></div>
+        <h3>التعليم الطبي عن بُعد</h3>
+        <p>توفير التعليم الطبي المستمر باستخدام أحدث الأساليب التدريبية المتوفرة عالمياً، مما يُتيح الوصول للمعرفة الطبية الحديثة.</p>
+      </div>
+      <div class="prog-card">
+        <div class="prog-ico" style="background:#f3e5f5;color:#8e44ad"><i class="fas fa-university"></i></div>
+        <h3>تدريب طلاب الجامعات</h3>
+        <p>برامج تدريب عملي لطلاب الطب والتمريض من جميع الجامعات الفلسطينية وبعض الجامعات الدولية.</p>
+      </div>
+      <div class="prog-card">
+        <div class="prog-ico" style="background:#e0f7f7;color:#00897b"><i class="fas fa-flask"></i></div>
+        <h3>البحث العلمي</h3>
+        <p>إدخال البحث العلمي ضمن منظومة المستشفى برؤية استراتيجية لمستقبل طبي أفضل وتطوير الممارسة الطبية المبنية على الأدلة.</p>
+      </div>
+      <div class="prog-card">
+        <div class="prog-ico" style="background:#e8eaf6;color:#3949ab"><i class="fas fa-chalkboard-teacher"></i></div>
+        <h3>تنمية الموارد البشرية</h3>
+        <p>برامج لتطوير الكوادر الطبية والإدارية على جميع المستويات بما يرفع من جودة الخدمات المقدمة للمرضى.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- التخصصات -->
+<section class="section">
+  <div class="container">
+    <div class="section-hd">
+      <div class="tag">برنامج الإقامة</div>
+      <h2>التخصصات الطبية المعتمدة</h2>
+      <p>13 تخصصاً طبياً رئيسياً وفرعياً معتمداً من المجلس الطبي الفلسطيني منذ عام 2008</p>
+      <div class="line"></div>
+    </div>
+    <div class="specs-grid" style="margin-top:40px">
+      <div class="spec-item"><div class="spec-num">1</div><div class="spec-name">النسائية والتوليد</div></div>
+      <div class="spec-item"><div class="spec-num">2</div><div class="spec-name">التخدير وعلم الألم</div></div>
+      <div class="spec-item"><div class="spec-num">3</div><div class="spec-name">الأمراض الباطنية</div></div>
+      <div class="spec-item"><div class="spec-num">4</div><div class="spec-name">الجراحة العامة</div></div>
+      <div class="spec-item"><div class="spec-num">5</div><div class="spec-name">جراحة العظام والمفاصل</div></div>
+      <div class="spec-item"><div class="spec-num">6</div><div class="spec-name">طب الأطفال والخداج</div></div>
+      <div class="spec-item"><div class="spec-num">7</div><div class="spec-name">الأشعة والتصوير الطبي</div></div>
+      <div class="spec-item"><div class="spec-num">8</div><div class="spec-name">القلب وجراحة القلب</div></div>
+      <div class="spec-item"><div class="spec-num">9</div><div class="spec-name">علم التشريح المرضي</div></div>
+      <div class="spec-item"><div class="spec-num">10</div><div class="spec-name">جراحة الأعصاب</div></div>
+      <div class="spec-item"><div class="spec-num">11</div><div class="spec-name">الجهاز الهضمي والتنظير</div></div>
+      <div class="spec-item"><div class="spec-num">12</div><div class="spec-name">طب الطوارئ</div></div>
+      <div class="spec-item"><div class="spec-num">13</div><div class="spec-name">طب الأسرة والمجتمع</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- مركز التعليم -->
+<section class="section gray">
+  <div class="container">
+    <div class="center-card">
+      <div class="center-text">
+        <h3><i class="fas fa-building" style="margin-left:12px;color:var(--orange)"></i>مركز الدكتور حافظ عبد النبي للتعليم والتدريب</h3>
+        <p>يُعدّ المركز الذراع التعليمية للمستشفى الأهلي، ويوفر بيئة تعليمية متكاملة مزودة بأحدث وسائل التكنولوجيا التعليمية الطبية، بما فيها المحاكاة السريرية وتقنيات التعليم التفاعلي.</p>
+        <p style="margin-top:14px">يستقطب المركز نخبة من المحاضرين والخبراء الطبيين المتميزين لتقديم برامج تعليمية بمستوى عالمي تُسهم في الارتقاء بمستوى الطب الفلسطيني.</p>
+      </div>
+      <div class="center-stats">
+        <div class="cstat">
+          <div class="num">2008</div>
+          <div class="lbl">بداية برنامج الإقامة</div>
+        </div>
+        <div class="cstat">
+          <div class="num">13</div>
+          <div class="lbl">تخصصاً طبياً</div>
+        </div>
+        <div class="cstat">
+          <div class="num">30+</div>
+          <div class="lbl">سنة من التعليم الطبي</div>
+        </div>
+        <div class="cstat">
+          <div class="num">100%</div>
+          <div class="lbl">اعتماد المجلس الطبي</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><i class="fas fa-hospital-alt"></i><span>المستشفى الأهلي</span></div>
+        <p>المستشفى الأهلي في الخليل — فلسطين. نقدم رعاية صحية شاملة بأعلى المعايير العالمية منذ عام 1976.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>روابط سريعة</h4>
+        <ul>
+          <li><a href="index.html">الرئيسية</a></li>
+          <li><a href="about.html">من نحن</a></li>
+          <li><a href="departments.html">الأقسام الطبية</a></li>
+          <li><a href="doctors.html">الأطباء</a></li>
+          <li><a href="news.html">الأخبار</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>خدماتنا</h4>
+        <ul>
+          <li><a href="#" onclick="document.getElementById('ahli-chat-btn')?.click();return false;">حجز موعد</a></li>
+          <li><a href="donations.html">التبرعات</a></li>
+          <li><a href="education.html">التعليم والتدريب</a></li>
+          <li><a href="lab-login.html">المختبر</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>تواصل معنا</h4>
+        <ul>
+          <li><a href="tel:+97022229247"><i class="fas fa-phone" style="margin-left:6px;color:var(--orange)"></i>+970-2-2229247</a></li>
+          <li><a href="mailto:info@ahli.org"><i class="fas fa-envelope" style="margin-left:6px;color:var(--orange)"></i>info@ahli.org</a></li>
+          <li><a href="#"><i class="fas fa-map-marker-alt" style="margin-left:6px;color:var(--orange)"></i>الخليل، فرش الهوى</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 المستشفى الأهلي — الخليل، فلسطين. جميع الحقوق محفوظة.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const API_BASE = (() => {
+  const m = location.pathname.match(/^(\/[^/]+\/)/);
+  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/hospital-chatbot/public';
+})();
+</script>
+<script src="../public/assets/js/chatbot.js?v=20260518-no-auth"></script>
+</body>
+</html>

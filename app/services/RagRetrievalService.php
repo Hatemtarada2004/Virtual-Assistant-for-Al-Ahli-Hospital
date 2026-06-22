@@ -8,7 +8,7 @@ class RagRetrievalService
 
     public function __construct()
     {
-        $this->config = require __DIR__ . '/../config/env.php';
+        $this->config = require __DIR__ . '/../config/load_env.php';
     }
 
     public function contextForPrompt(string $query): string

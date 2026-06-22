@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة المختبر - المستشفى الأهلي</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="../public/assets/css/main.css" rel="stylesheet">
+  <style>
+    body { background: #f0f4f8; }
+    .dash-layout { display: flex; min-height: calc(100vh - 70px); }
+    .sidebar { width: 240px; background: #0f3d23; color: #fff; padding: 1.5rem 0; flex-shrink: 0; }
+    .sidebar .user-info { text-align: center; padding: 0 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,.15); }
+    .sidebar .user-info .avatar { width: 70px; height: 70px; background: #198754; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto .7rem; font-size: 2rem; }
+    .sidebar .user-info h3 { font-size: .95rem; margin: 0; }
+    .sidebar nav a { display: flex; align-items: center; gap: .6rem; padding: .75rem 1.5rem; color: rgba(255,255,255,.8); text-decoration: none; font-size: .93rem; transition: all .2s; }
+    .sidebar nav a:hover, .sidebar nav a.active { background: rgba(255,255,255,.1); color: #fff; border-right: 3px solid #198754; }
+    .sidebar nav a i { width: 18px; text-align: center; }
+    .main-content { flex: 1; padding: 2rem; overflow-y: auto; }
+    .page-title { font-size: 1.4rem; font-weight: 700; color: #1a2e4a; margin-bottom: 1.5rem; }
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card { background: #fff; border-radius: 12px; padding: 1.2rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .stat-card .num { font-size: 2rem; font-weight: 700; color: #198754; }
+    .stat-card .lbl { font-size: .85rem; color: #6c757d; margin-top: .3rem; }
+    .section-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.07); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .section-card h2 { font-size: 1.1rem; color: #1a2e4a; margin: 0 0 1rem; border-bottom: 2px solid #e9ecef; padding-bottom: .5rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    th { background: #f8f9fa; padding: .6rem .8rem; text-align: right; color: #495057; font-weight: 600; white-space: nowrap; }
+    td { padding: .6rem .8rem; border-bottom: 1px solid #f0f0f0; color: #333; }
+    tr:hover td { background: #f8f9fa; }
+    .badge { padding: .2rem .55rem; border-radius: 20px; font-size: .76rem; font-weight: 600; }
+    .badge-pending { background: #fff3cd; color: #664d03; }
+    .badge-ready { background: #d1e7dd; color: #0f5132; }
+    .btn { padding: .3rem .7rem; border: none; border-radius: 6px; cursor: pointer; font-size: .82rem; font-weight: 600; font-family: inherit; }
+    .btn-success { background: #198754; color: #fff; }
+    .btn-primary { background: #0d6efd; color: #fff; }
+    .btn-danger { background: #dc3545; color: #fff; }
+    .filter-row { display: flex; gap: .7rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
+    .filter-row select, .filter-row input { padding: .4rem .8rem; border: 1.5px solid #dee2e6; border-radius: 8px; font-family: inherit; font-size: .9rem; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-overlay.visible { display: flex; }
+    .modal { background: #fff; border-radius: 12px; padding: 1.8rem; width: 100%; max-width: 480px; box-shadow: 0 8px 32px rgba(0,0,0,.2); }
+    .modal h3 { margin: 0 0 1.2rem; color: #1a2e4a; }
+    .modal .form-group { margin-bottom: 1rem; }
+    .modal .form-group label { display: block; font-weight: 600; margin-bottom: .4rem; }
+    .modal .form-group textarea, .modal .form-group select, .modal .form-group input { width: 100%; padding: .6rem .9rem; border: 1.5px solid #dee2e6; border-radius: 8px; font-family: inherit; font-size: .9rem; box-sizing: border-box; }
+    .modal .form-group textarea { min-height: 100px; resize: vertical; }
+    .modal .btn-row { display: flex; gap: .7rem; justify-content: flex-start; margin-top: 1rem; }
+    .alert { padding: .6rem 1rem; border-radius: 8px; margin-top: .6rem; font-size: .88rem; }
+    .alert-danger { background: #f8d7da; color: #842029; }
+    .alert-success { background: #d1e7dd; color: #0f5132; }
+    .hidden { display: none; }
+    .btn-logout { background: none; border: 1px solid rgba(255,255,255,.4); color: rgba(255,255,255,.8); padding: .5rem 1rem; border-radius: 6px; cursor: pointer; margin: 1rem 1.5rem 0; width: calc(100% - 3rem); font-family: inherit; }
+  </style>
+</head>
+<body>
+  <header class="ahli-navbar">
+    <a href="index.html" class="brand"><i class="fas fa-hospital-alt"></i> المستشفى الأهلي</a>
+    <nav class="nav-links">
+      <span id="nav-user" style="color:#fff;font-weight:600"></span>
+    </nav>
+  </header>
+
+  <div class="dash-layout">
+    <aside class="sidebar">
+      <div class="user-info">
+        <div class="avatar"><i class="fas fa-flask"></i></div>
+        <h3 id="sidebar-name">جاري التحميل...</h3>
+      </div>
+      <nav>
+        <a href="#" class="active" data-tab="tests" onclick="showTab('tests',this)"><i class="fas fa-vials"></i> الفحوصات</a>
+        <a href="#" data-tab="add" onclick="showTab('add',this)"><i class="fas fa-plus-circle"></i> إضافة فحص</a>
+      </nav>
+      <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+    </aside>
+
+    <main class="main-content">
+      <!-- Tests Tab -->
+      <div id="tab-tests" class="tab-content">
+        <div class="page-title"><i class="fas fa-vials" style="color:#198754"></i> قائمة الفحوصات</div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="num" id="cnt-total">-</div><div class="lbl">إجمالي الفحوصات</div></div>
+          <div class="stat-card"><div class="num" id="cnt-pending" style="color:#664d03">-</div><div class="lbl">قيد الانتظار</div></div>
+          <div class="stat-card"><div class="num" id="cnt-ready" style="color:#0f5132">-</div><div class="lbl">جاهزة</div></div>
+        </div>
+        <div class="section-card">
+          <div class="filter-row">
+            <select id="filter-status" onchange="loadTests()">
+              <option value="">كل الحالات</option>
+              <option value="Pending">قيد الانتظار</option>
+              <option value="Ready">جاهز</option>
+            </select>
+            <input type="text" id="filter-search" placeholder="بحث بالاسم..." oninput="filterTable()">
+            <button class="btn btn-primary" onclick="loadTests()"><i class="fas fa-sync"></i> تحديث</button>
+          </div>
+          <table>
+            <thead><tr><th>#</th><th>المريض</th><th>الهاتف</th><th>الفحص</th><th>التاريخ</th><th>الطبيب</th><th>الحالة</th><th>النتيجة</th><th>إجراء</th></tr></thead>
+            <tbody id="tests-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Add Test Tab -->
+      <div id="tab-add" class="tab-content hidden">
+        <div class="page-title"><i class="fas fa-plus-circle" style="color:#198754"></i> إضافة فحص جديد</div>
+        <div class="section-card" style="max-width:520px">
+          <div class="form-group">
+            <label>المريض <span style="color:red">*</span></label>
+            <select id="add-patient">
+              <option value="">-- اختر المريض --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>اسم الفحص <span style="color:red">*</span></label>
+            <input type="text" id="add-test-name" placeholder="مثال: صورة دم كاملة، تحليل بول...">
+          </div>
+          <div class="form-group">
+            <label>الطبيب الطالب</label>
+            <select id="add-doctor">
+              <option value="">-- اختياري --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>تاريخ الفحص</label>
+            <input type="date" id="add-date">
+          </div>
+          <button class="btn btn-success" onclick="addTest()"><i class="fas fa-save"></i> إضافة الفحص</button>
+          <div id="add-msg" class="alert hidden"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal: إدخال النتيجة -->
+  <div class="modal-overlay" id="result-modal">
+    <div class="modal">
+      <h3><i class="fas fa-edit" style="color:#198754"></i> إدخال نتيجة الفحص</h3>
+      <p id="modal-test-info" style="color:#6c757d;font-size:.9rem;margin-bottom:1rem"></p>
+      <div class="form-group">
+        <label>نص النتيجة <span style="color:red">*</span></label>
+        <textarea id="modal-result" placeholder="اكتب نتيجة الفحص هنا..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>الحالة</label>
+        <select id="modal-status">
+          <option value="Ready">جاهز (Ready)</option>
+          <option value="Pending">قيد الانتظار (Pending)</option>
+        </select>
+      </div>
+      <div id="modal-msg" class="alert hidden"></div>
+      <div class="btn-row">
+        <button class="btn btn-success" onclick="submitResult()"><i class="fas fa-save"></i> حفظ النتيجة</button>
+        <button class="btn" style="background:#6c757d;color:#fff" onclick="closeModal()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const BASE = (location.pathname.match(/^(\/[^/]+\/)/) || [,''])[1] + 'public';
+    let allTests = [], editId = null;
+
+    async function init() {
+      try {
+        const res  = await fetch(BASE + '/api/lab/me', {credentials:'include'});
+        const data = await res.json();
+        if (!data.success) { location.href = 'lab-login.html'; return; }
+        document.getElementById('sidebar-name').textContent = data.data.full_name;
+        document.getElementById('nav-user').textContent = data.data.full_name + ' - المختبر';
+        document.getElementById('add-date').value = new Date().toISOString().slice(0,10);
+        await Promise.all([loadTests(), loadPatients(), loadDoctors()]);
+      } catch { location.href = 'lab-login.html'; }
+    }
+
+    async function loadTests() {
+      const status = document.getElementById('filter-status').value;
+      let url = BASE + '/api/lab/tests';
+      if (status) url += '?status=' + status;
+      const res  = await fetch(url, {credentials:'include'});
+      const data = await res.json();
+      if (!data.success) return;
+      allTests = data.data || [];
+      renderTests(allTests);
+      buildStats();
+    }
+
+    function renderTests(rows) {
+      const tbody = document.getElementById('tests-tbody');
+      if (!rows.length) { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:1.5rem;color:#6c757d">لا توجد فحوصات</td></tr>'; return; }
+      tbody.innerHTML = rows.map(t => `
+        <tr>
+          <td>${t.lab_test_id}</td>
+          <td><strong>${t.patient_name}</strong><br><small>${t.patient_email || ''}</small></td>
+          <td>${t.patient_phone || '-'}</td>
+          <td>${t.test_name}</td>
+          <td>${t.test_date || '-'}</td>
+          <td>${t.doctor_name || '-'}</td>
+          <td>${t.status === 'Ready' ? '<span class="badge badge-ready">جاهز</span>' : '<span class="badge badge-pending">انتظار</span>'}</td>
+          <td style="max-width:150px;word-break:break-word">${t.result_text || '<em style="color:#aaa">لا يوجد</em>'}</td>
+          <td><button class="btn btn-success" onclick="openModal(${t.lab_test_id},'${t.test_name.replace(/'/g,"\\'")}','${t.patient_name.replace(/'/g,"\\'")}')"><i class="fas fa-edit"></i> نتيجة</button></td>
+        </tr>`).join('');
+    }
+
+    function filterTable() {
+      const q = document.getElementById('filter-search').value.trim().toLowerCase();
+      if (!q) { renderTests(allTests); return; }
+      renderTests(allTests.filter(t => t.patient_name?.toLowerCase().includes(q) || t.test_name?.toLowerCase().includes(q)));
+    }
+
+    function buildStats() {
+      document.getElementById('cnt-total').textContent   = allTests.length;
+      document.getElementById('cnt-pending').textContent = allTests.filter(t => t.status === 'Pending').length;
+      document.getElementById('cnt-ready').textContent   = allTests.filter(t => t.status === 'Ready').length;
+    }
+
+    async function loadPatients() {
+      const res  = await fetch(BASE + '/api/patients', {credentials:'include'});
+      const data = await res.json();
+      if (!data.success) return;
+      const sel = document.getElementById('add-patient');
+      data.data.forEach(p => { const o = document.createElement('option'); o.value = p.patient_id; o.textContent = p.full_name + (p.phone ? ' - ' + p.phone : ''); sel.appendChild(o); });
+    }
+
+    async function loadDoctors() {
+      const res  = await fetch(BASE + '/api/doctors', {credentials:'include'});
+      const data = await res.json();
+      if (!data.success) return;
+      const sel = document.getElementById('add-doctor');
+      data.data.forEach(d => { const o = document.createElement('option'); o.value = d.doctor_id; o.textContent = d.full_name; sel.appendChild(o); });
+    }
+
+    async function addTest() {
+      const patientId = document.getElementById('add-patient').value;
+      const testName  = document.getElementById('add-test-name').value.trim();
+      const doctorId  = document.getElementById('add-doctor').value;
+      const date      = document.getElementById('add-date').value;
+      const msg       = document.getElementById('add-msg');
+
+      if (!patientId || !testName) {
+        msg.className = 'alert alert-danger'; msg.textContent = 'المريض واسم الفحص مطلوبان'; msg.classList.remove('hidden'); return;
+      }
+
+      const res  = await fetch(BASE + '/api/lab/tests', {
+        method: 'POST', credentials: 'include',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({patient_id: +patientId, test_name: testName, ordered_by_doctor_id: doctorId || null, test_date: date})
+      });
+      const data = await res.json();
+      msg.className = data.success ? 'alert alert-success' : 'alert alert-danger';
+      msg.textContent = data.message;
+      msg.classList.remove('hidden');
+      if (data.success) {
+        document.getElementById('add-test-name').value = '';
+        document.getElementById('add-patient').value = '';
+        document.getElementById('add-doctor').value = '';
+        loadTests();
+      }
+    }
+
+    function openModal(id, testName, patientName) {
+      editId = id;
+      document.getElementById('modal-test-info').textContent = 'المريض: ' + patientName + ' | الفحص: ' + testName;
+      document.getElementById('modal-result').value = '';
+      document.getElementById('modal-status').value = 'Ready';
+      document.getElementById('modal-msg').classList.add('hidden');
+      document.getElementById('result-modal').classList.add('visible');
+    }
+
+    function closeModal() {
+      document.getElementById('result-modal').classList.remove('visible');
+      editId = null;
+    }
+
+    async function submitResult() {
+      const result = document.getElementById('modal-result').value.trim();
+      const status = document.getElementById('modal-status').value;
+      const msg    = document.getElementById('modal-msg');
+
+      if (!result) { msg.className = 'alert alert-danger'; msg.textContent = 'نص النتيجة مطلوب'; msg.classList.remove('hidden'); return; }
+
+      const res  = await fetch(BASE + '/api/lab/tests/' + editId, {
+        method: 'PUT', credentials: 'include',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({result_text: result, status})
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        closeModal();
+        loadTests();
+        const info = data.data?.patient_email ? ' — تم إرسال إيميل للمريض' : '';
+        alert('تم حفظ النتيجة بنجاح' + info);
+      } else {
+        msg.className = 'alert alert-danger'; msg.textContent = data.message; msg.classList.remove('hidden');
+      }
+    }
+
+    function showTab(tab, el) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+      document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.remove('hidden');
+      el.classList.add('active');
+      return false;
+    }
+
+    async function logout() {
+      await fetch(BASE + '/api/lab/logout', {method:'POST', credentials:'include'});
+      location.href = 'lab-login.html';
+    }
+
+    document.getElementById('result-modal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
+
+    init();
+  </script>
+</body>
+</html>

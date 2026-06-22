@@ -29,6 +29,7 @@ class DoctorRepository
                    d.specialty,
                    d.phone,
                    d.email,
+                   d.photo_url,
                    d.department_id,
                    dep.name AS department_name
             FROM   Doctor d

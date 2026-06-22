@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>من نحن — المستشفى الأهلي</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link href="../public/assets/css/chatbot.css" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--navy:#002b5b;--blue:#0062a7;--blue2:#1a7bbf;--orange:#e87a1e;--white:#ffffff;--light:#f0f6ff;--gray:#f5f7fa;--text:#2c3e50;--muted:#6b7a8d;--border:#dde8f0;--radius:12px}
+    body{font-family:'Cairo',sans-serif;background:var(--white);color:var(--text);direction:rtl}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+    .topbar{background:var(--navy);color:rgba(255,255,255,.85);font-size:13px;padding:7px 0}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+    .topbar .tb-info{display:flex;gap:20px;align-items:center}
+    .topbar .tb-info span{display:flex;align-items:center;gap:6px}
+    .topbar .tb-info i{color:var(--orange)}
+    .topbar .tb-social{display:flex;gap:10px}
+    .topbar .tb-social a{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;transition:background .2s}
+    .topbar .tb-social a:hover{background:var(--orange)}
+
+    .site-header{background:var(--white);padding:14px 0;border-bottom:2px solid var(--border)}
+    .site-header .inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .site-logo{display:flex;align-items:center;gap:14px}
+    .logo-icon{width:60px;height:60px;background:linear-gradient(135deg,var(--blue),var(--navy));border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;flex-shrink:0}
+    .logo-text h1{font-size:22px;font-weight:900;color:var(--navy);line-height:1.2}
+    .logo-text p{font-size:12px;color:var(--muted);margin-top:2px}
+    .header-contact{display:flex;gap:18px}
+    .hc-item{display:flex;align-items:center;gap:8px}
+    .hc-icon{width:38px;height:38px;border-radius:50%;background:var(--light);display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:14px;flex-shrink:0}
+    .hc-text p:first-child{font-size:11px;color:var(--muted)}
+    .hc-text p:last-child{font-size:13px;font-weight:700;color:var(--navy);direction:ltr}
+
+    .main-nav{background:var(--blue);position:sticky;top:0;z-index:1000;box-shadow:0 3px 12px rgba(0,98,167,.35)}
+    .main-nav .inner{display:flex;align-items:center;justify-content:space-between}
+    .nav-links{display:flex;list-style:none}
+    .nav-links li a{display:block;padding:15px 18px;color:rgba(255,255,255,.88);font-size:14px;font-weight:600;transition:background .2s,color .2s;white-space:nowrap;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+    .nav-links li a:hover,.nav-links li a.active{background:rgba(255,255,255,.15);color:#fff}
+    .nav-links li a.active{border-bottom:3px solid var(--orange)}
+    .nav-btn{background:var(--orange);color:#fff !important;border-radius:6px;padding:8px 18px !important;margin:8px 0;font-weight:700 !important;transition:background .2s !important}
+    .nav-btn:hover{background:#d06a10 !important}
+
+    .page-hero{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);padding:60px 0;color:#fff;text-align:center}
+    .page-hero h2{font-size:38px;font-weight:900;margin-bottom:12px}
+    .page-hero p{font-size:16px;color:rgba(255,255,255,.8);max-width:600px;margin:0 auto}
+    .breadcrumb{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,.7)}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb i{font-size:10px}
+
+    .section{padding:60px 0}
+    .section.gray{background:var(--gray)}
+    .section-hd{text-align:center;margin-bottom:40px}
+    .section-hd .tag{display:inline-block;background:var(--light);color:var(--blue);font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;margin-bottom:10px}
+    .section-hd h2{font-size:28px;font-weight:900;color:var(--navy);margin-bottom:10px}
+    .section-hd p{font-size:14px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7}
+    .line{width:60px;height:4px;background:var(--orange);border-radius:2px;margin:14px auto 0}
+
+    /* إحصائيات */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:40px}
+    .stat-box{background:var(--white);border-radius:var(--radius);padding:30px 20px;text-align:center;box-shadow:0 4px 20px rgba(0,43,91,.08);border-top:4px solid var(--orange)}
+    .stat-box .num{font-size:38px;font-weight:900;color:var(--navy)}
+    .stat-box .lbl{font-size:13px;color:var(--muted);margin-top:6px}
+    .stat-box .ico{font-size:28px;color:var(--blue);margin-bottom:12px}
+
+    /* نبذة */
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+    .about-img{border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,43,91,.15)}
+    .about-img img{width:100%;height:360px;object-fit:cover}
+    .about-img-placeholder{width:100%;height:360px;background:linear-gradient(135deg,var(--navy),var(--blue));display:flex;align-items:center;justify-content:center;font-size:80px;color:rgba(255,255,255,.3)}
+    .about-text h3{font-size:24px;font-weight:900;color:var(--navy);margin-bottom:16px}
+    .about-text p{font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:14px}
+    .about-badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+    .badge{display:flex;align-items:center;gap:8px;background:var(--light);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--blue)}
+    .badge i{color:var(--orange)}
+
+    /* رسالة المدير */
+    .director-card{background:var(--white);border-radius:20px;padding:40px;box-shadow:0 4px 24px rgba(0,43,91,.08);border-right:6px solid var(--orange)}
+    .director-card blockquote{font-size:16px;color:var(--text);line-height:2;font-style:italic;margin-bottom:20px}
+    .director-name{display:flex;align-items:center;gap:14px}
+    .director-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--navy));display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px}
+    .director-name h4{font-size:16px;font-weight:700;color:var(--navy)}
+    .director-name p{font-size:12px;color:var(--muted)}
+
+    /* الرؤية والرسالة */
+    .vm-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+    .vm-card{border-radius:var(--radius);padding:30px;text-align:center}
+    .vm-card.vision{background:linear-gradient(135deg,#e8f4fb,#d0e8f5)}
+    .vm-card.mission{background:linear-gradient(135deg,#fff3e0,#fde8c8)}
+    .vm-card.values{background:linear-gradient(135deg,#e8f5e9,#c8e6c9)}
+    .vm-card .ico{font-size:36px;margin-bottom:14px}
+    .vm-card.vision .ico{color:var(--blue)}
+    .vm-card.mission .ico{color:var(--orange)}
+    .vm-card.values .ico{color:#27ae60}
+    .vm-card h3{font-size:18px;font-weight:900;color:var(--navy);margin-bottom:12px}
+    .vm-card p{font-size:13px;color:var(--muted);line-height:1.8}
+
+    /* تاريخ */
+    .timeline{position:relative;padding-right:30px}
+    .timeline::before{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;background:var(--border)}
+    .tl-item{position:relative;padding:0 30px 36px 0}
+    .tl-dot{position:absolute;right:-11px;top:4px;width:22px;height:22px;border-radius:50%;background:var(--orange);border:3px solid var(--white);box-shadow:0 0 0 3px var(--orange)}
+    .tl-year{font-size:13px;font-weight:700;color:var(--orange);margin-bottom:4px}
+    .tl-title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px}
+    .tl-text{font-size:13px;color:var(--muted);line-height:1.7}
+
+    /* فوتر */
+    .site-footer{background:var(--navy);color:rgba(255,255,255,.8);padding:50px 0 0}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+    .footer-brand .logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:900;color:#fff;margin-bottom:14px}
+    .footer-brand .logo i{color:var(--orange)}
+    .footer-brand p{font-size:13px;line-height:1.8;color:rgba(255,255,255,.65)}
+    .socials{display:flex;gap:10px;margin-top:16px}
+    .socials a{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;transition:background .2s}
+    .socials a:hover{background:var(--orange)}
+    .footer-col h4{font-size:14px;font-weight:700;color:#fff;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid rgba(255,255,255,.1)}
+    .footer-col ul{list-style:none}
+    .footer-col ul li{margin-bottom:8px}
+    .footer-col ul li a{font-size:13px;color:rgba(255,255,255,.65);transition:color .2s}
+    .footer-col ul li a:hover{color:var(--orange)}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:18px 0;text-align:center;font-size:12px;color:rgba(255,255,255,.5)}
+
+    @media(max-width:768px){
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .about-grid{grid-template-columns:1fr}
+      .vm-grid{grid-template-columns:1fr}
+      .footer-grid{grid-template-columns:1fr 1fr}
+      .header-contact{display:none}
+      .nav-links li a{padding:15px 12px;font-size:13px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- شريط علوي -->
+<div class="topbar">
+  <div class="container inner">
+    <div class="tb-info">
+      <span><i class="fas fa-phone"></i> +970-2-2229247</span>
+      <span><i class="fas fa-calendar-check"></i> حجز: 1700200400</span>
+      <span><i class="fas fa-envelope"></i> info@ahli.org</span>
+    </div>
+    <div class="tb-social">
+      <a href="https://www.facebook.com/AlAhliHospital" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+</div>
+
+<!-- رأس الصفحة -->
+<header class="site-header">
+  <div class="container inner">
+    <a href="index.html" class="site-logo">
+      <div class="logo-icon"><i class="fas fa-hospital-alt"></i></div>
+      <div class="logo-text">
+        <h1>المستشفى الأهلي</h1>
+        <p>Al-Ahli Hospital | الخليل، فلسطين</p>
+      </div>
+    </a>
+    <div class="header-contact">
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-phone-alt"></i></div>
+        <div class="hc-text"><p>هاتف المستشفى</p><p>+970-2-2229247</p></div>
+      </div>
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-calendar-alt"></i></div>
+        <div class="hc-text"><p>حجز العيادات</p><p>1700200400</p></div>
+      </div>
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-clock"></i></div>
+        <div class="hc-text"><p>الطوارئ</p><p>24 ساعة / 7 أيام</p></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ناف -->
+<nav class="main-nav">
+  <div class="container inner">
+    <ul class="nav-links">
+      <li><a href="index.html">الرئيسية</a></li>
+      <li><a href="about.html" class="active">من نحن</a></li>
+      <li><a href="departments.html">الأقسام والوحدات الطبية</a></li>
+      <li><a href="doctors.html">الأطباء</a></li>
+      <li><a href="news.html">الأخبار</a></li>
+      <li><a href="donations.html">المشاريع والتبرعات</a></li>
+      <li><a href="visitor.html">للزائر والمريض</a></li>
+      <li><a href="education.html">التعليم والتدريب</a></li>
+    </ul>
+    <a href="#" class="nav-btn" onclick="document.getElementById('ahli-chat-btn')?.click();return false;">
+      <i class="fas fa-comments"></i> المساعد الذكي
+    </a>
+  </div>
+</nav>
+
+<!-- هيرو الصفحة -->
+<div class="page-hero">
+  <h2><i class="fas fa-hospital-alt" style="color:var(--orange);margin-left:12px"></i>من نحن</h2>
+  <p>تعرّف على المستشفى الأهلي في الخليل — رحلة أربعة عقود من الرعاية والعطاء</p>
+  <div class="breadcrumb">
+    <a href="index.html">الرئيسية</a>
+    <i class="fas fa-chevron-left"></i>
+    <span>من نحن</span>
+  </div>
+</div>
+
+<!-- إحصائيات -->
+<section class="section" style="padding:50px 0">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="ico"><i class="fas fa-bed"></i></div>
+        <div class="num">304</div>
+        <div class="lbl">سرير طبي</div>
+      </div>
+      <div class="stat-box">
+        <div class="ico"><i class="fas fa-users"></i></div>
+        <div class="num">1,054</div>
+        <div class="lbl">موظف وموظفة</div>
+      </div>
+      <div class="stat-box">
+        <div class="ico"><i class="fas fa-user-injured"></i></div>
+        <div class="num">160,000</div>
+        <div class="lbl">مريض سنوياً</div>
+      </div>
+      <div class="stat-box">
+        <div class="ico"><i class="fas fa-building"></i></div>
+        <div class="num">21</div>
+        <div class="lbl">قسم طبي متخصص</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- نبذة عن المستشفى -->
+<section class="section gray">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img">
+        <img src="https://ahli.org/images/%D8%A7%D9%84%D9%85%D8%B3%D8%B4%D8%AA%D9%81%D9%89%20%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%8A.webp"
+             alt="المستشفى الأهلي"
+             onerror="this.parentElement.innerHTML='<div class=\'about-img-placeholder\'><i class=\'fas fa-hospital-alt\'></i></div>'">
+      </div>
+      <div class="about-text">
+        <div class="section-hd" style="text-align:right;margin-bottom:24px">
+          <div class="tag">المستشفى الأهلي</div>
+          <h2 style="text-align:right">صرح صحي راسخ منذ 1976</h2>
+        </div>
+        <p>تأسست جمعية أصدقاء المريض في الخليل عام <strong>1976</strong> كجمعية خيرية غير ربحية، هدفها الاستراتيجي رفع مستوى الخدمات الصحية في محافظة الخليل بشكل خاص وفلسطين بشكل عام.</p>
+        <p>بدأ بناء المستشفى عام <strong>1988</strong> على مساحة 27,500 متر مربع، وافتُتح عام <strong>1993</strong> بأربعة أقسام رئيسية: الطوارئ، الجراحة، النسائية والتوليد، والأمراض الباطنية.</p>
+        <p>توسّع المستشفى ليتجاوز اليوم <strong>38,000 متر مربع</strong>، ويضم 304 سريراً، ويقدم خدماته لأكثر من 160,000 مريض سنوياً من محافظة الخليل وفلسطين عموماً.</p>
+        <div class="about-badges">
+          <div class="badge"><i class="fas fa-award"></i> مستشفى تعليمي معتمد</div>
+          <div class="badge"><i class="fas fa-certificate"></i> اعتماد دولي</div>
+          <div class="badge"><i class="fas fa-heartbeat"></i> رعاية متكاملة</div>
+          <div class="badge"><i class="fas fa-graduation-cap"></i> 13 تخصصاً طبياً</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- الرؤية والرسالة والقيم -->
+<section class="section">
+  <div class="container">
+    <div class="section-hd">
+      <div class="tag">هويتنا</div>
+      <h2>رؤيتنا ورسالتنا وقيمنا</h2>
+      <div class="line"></div>
+    </div>
+    <div class="vm-grid">
+      <div class="vm-card vision">
+        <div class="ico"><i class="fas fa-eye"></i></div>
+        <h3>رؤيتنا</h3>
+        <p>أن نكون المستشفى الأهلي المرجع في فلسطين بتقديم خدمات صحية متكاملة وفق أعلى المعايير الدولية، ولنكون نموذجاً يُحتذى به في جودة الرعاية الصحية.</p>
+      </div>
+      <div class="vm-card mission">
+        <div class="ico"><i class="fas fa-bullseye"></i></div>
+        <h3>رسالتنا</h3>
+        <p>رفع مستوى الخدمات الصحية في محافظة الخليل وفلسطين من خلال تقديم رعاية طبية متميزة، وتطوير الكوادر البشرية، وتعزيز البحث العلمي الطبي.</p>
+      </div>
+      <div class="vm-card values">
+        <div class="ico"><i class="fas fa-star"></i></div>
+        <h3>قيمنا</h3>
+        <p>الجودة والتميز في الخدمة، والشفافية والنزاهة، والاحترام والكرامة الإنسانية، والتطوير المستمر، والمسؤولية الاجتماعية تجاه أبناء المجتمع.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- كلمة المدير العام -->
+<section class="section gray">
+  <div class="container">
+    <div class="section-hd">
+      <div class="tag">قيادة المستشفى</div>
+      <h2>كلمة المدير العام</h2>
+      <div class="line"></div>
+    </div>
+    <div style="max-width:800px;margin:0 auto">
+      <div class="director-card">
+        <blockquote>
+          "التميز لا يتحقق صدفة بل هو ثمرة رؤية واضحة وعمل جماعي دؤوب وإيمان راسخ بالقدرة على تحقيق النجاح. انطلاقاً من هذه القناعة، سعت مؤسستنا لتكون صرحاً طبياً متميزاً يقدم خدمات طبية وتعليمية وفق أعلى المعايير الدولية.<br><br>
+          رغم الأزمات التي مرّ بها الوطن من جائحة كورونا والظروف الاقتصادية والسياسية الصعبة، استمرت المؤسسة في البناء بثقة. قامت بتطوير البنية التحتية وتزويد الأقسام بأجهزة ومعدات طبية حديثة واستقطاب كفاءات علمية متميزة لتأسيس بيئة صحية آمنة.<br><br>
+          النجاح ليس حكراً على أحد؛ فهو لمن يثبت على الهدف ويقدم التضحيات. ما تحقق رغم التحديات يعكس ما يمكن إنجازه حين تتوفر الإرادة والعمل الجماعي المبني على الإيمان."
+        </blockquote>
+        <div class="director-name">
+          <div class="director-avatar"><i class="fas fa-user-tie"></i></div>
+          <div>
+            <h4>الدكتور يوسف التكروري</h4>
+            <p>المدير العام — المستشفى الأهلي</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- التاريخ -->
+<section class="section">
+  <div class="container">
+    <div class="section-hd">
+      <div class="tag">مسيرتنا</div>
+      <h2>محطات في تاريخ المستشفى</h2>
+      <div class="line"></div>
+    </div>
+    <div style="max-width:700px;margin:40px auto 0">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">1976</div>
+          <div class="tl-title">تأسيس جمعية أصدقاء المريض</div>
+          <div class="tl-text">تأسست الجمعية الخيرية غير الربحية في الخليل بهدف رفع مستوى الخدمات الصحية في المحافظة.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">1977</div>
+          <div class="tl-title">افتتاح المركز الطبي الأول</div>
+          <div class="tl-text">افتُتح المركز الطبي وسط مدينة الخليل بعيادات تخصصية ومختبر وقسم أشعة.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">1984</div>
+          <div class="tl-title">افتتاح مركز الطوارئ</div>
+          <div class="tl-text">توسعت خدمات الجمعية بافتتاح مركز طوارئ لخدمة أبناء المحافظة على مدار الساعة.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">1988</div>
+          <div class="tl-title">بداية بناء المستشفى</div>
+          <div class="tl-text">بدأ بناء المستشفى الأهلي على مساحة 27,500 متر مربع في منطقة فرش الهوى بالخليل.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">1993</div>
+          <div class="tl-title">افتتاح المستشفى الأهلي</div>
+          <div class="tl-text">افتُتح المستشفى رسمياً بأقسامه الأربعة الأولى: الطوارئ، الجراحة، النسائية والتوليد، والأمراض الباطنية.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2008</div>
+          <div class="tl-title">برنامج الإقامة التخصصي</div>
+          <div class="tl-text">انطلق برنامج الإقامة الطبية التخصصية بالتعاون مع المجلس الطبي الفلسطيني في 13 تخصصاً.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">اليوم</div>
+          <div class="tl-title">مستشفى متكامل ومتطور</div>
+          <div class="tl-text">يضم المستشفى اليوم 304 سريراً و21 قسماً طبياً و1,054 موظفاً، ويخدم أكثر من 160,000 مريض سنوياً.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- فوتر -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><i class="fas fa-hospital-alt"></i><span>المستشفى الأهلي</span></div>
+        <p>المستشفى الأهلي في الخليل — فلسطين. نقدم رعاية صحية شاملة بأعلى المعايير العالمية منذ عام 1976.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>روابط سريعة</h4>
+        <ul>
+          <li><a href="index.html">الرئيسية</a></li>
+          <li><a href="about.html">من نحن</a></li>
+          <li><a href="departments.html">الأقسام الطبية</a></li>
+          <li><a href="doctors.html">الأطباء</a></li>
+          <li><a href="news.html">الأخبار</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>خدماتنا</h4>
+        <ul>
+          <li><a href="#" onclick="document.getElementById('ahli-chat-btn')?.click();return false;">حجز موعد</a></li>
+          <li><a href="donations.html">التبرعات</a></li>
+          <li><a href="education.html">التعليم والتدريب</a></li>
+          <li><a href="lab-login.html">المختبر</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>تواصل معنا</h4>
+        <ul>
+          <li><a href="tel:+97022229247"><i class="fas fa-phone" style="margin-left:6px;color:var(--orange)"></i>+970-2-2229247</a></li>
+          <li><a href="mailto:info@ahli.org"><i class="fas fa-envelope" style="margin-left:6px;color:var(--orange)"></i>info@ahli.org</a></li>
+          <li><a href="#"><i class="fas fa-map-marker-alt" style="margin-left:6px;color:var(--orange)"></i>الخليل، فرش الهوى</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 المستشفى الأهلي — الخليل، فلسطين. جميع الحقوق محفوظة.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const API_BASE = (() => {
+  const m = location.pathname.match(/^(\/[^/]+\/)/);
+  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/hospital-chatbot/public';
+})();
+</script>
+<script src="../public/assets/js/chatbot.js?v=20260518-no-auth"></script>
+</body>
+</html>

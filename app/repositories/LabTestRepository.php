@@ -101,4 +101,32 @@ class LabTestRepository
 
         return array_map(fn(array $row) => new LabTest($row), $stmt->fetchAll());
     }
+
+    /**
+     * Search a patient's tests by name, with optional status filtering.
+     *
+     * @return LabTest[]
+     */
+    public function searchByPatientId(int $patientId, string $query, ?string $status = null): array
+    {
+        $where = ' WHERE lt.patient_id = :patient_id';
+        $params = [':patient_id' => $patientId];
+
+        $query = trim($query);
+        if ($query !== '') {
+            $where .= ' AND (LOWER(lt.test_name) LIKE :query_name OR LOWER(COALESCE(lt.result_text, \'\')) LIKE :query_result)';
+            $params[':query_name'] = '%' . mb_strtolower($query, 'UTF-8') . '%';
+            $params[':query_result'] = '%' . mb_strtolower($query, 'UTF-8') . '%';
+        }
+
+        if ($status !== null) {
+            $where .= ' AND lt.status = :status';
+            $params[':status'] = $status;
+        }
+
+        $stmt = $this->pdo->prepare($this->baseSelect() . $where . ' ORDER BY lt.test_date DESC');
+        $stmt->execute($params);
+
+        return array_map(fn(array $row) => new LabTest($row), $stmt->fetchAll());
+    }
 }

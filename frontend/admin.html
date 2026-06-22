@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة الإدارة - المستشفى الأهلي</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="../public/assets/css/main.css" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box}
+    body{background:#f0f4f8;margin:0}
+    .layout{display:flex;min-height:calc(100vh - 70px)}
+    /* Sidebar */
+    .sidebar{width:230px;background:#1a2e4a;color:#fff;flex-shrink:0;display:flex;flex-direction:column}
+    .sidebar .admin-info{text-align:center;padding:1.2rem 1rem;border-bottom:1px solid rgba(255,255,255,.15)}
+    .sidebar .admin-info .av{width:60px;height:60px;background:#6f42c1;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .6rem;font-size:1.6rem}
+    .sidebar .admin-info h3{margin:0 0 .2rem;font-size:.9rem}
+    .sidebar .admin-info p{margin:0;font-size:.75rem;color:#aab;background:#6f42c166;border-radius:20px;padding:.15rem .5rem;display:inline-block}
+    .sidebar nav{flex:1;padding-top:.5rem}
+    .sidebar nav a{display:flex;align-items:center;gap:.5rem;padding:.65rem 1.2rem;color:rgba(255,255,255,.8);text-decoration:none;font-size:.88rem;transition:all .2s;cursor:pointer}
+    .sidebar nav a:hover,.sidebar nav a.active{background:rgba(255,255,255,.12);color:#fff;border-right:3px solid #6f42c1}
+    .sidebar nav a i{width:16px;text-align:center;font-size:.9rem}
+    .sidebar .nav-section{padding:.4rem 1.2rem .2rem;font-size:.72rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em;margin-top:.5rem}
+    .btn-logout{background:none;border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.7);padding:.45rem .9rem;border-radius:6px;cursor:pointer;margin:1rem;font-family:inherit;font-size:.85rem;width:calc(100% - 2rem)}
+    /* Main */
+    .main{flex:1;padding:1.5rem;overflow-y:auto;max-height:calc(100vh - 70px)}
+    .page-title{font-size:1.3rem;font-weight:700;color:#1a2e4a;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem}
+    /* Stats */
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.9rem;margin-bottom:1.5rem}
+    .stat{background:#fff;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+    .stat .n{font-size:1.8rem;font-weight:700}
+    .stat .l{font-size:.78rem;color:#6c757d;margin-top:.2rem}
+    /* Cards & Tables */
+    .card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.07);padding:1.2rem;margin-bottom:1.2rem}
+    .card h2{font-size:1rem;color:#1a2e4a;margin:0 0 .9rem;border-bottom:2px solid #e9ecef;padding-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+    table{width:100%;border-collapse:collapse;font-size:.85rem}
+    th{background:#f8f9fa;padding:.55rem .7rem;text-align:right;color:#495057;font-weight:600;white-space:nowrap}
+    td{padding:.55rem .7rem;border-bottom:1px solid #f0f0f0;color:#333;vertical-align:middle}
+    tr:hover td{background:#fafafa}
+    .badge{padding:.18rem .5rem;border-radius:20px;font-size:.74rem;font-weight:600}
+    .b-blue{background:#cfe2ff;color:#084298}
+    .b-green{background:#d1e7dd;color:#0f5132}
+    .b-red{background:#f8d7da;color:#842029}
+    .b-yellow{background:#fff3cd;color:#664d03}
+    .b-purple{background:#e2d9f3;color:#3d1a78}
+    /* Buttons */
+    .btn{padding:.28rem .6rem;border:none;border-radius:5px;cursor:pointer;font-size:.8rem;font-weight:600;font-family:inherit}
+    .btn-p{background:#0d6efd;color:#fff}.btn-p:hover{background:#0b5ed7}
+    .btn-s{background:#198754;color:#fff}.btn-s:hover{background:#157347}
+    .btn-d{background:#dc3545;color:#fff}.btn-d:hover{background:#bb2d3b}
+    .btn-w{background:#ffc107;color:#000}.btn-w:hover{background:#e0a800}
+    .btn-g{background:#6c757d;color:#fff}
+    .btn-lg{padding:.45rem 1rem;font-size:.9rem}
+    /* Filters */
+    .filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.9rem;align-items:center}
+    .filters input,.filters select{padding:.37rem .7rem;border:1.5px solid #dee2e6;border-radius:7px;font-family:inherit;font-size:.85rem}
+    /* Modal */
+    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;padding:1rem}
+    .modal-bg.on{display:flex}
+    .modal{background:#fff;border-radius:14px;padding:1.6rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.25)}
+    .modal h3{margin:0 0 1.1rem;color:#1a2e4a;font-size:1.1rem}
+    .fg{margin-bottom:.9rem}
+    .fg label{display:block;font-weight:600;margin-bottom:.35rem;font-size:.88rem}
+    .fg input,.fg select,.fg textarea{width:100%;padding:.55rem .8rem;border:1.5px solid #dee2e6;border-radius:8px;font-family:inherit;font-size:.88rem}
+    .fg textarea{min-height:80px;resize:vertical}
+    .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:#6f42c1}
+    .mrow{display:flex;gap:.6rem;margin-top:1rem;justify-content:flex-end}
+    .alert{padding:.5rem .9rem;border-radius:7px;font-size:.85rem;margin-top:.6rem}
+    .a-d{background:#f8d7da;color:#842029}
+    .a-s{background:#d1e7dd;color:#0f5132}
+    .hidden{display:none}
+    .tab-content{display:none}
+    .tab-content.active{display:block}
+    /* Feature Cards */
+    .feature-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem;margin-top:1.2rem}
+    .fc{background:#fff;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.1);overflow:hidden;display:flex;flex-direction:column}
+    .fc-head{padding:1.3rem 1.2rem;display:flex;align-items:center;justify-content:space-between;color:#fff}
+    .fc-head-text .fc-title{font-size:1.15rem;font-weight:700;margin:0 0 .2rem}
+    .fc-head-text .fc-sub{font-size:.78rem;opacity:.85;margin:0}
+    .fc-head-icon{width:52px;height:52px;background:rgba(255,255,255,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+    .fc-body{padding:1rem 1.2rem;flex:1}
+    .fc-desc{font-size:.87rem;color:#555;margin:0 0 .9rem;line-height:1.6}
+    .fc-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.45rem}
+    .fc-list li{font-size:.84rem;color:#333;display:flex;align-items:center;gap:.5rem}
+    .fc-list li::before{content:'✔';color:#198754;font-weight:700;font-size:.8rem;flex-shrink:0}
+    .fc-foot{padding:.9rem 1.2rem;border-top:1px solid #f0f0f0}
+    .fc-btn{width:100%;padding:.55rem 1rem;border:none;border-radius:8px;color:#fff;font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:opacity .2s}
+    .fc-btn:hover{opacity:.88}
+    .fc-green .fc-head{background:linear-gradient(135deg,#1a7a5e,#2ca87f)}
+    .fc-green .fc-btn{background:linear-gradient(135deg,#1a7a5e,#2ca87f)}
+    .fc-navy  .fc-head{background:linear-gradient(135deg,#1a2e4a,#2d4d7a)}
+    .fc-navy  .fc-btn{background:linear-gradient(135deg,#1a2e4a,#2d4d7a)}
+    .fc-orange .fc-head{background:linear-gradient(135deg,#d4620a,#f07c1a)}
+    .fc-orange .fc-btn{background:linear-gradient(135deg,#d4620a,#f07c1a)}
+  </style>
+</head>
+<body>
+<header class="ahli-navbar">
+  <a href="index.html" class="brand"><i class="fas fa-hospital-alt"></i> المستشفى الأهلي</a>
+  <nav class="nav-links"><span id="nav-admin" style="color:#fff;font-weight:600"></span></nav>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="admin-info">
+      <div class="av"><i class="fas fa-user-shield"></i></div>
+      <h3 id="s-name">جاري...</h3>
+      <p id="s-role"></p>
+    </div>
+    <nav>
+      <a class="active" onclick="go('overview')"><i class="fas fa-tachometer-alt"></i> الرئيسية</a>
+      <div class="nav-section">الموارد البشرية</div>
+      <a onclick="go('doctors')"><i class="fas fa-user-md"></i> الأطباء</a>
+      <a onclick="go('patients')"><i class="fas fa-users"></i> المرضى</a>
+      <a onclick="go('departments')"><i class="fas fa-building"></i> الأقسام</a>
+      <div class="nav-section">العمليات</div>
+      <a onclick="go('appointments')"><i class="fas fa-calendar-check"></i> المواعيد</a>
+      <a href="appointments.html" style="padding-right:2rem;font-size:.82rem;opacity:.75"><i class="fas fa-external-link-alt"></i> صفحة المواعيد الكاملة</a>
+      <a onclick="go('lab')"><i class="fas fa-vials"></i> المختبر</a>
+      <a onclick="go('invoices')"><i class="fas fa-file-invoice-dollar"></i> الفواتير</a>
+      <div class="nav-section">أخرى</div>
+      <a href="admin-stats.html"><i class="fas fa-chart-bar"></i> الإحصائيات</a>
+      <a onclick="go('feedback')"><i class="fas fa-comments"></i> الملاحظات</a>
+      <a onclick="go('labusers')"><i class="fas fa-flask"></i> مستخدمو المختبر</a>
+      <a onclick="go('news')"><i class="fas fa-newspaper"></i> الأخبار</a>
+    </nav>
+    <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+  </aside>
+
+  <main class="main">
+    <!-- OVERVIEW -->
+    <div class="tab-content active" id="tab-overview">
+      <div class="page-title"><i class="fas fa-tachometer-alt" style="color:#6f42c1"></i> لوحة الإدارة الرئيسية</div>
+      <div class="stats-grid">
+        <div class="stat"><div class="n" id="st-doctors" style="color:#0d6efd">-</div><div class="l">طبيب</div></div>
+        <div class="stat"><div class="n" id="st-patients" style="color:#198754">-</div><div class="l">مريض</div></div>
+        <div class="stat"><div class="n" id="st-depts" style="color:#fd7e14">-</div><div class="l">قسم</div></div>
+        <div class="stat"><div class="n" id="st-appts" style="color:#6f42c1">-</div><div class="l">موعد</div></div>
+        <div class="stat"><div class="n" id="st-labs" style="color:#0dcaf0">-</div><div class="l">فحص</div></div>
+        <div class="stat"><div class="n" id="st-pending" style="color:#ffc107">-</div><div class="l">فحص معلّق</div></div>
+        <div class="stat"><div class="n" id="st-revenue" style="color:#198754">-</div><div class="l">إيرادات (₪)</div></div>
+        <div class="stat"><div class="n" id="st-feedback" style="color:#dc3545">-</div><div class="l">ملاحظة جديدة</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="card"><h2><i class="fas fa-user-md" style="color:#0d6efd"></i> روابط سريعة</h2>
+          <div style="display:flex;flex-direction:column;gap:.5rem">
+            <button class="btn btn-p btn-lg" onclick="go('doctors')"><i class="fas fa-plus"></i> إضافة طبيب</button>
+            <button class="btn btn-s btn-lg" onclick="go('patients')"><i class="fas fa-plus"></i> إضافة مريض</button>
+            <button class="btn btn-w btn-lg" onclick="go('appointments')"><i class="fas fa-calendar"></i> المواعيد</button>
+            <button class="btn btn-g btn-lg" onclick="go('lab')"><i class="fas fa-vials"></i> فحوصات المختبر</button>
+          </div>
+        </div>
+        <div class="card"><h2><i class="fas fa-info-circle" style="color:#6f42c1"></i> معلومات النظام</h2>
+          <p style="font-size:.88rem;color:#555">الحساب: <strong id="ov-email">-</strong></p>
+          <p style="font-size:.88rem;color:#555">الصلاحية: <strong id="ov-role">-</strong></p>
+          <p style="font-size:.88rem;color:#555">جميع التغييرات تُطبَّق مباشرة على قاعدة البيانات.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DOCTORS -->
+    <div class="tab-content" id="tab-doctors">
+      <div class="page-title"><i class="fas fa-user-md" style="color:#0d6efd"></i> إدارة الأطباء</div>
+      <div class="card">
+        <div class="filters">
+          <input type="text" id="d-search" placeholder="بحث..." oninput="filterDoctors()">
+          <button class="btn btn-p" onclick="openModal('doctor')"><i class="fas fa-plus"></i> إضافة طبيب</button>
+          <button class="btn btn-g" onclick="loadDoctors()"><i class="fas fa-sync"></i></button>
+        </div>
+        <table><thead><tr><th>#</th><th>الاسم</th><th>التخصص</th><th>القسم</th><th>الإيميل</th><th>الهاتف</th><th>إجراء</th></tr></thead>
+        <tbody id="doctors-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- PATIENTS -->
+    <div class="tab-content" id="tab-patients">
+      <div class="page-title"><i class="fas fa-users" style="color:#198754"></i> إدارة المرضى</div>
+      <div class="card">
+        <div class="filters">
+          <input type="text" id="p-search" placeholder="بحث..." oninput="filterPatients()">
+          <button class="btn btn-s" onclick="openModal('patient')"><i class="fas fa-plus"></i> إضافة مريض</button>
+          <button class="btn btn-g" onclick="loadPatients()"><i class="fas fa-sync"></i></button>
+        </div>
+        <table><thead><tr><th>#</th><th>الاسم</th><th>الهوية</th><th>الهاتف</th><th>الإيميل</th><th>الجنس</th><th>تاريخ الميلاد</th><th>إجراء</th></tr></thead>
+        <tbody id="patients-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- DEPARTMENTS -->
+    <div class="tab-content" id="tab-departments">
+      <div class="page-title"><i class="fas fa-building" style="color:#fd7e14"></i> إدارة الأقسام</div>
+      <div class="card">
+        <div class="filters">
+          <button class="btn btn-w" onclick="openModal('department')"><i class="fas fa-plus"></i> إضافة قسم</button>
+          <button class="btn btn-g" onclick="loadDepartments()"><i class="fas fa-sync"></i></button>
+        </div>
+        <table><thead><tr><th>#</th><th>اسم القسم</th><th>الموقع</th><th>ساعات العمل</th><th>إجراء</th></tr></thead>
+        <tbody id="depts-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- APPOINTMENTS -->
+    <div class="tab-content" id="tab-appointments">
+      <div class="page-title"><i class="fas fa-calendar-check" style="color:#6f42c1"></i> إدارة المواعيد</div>
+      <div class="card">
+        <div class="filters">
+          <select id="a-status" onchange="loadAppointments()">
+            <option value="">كل الحالات</option>
+            <option value="Booked">محجوز</option>
+            <option value="Completed">مكتمل</option>
+            <option value="Cancelled">ملغي</option>
+            <option value="NoShow">لم يحضر</option>
+          </select>
+          <input type="text" id="a-search" placeholder="بحث..." oninput="filterAppts()">
+          <button class="btn btn-g" onclick="loadAppointments()"><i class="fas fa-sync"></i></button>
+        </div>
+        <table><thead><tr><th>#</th><th>المريض</th><th>الطبيب</th><th>القسم</th><th>التاريخ</th><th>الحالة</th><th>السبب</th><th>إجراء</th></tr></thead>
+        <tbody id="appts-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- LAB -->
+    <div class="tab-content" id="tab-lab">
+      <div class="page-title"><i class="fas fa-vials" style="color:#0dcaf0"></i> إدارة المختبر</div>
+      <div class="card">
+        <div class="filters">
+          <select id="l-status" onchange="loadLab()">
+            <option value="">كل الحالات</option>
+            <option value="Pending">معلّق</option>
+            <option value="Ready">جاهز</option>
+          </select>
+          <input type="text" id="l-search" placeholder="بحث..." oninput="filterLab()">
+          <button class="btn btn-g" onclick="loadLab()"><i class="fas fa-sync"></i></button>
+        </div>
+        <table><thead><tr><th>#</th><th>المريض</th><th>الفحص</th><th>التاريخ</th><th>الطبيب</th><th>الحالة</th><th>النتيجة</th><th>إجراء</th></tr></thead>
+        <tbody id="lab-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- INVOICES -->
+    <div class="tab-content" id="tab-invoices">
+      <div class="page-title"><i class="fas fa-file-invoice-dollar" style="color:#198754"></i> إدارة الفواتير</div>
+      <div class="card">
+        <div class="filters">
+          <button class="btn btn-g" onclick="loadInvoices()"><i class="fas fa-sync"></i> تحديث</button>
+        </div>
+        <table><thead><tr><th>#</th><th>المريض</th><th>الهاتف</th><th>التاريخ</th><th>المبلغ (₪)</th><th>الحالة</th><th>إجراء</th></tr></thead>
+        <tbody id="inv-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- FEEDBACK -->
+    <div class="tab-content" id="tab-feedback">
+      <div class="page-title"><i class="fas fa-comments" style="color:#dc3545"></i> الملاحظات والشكاوى</div>
+      <div class="card">
+        <div class="filters"><button class="btn btn-g" onclick="loadFeedback()"><i class="fas fa-sync"></i> تحديث</button></div>
+        <table><thead><tr><th>#</th><th>المريض</th><th>النوع</th><th>الرسالة</th><th>الحالة</th><th>التاريخ</th><th>إجراء</th></tr></thead>
+        <tbody id="fb-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- LAB USERS -->
+    <div class="tab-content" id="tab-labusers">
+      <div class="page-title"><i class="fas fa-flask" style="color:#6f42c1"></i> مستخدمو المختبر</div>
+      <div class="card">
+        <div class="filters">
+          <button class="btn btn-p" onclick="openModal('labuser')"><i class="fas fa-plus"></i> إضافة مستخدم</button>
+          <button class="btn btn-g" onclick="loadLabUsers()"><i class="fas fa-sync"></i></button>
+        </div>
+        <table><thead><tr><th>#</th><th>اسم المستخدم</th><th>الاسم الكامل</th><th>الحالة</th><th>تاريخ الإنشاء</th><th>إجراء</th></tr></thead>
+        <tbody id="lu-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- NEWS -->
+    <div class="tab-content" id="tab-news">
+      <div class="page-title"><i class="fas fa-newspaper" style="color:#e87a1e"></i> إدارة الأخبار</div>
+      <div class="card">
+        <div class="filters">
+          <button class="btn btn-p" onclick="openNewsModal()"><i class="fas fa-plus"></i> إضافة خبر</button>
+          <button class="btn btn-g" onclick="loadNews()"><i class="fas fa-sync"></i></button>
+        </div>
+        <table>
+          <thead><tr><th>#</th><th>العنوان</th><th>تاريخ النشر</th><th>الحالة</th><th>بواسطة</th><th>إجراء</th></tr></thead>
+          <tbody id="news-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- News Modal -->
+<div class="modal-bg" id="news-modal-bg" onclick="if(event.target===this)closeNewsModal()">
+  <div class="modal" style="max-width:620px">
+    <h3 id="news-modal-title">إضافة خبر جديد</h3>
+    <div class="fg">
+      <label>عنوان الخبر *</label>
+      <input type="text" id="nm-title" placeholder="أدخل عنوان الخبر">
+    </div>
+    <div class="fg">
+      <label>محتوى الخبر *</label>
+      <textarea id="nm-content" rows="5" placeholder="اكتب محتوى الخبر هنا..."></textarea>
+    </div>
+    <div class="fg">
+      <label>رابط الصورة (اختياري)</label>
+      <input type="url" id="nm-image" placeholder="https://...">
+    </div>
+    <div class="fg">
+      <label>تاريخ ووقت النشر</label>
+      <input type="datetime-local" id="nm-date">
+    </div>
+    <div class="fg">
+      <label>الحالة</label>
+      <select id="nm-published">
+        <option value="1">منشور</option>
+        <option value="0">مسودة</option>
+      </select>
+    </div>
+    <div id="news-modal-alert" class="alert hidden"></div>
+    <div class="mrow">
+      <button class="btn btn-p" onclick="saveNews()"><i class="fas fa-save"></i> حفظ</button>
+      <button class="btn btn-g" onclick="closeNewsModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3 id="modal-title">العنوان</h3>
+    <div id="modal-body"></div>
+    <div id="modal-alert" class="alert hidden"></div>
+    <div class="mrow">
+      <button class="btn btn-p" id="modal-save" onclick="saveModal()"><i class="fas fa-save"></i> حفظ</button>
+      <button class="btn btn-g" onclick="closeModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const BASE  = (location.pathname.match(/^(\/[^/]+\/)/) || [,''])[1] + 'public';
+let admin   = null, modalType = null, editId = null;
+let allDoctors=[], allPatients=[], allAppts=[], allLab=[], allDepts=[];
+
+// ---- AUTH ----
+async function init() {
+  try {
+    const res  = await fetch(BASE+'/api/admin/me',{credentials:'include'});
+    const data = await res.json();
+    if (!data.success) { location.href='admin-login.html'; return; }
+    admin = data.data;
+    document.getElementById('s-name').textContent = admin.full_name || admin.username;
+    document.getElementById('s-role').textContent = roleLabel(admin.role);
+    document.getElementById('nav-admin').textContent = admin.full_name || admin.username;
+    document.getElementById('ov-email').textContent = admin.email || '-';
+    document.getElementById('ov-role').textContent = roleLabel(admin.role);
+    loadStats();
+    const goTab = sessionStorage.getItem('go');
+    if (goTab) {
+      sessionStorage.removeItem('go');
+      document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.sidebar nav a').forEach(a=>a.classList.remove('active'));
+      const tabEl = document.getElementById('tab-'+goTab);
+      if (tabEl) tabEl.classList.add('active');
+      const loaders={doctors:loadDoctors,patients:loadPatients,departments:loadDepartments,
+                     appointments:loadAppointments,lab:loadLab,invoices:loadInvoices,
+                     feedback:loadFeedback,labusers:loadLabUsers,news:loadNews};
+      if(loaders[goTab]) loaders[goTab]();
+    }
+  } catch { location.href='admin-login.html'; }
+}
+
+function roleLabel(r) { return {super_admin:'مدير عام',admin:'أدمن',support:'دعم'}[r]||r; }
+
+async function logout() {
+  await fetch(BASE+'/api/admin/logout',{method:'POST',credentials:'include'});
+  location.href='admin-login.html';
+}
+
+// ---- NAVIGATION ----
+function go(tab) {
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.sidebar nav a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  event.currentTarget.classList.add('active');
+  const loaders={doctors:loadDoctors,patients:loadPatients,departments:loadDepartments,
+                 appointments:loadAppointments,lab:loadLab,invoices:loadInvoices,
+                 feedback:loadFeedback,labusers:loadLabUsers,news:loadNews};
+  if(loaders[tab]) loaders[tab]();
+}
+
+function goFromCard(tab) {
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.sidebar nav a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  const tabMap={patients:'المرضى',appointments:'المواعيد',doctors:'الأطباء'};
+  document.querySelectorAll('.sidebar nav a').forEach(a=>{ if(a.textContent.trim().includes(tabMap[tab]||'')) a.classList.add('active'); });
+  const loaders={doctors:loadDoctors,patients:loadPatients,departments:loadDepartments,
+                 appointments:loadAppointments,lab:loadLab,invoices:loadInvoices,
+                 feedback:loadFeedback,labusers:loadLabUsers,news:loadNews};
+  if(loaders[tab]) loaders[tab]();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ---- STATS ----
+async function loadStats() {
+  const data = await api('/api/admin/stats');
+  if (!data) return;
+  document.getElementById('st-doctors').textContent = data.doctors;
+  document.getElementById('st-patients').textContent = data.patients;
+  document.getElementById('st-depts').textContent = data.departments;
+  document.getElementById('st-appts').textContent = data.appointments;
+  document.getElementById('st-labs').textContent = data.lab_tests;
+  document.getElementById('st-pending').textContent = data.pending_labs;
+  document.getElementById('st-revenue').textContent = (+data.revenue).toLocaleString();
+  document.getElementById('st-feedback').textContent = data.feedback;
+}
+
+// ---- DOCTORS ----
+async function loadDoctors() {
+  const data = await api('/api/admin/doctors');
+  if (!data) return;
+  allDoctors = data;
+  renderDoctors(allDoctors);
+}
+
+function renderDoctors(rows) {
+  document.getElementById('doctors-tbody').innerHTML = rows.length ? rows.map(d=>`
+    <tr>
+      <td>${d.doctor_id}</td>
+      <td><strong>${d.full_name}</strong></td>
+      <td>${d.specialty}</td>
+      <td>${d.department_name||'-'}</td>
+      <td>${d.email||'-'}</td>
+      <td>${d.phone||'-'}</td>
+      <td>
+        <button class="btn btn-p" onclick='editDoctor(${JSON.stringify(d)})'><i class="fas fa-edit"></i></button>
+        <button class="btn btn-d" onclick="del('doctors',${d.doctor_id})"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>`).join('') : '<tr><td colspan="7" style="text-align:center;padding:1rem;color:#aaa">لا توجد بيانات</td></tr>';
+}
+
+function filterDoctors() {
+  const q = document.getElementById('d-search').value.toLowerCase();
+  renderDoctors(allDoctors.filter(d=>(d.full_name+d.specialty+d.department_name+d.email).toLowerCase().includes(q)));
+}
+
+// ---- PATIENTS ----
+async function loadPatients() {
+  const data = await api('/api/admin/patients');
+  if (!data) return;
+  allPatients = data;
+  renderPatients(allPatients);
+}
+
+function renderPatients(rows) {
+  document.getElementById('patients-tbody').innerHTML = rows.length ? rows.map(p=>`
+    <tr>
+      <td>${p.patient_id}</td>
+      <td><strong>${p.full_name}</strong></td>
+      <td>${p.national_id||'-'}</td>
+      <td>${p.phone||'-'}</td>
+      <td>${p.email||'-'}</td>
+      <td>${p.gender==='Male'?'ذكر':'أنثى'}</td>
+      <td>${p.date_of_birth||'-'}</td>
+      <td>
+        <button class="btn btn-p" onclick='editPatient(${JSON.stringify(p)})'><i class="fas fa-edit"></i></button>
+        <button class="btn btn-d" onclick="del('patients',${p.patient_id})"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>`).join('') : '<tr><td colspan="8" style="text-align:center;padding:1rem;color:#aaa">لا توجد بيانات</td></tr>';
+}
+
+function filterPatients() {
+  const q = document.getElementById('p-search').value.toLowerCase();
+  renderPatients(allPatients.filter(p=>(p.full_name+p.phone+p.email+p.national_id).toLowerCase().includes(q)));
+}
+
+// ---- DEPARTMENTS ----
+async function loadDepartments() {
+  const data = await api('/api/admin/departments');
+  if (!data) return;
+  allDepts = data;
+  document.getElementById('depts-tbody').innerHTML = data.length ? data.map(d=>`
+    <tr>
+      <td>${d.department_id}</td>
+      <td><strong>${d.name}</strong></td>
+      <td>${d.location||'-'}</td>
+      <td>${d.working_hours||'-'}</td>
+      <td>
+        <button class="btn btn-p" onclick='editDept(${JSON.stringify(d)})'><i class="fas fa-edit"></i></button>
+        <button class="btn btn-d" onclick="del('departments',${d.department_id})"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>`).join('') : '<tr><td colspan="5" style="text-align:center;padding:1rem;color:#aaa">لا توجد بيانات</td></tr>';
+}
+
+// ---- APPOINTMENTS ----
+async function loadAppointments() {
+  const status = document.getElementById('a-status')?.value || '';
+  const data = await api('/api/admin/appointments'+(status?'?status='+status:''));
+  if (!data) return;
+  allAppts = data;
+  renderAppts(allAppts);
+}
+
+function renderAppts(rows) {
+  const bmap = {Booked:'b-blue محجوز',Completed:'b-green مكتمل',Cancelled:'b-red ملغي',NoShow:'b-yellow لم يحضر'};
+  document.getElementById('appts-tbody').innerHTML = rows.length ? rows.map(a=>{
+    const [bc,bl]=(bmap[a.status]||'b-blue '+a.status).split(' ');
+    return `<tr>
+      <td>${a.appointment_id}</td>
+      <td>${a.patient_name}</td>
+      <td>${a.doctor_name}</td>
+      <td>${a.department_name}</td>
+      <td>${(a.appointment_datetime||'').slice(0,16)}</td>
+      <td><span class="badge ${bc}">${bl}</span></td>
+      <td>${a.reason||'-'}</td>
+      <td>
+        <button class="btn btn-p" onclick='editAppt(${JSON.stringify(a)})'><i class="fas fa-edit"></i></button>
+        <button class="btn btn-d" onclick="del('appointments',${a.appointment_id})"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>`;}).join('') : '<tr><td colspan="8" style="text-align:center;padding:1rem;color:#aaa">لا توجد بيانات</td></tr>';
+}
+
+function filterAppts() {
+  const q = document.getElementById('a-search').value.toLowerCase();
+  renderAppts(allAppts.filter(a=>(a.patient_name+a.doctor_name+a.department_name).toLowerCase().includes(q)));
+}
+
+// ---- LAB ----
+async function loadLab() {
+  const status = document.getElementById('l-status')?.value||'';
+  const data = await api('/api/admin/lab-tests'+(status?'?status='+status:''));
+  if (!data) return;
+  allLab = data;
+  renderLab(allLab);
+}
+
+function renderLab(rows) {
+  document.getElementById('lab-tbody').innerHTML = rows.length ? rows.map(t=>`
+    <tr>
+      <td>${t.lab_test_id}</td>
+      <td>${t.patient_name}<br><small>${t.patient_email||''}</small></td>
+      <td>${t.test_name}</td>
+      <td>${t.test_date||'-'}</td>
+      <td>${t.doctor_name||'-'}</td>
+      <td><span class="badge ${t.status==='Ready'?'b-green':'b-yellow'}">${t.status==='Ready'?'جاهز':'انتظار'}</span></td>
+      <td style="max-width:140px;word-break:break-word">${t.result_text||'<em style="color:#aaa">-</em>'}</td>
+      <td><button class="btn btn-d" onclick="del('lab-tests',${t.lab_test_id})"><i class="fas fa-trash"></i></button></td>
+    </tr>`).join('') : '<tr><td colspan="8" style="text-align:center;padding:1rem;color:#aaa">لا توجد بيانات</td></tr>';
+}
+
+function filterLab() {
+  const q = document.getElementById('l-search').value.toLowerCase();
+  renderLab(allLab.filter(t=>(t.patient_name+t.test_name).toLowerCase().includes(q)));
+}
+
+// ---- INVOICES ----
+async function loadInvoices() {
+  const data = await api('/api/admin/invoices');
+  if (!data) return;
+  const bmap = {Unpaid:'b-red غير مدفوع',Paid:'b-green مدفوع',PartiallyPaid:'b-yellow مدفوع جزئيًا'};
+  document.getElementById('inv-tbody').innerHTML = data.length ? data.map(i=>{
+    const [bc,bl]=(bmap[i.status]||'b-blue '+i.status).split(' ');
+    return `<tr>
+      <td>${i.invoice_id}</td>
+      <td>${i.patient_name}</td>
+      <td>${i.patient_phone||'-'}</td>
+      <td>${i.issue_date||'-'}</td>
+      <td>${(+i.total_amount).toLocaleString()}</td>
+      <td><span class="badge ${bc}">${bl}</span></td>
+      <td><button class="btn btn-p" onclick='editInvoice(${JSON.stringify(i)})'><i class="fas fa-edit"></i></button></td>
+    </tr>`;}).join('') : '<tr><td colspan="7" style="text-align:center;padding:1rem;color:#aaa">لا توجد بيانات</td></tr>';
+}
+
+// ---- FEEDBACK ----
+async function loadFeedback() {
+  const data = await api('/api/admin/feedback');
+  if (!data) return;
+  const bmap = {New:'b-red جديد',InReview:'b-yellow قيد المراجعة',Closed:'b-green مغلق'};
+  document.getElementById('fb-tbody').innerHTML = data.length ? data.map(f=>{
+    const [bc,bl]=(bmap[f.status]||'b-blue '+f.status).split(' ');
+    return `<tr>
+      <td>${f.feedback_id}</td>
+      <td>${f.patient_name||'مجهول'}</td>
+      <td><span class="badge ${f.type==='Complaint'?'b-red':'b-blue'}">${f.type==='Complaint'?'شكوى':'ملاحظة'}</span></td>
+      <td style="max-width:200px;word-break:break-word">${f.message}</td>
+      <td><span class="badge ${bc}">${bl}</span></td>
+      <td>${(f.created_at||'').slice(0,10)}</td>
+      <td>
+        <select class="btn" onchange="updateFbStatus(${f.feedback_id},this.value)" style="padding:.28rem .5rem">
+          <option ${f.status==='New'?'selected':''} value="New">جديد</option>
+          <option ${f.status==='InReview'?'selected':''} value="InReview">مراجعة</option>
+          <option ${f.status==='Closed'?'selected':''} value="Closed">مغلق</option>
+        </select>
+      </td>
+    </tr>`;}).join('') : '<tr><td colspan="7" style="text-align:center;padding:1rem;color:#aaa">لا توجد بيانات</td></tr>';
+}
+
+async function updateFbStatus(id, status) {
+  await api('/api/admin/feedback/'+id, 'PUT', {status});
+}
+
+// ---- LAB USERS ----
+async function loadLabUsers() {
+  const data = await api('/api/admin/lab-users');
+  if (!data) return;
+  document.getElementById('lu-tbody').innerHTML = data.length ? data.map(u=>`
+    <tr>
+      <td>${u.lab_user_id}</td>
+      <td><strong>${u.username}</strong></td>
+      <td>${u.full_name}</td>
+      <td><span class="badge ${u.is_active?'b-green':'b-red'}">${u.is_active?'نشط':'معطّل'}</span></td>
+      <td>${(u.created_at||'').slice(0,10)}</td>
+      <td><button class="btn btn-p" onclick='editLabUser(${JSON.stringify(u)})'><i class="fas fa-edit"></i></button></td>
+    </tr>`).join('') : '<tr><td colspan="6" style="text-align:center;padding:1rem;color:#aaa">لا توجد بيانات</td></tr>';
+}
+
+// ---- MODAL ----
+function openModal(type, data={}) {
+  modalType = type; editId = data.id || null;
+  const titles = {doctor:'طبيب',patient:'مريض',department:'قسم',appointment:'موعد',invoice:'فاتورة',labuser:'مستخدم مختبر'};
+  document.getElementById('modal-title').textContent = (editId?'تعديل ':'إضافة ') + (titles[type]||type);
+  document.getElementById('modal-alert').classList.add('hidden');
+  document.getElementById('modal-body').innerHTML = modalForm(type, data);
+  document.getElementById('modal-bg').classList.add('on');
+  fillDeptSelect(data.department_id);
+}
+
+function modalForm(type, d={}) {
+  if (type==='doctor') return `
+    <div class="fg"><label>الاسم الكامل *</label><input id="f-fullname" value="${d.full_name||''}"></div>
+    <div class="fg"><label>التخصص *</label><input id="f-specialty" value="${d.specialty||''}"></div>
+    <div class="fg"><label>القسم</label><select id="f-dept"><option value="">-- اختر --</option></select></div>
+    <div class="fg"><label>الإيميل</label><input type="email" id="f-email" value="${d.email||''}"></div>
+    <div class="fg"><label>الهاتف</label><input id="f-phone" value="${d.phone||''}"></div>
+    <div class="fg"><label>كلمة المرور ${d.doctor_id?'(اتركها فارغة للإبقاء على القديمة)':'(افتراضي: Doctor@123)'}</label><input type="password" id="f-pass"></div>`;
+  if (type==='patient') return `
+    <div class="fg"><label>الاسم الكامل *</label><input id="f-fullname" value="${d.full_name||''}"></div>
+    <div class="fg"><label>رقم الهوية</label><input id="f-nid" value="${d.national_id||''}"></div>
+    <div class="fg"><label>الهاتف *</label><input id="f-phone" value="${d.phone||''}"></div>
+    <div class="fg"><label>الإيميل</label><input type="email" id="f-email" value="${d.email||''}"></div>
+    <div class="fg"><label>الجنس</label><select id="f-gender"><option value="Male" ${d.gender==='Male'?'selected':''}>ذكر</option><option value="Female" ${d.gender==='Female'?'selected':''}>أنثى</option></select></div>
+    <div class="fg"><label>تاريخ الميلاد</label><input type="date" id="f-dob" value="${d.date_of_birth||''}"></div>`;
+  if (type==='department') return `
+    <div class="fg"><label>اسم القسم *</label><input id="f-name" value="${d.name||''}"></div>
+    <div class="fg"><label>الموقع</label><input id="f-location" value="${d.location||''}"></div>
+    <div class="fg"><label>ساعات العمل</label><input id="f-hours" value="${d.working_hours||''}"></div>`;
+  if (type==='appointment') return `
+    <div class="fg"><label>الحالة</label><select id="f-status">
+      <option ${d.status==='Booked'?'selected':''} value="Booked">محجوز</option>
+      <option ${d.status==='Completed'?'selected':''} value="Completed">مكتمل</option>
+      <option ${d.status==='Cancelled'?'selected':''} value="Cancelled">ملغي</option>
+      <option ${d.status==='NoShow'?'selected':''} value="NoShow">لم يحضر</option>
+    </select></div>
+    <div class="fg"><label>التاريخ والوقت</label><input type="datetime-local" id="f-dt" value="${(d.appointment_datetime||'').slice(0,16)}"></div>
+    <div class="fg"><label>السبب</label><textarea id="f-reason">${d.reason||''}</textarea></div>`;
+  if (type==='invoice') return `
+    <div class="fg"><label>الحالة</label><select id="f-status">
+      <option ${d.status==='Unpaid'?'selected':''} value="Unpaid">غير مدفوع</option>
+      <option ${d.status==='Paid'?'selected':''} value="Paid">مدفوع</option>
+      <option ${d.status==='PartiallyPaid'?'selected':''} value="PartiallyPaid">مدفوع جزئيًا</option>
+    </select></div>
+    <div class="fg"><label>المبلغ الإجمالي</label><input type="number" id="f-amount" value="${d.total_amount||''}"></div>`;
+  if (type==='labuser') return `
+    <div class="fg"><label>اسم المستخدم *</label><input id="f-uname" value="${d.username||''}"></div>
+    <div class="fg"><label>الاسم الكامل *</label><input id="f-fullname" value="${d.full_name||''}"></div>
+    <div class="fg"><label>كلمة المرور ${d.lab_user_id?'(اتركها فارغة)':'(افتراضي: Lab@123)'}</label><input type="password" id="f-pass"></div>
+    ${d.lab_user_id?`<div class="fg"><label>الحالة</label><select id="f-active"><option value="1" ${d.is_active?'selected':''}>نشط</option><option value="0" ${!d.is_active?'selected':''}>معطّل</option></select></div>`:''}`;
+  return '';
+}
+
+async function fillDeptSelect(selectedId) {
+  if (!allDepts.length) allDepts = await api('/api/admin/departments') || [];
+  const sel = document.getElementById('f-dept');
+  if (!sel) return;
+  allDepts.forEach(d => {
+    const o = document.createElement('option');
+    o.value = d.department_id; o.textContent = d.name;
+    if (d.department_id == selectedId) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+
+async function saveModal() {
+  const alrt = document.getElementById('modal-alert');
+  alrt.classList.add('hidden');
+  let body={}, url='', method='POST';
+
+  if (modalType==='doctor') {
+    body={full_name:v('f-fullname'),specialty:v('f-specialty'),email:v('f-email'),phone:v('f-phone'),department_id:v('f-dept')||null};
+    if (v('f-pass')) body.password=v('f-pass');
+    if (!body.full_name||!body.specialty) { showAlrt('الاسم والتخصص مطلوبان'); return; }
+    url = editId ? `/api/admin/doctors/${editId}` : '/api/admin/doctors';
+    if (editId) method='PUT';
+  }
+  else if (modalType==='patient') {
+    body={full_name:v('f-fullname'),phone:v('f-phone'),email:v('f-email'),national_id:v('f-nid'),gender:v('f-gender'),date_of_birth:v('f-dob')};
+    if (!body.full_name||!body.phone) { showAlrt('الاسم والهاتف مطلوبان'); return; }
+    url = editId ? `/api/admin/patients/${editId}` : '/api/admin/patients';
+    if (editId) method='PUT';
+  }
+  else if (modalType==='department') {
+    body={name:v('f-name'),location:v('f-location'),working_hours:v('f-hours')};
+    if (!body.name) { showAlrt('اسم القسم مطلوب'); return; }
+    url = editId ? `/api/admin/departments/${editId}` : '/api/admin/departments';
+    if (editId) method='PUT';
+  }
+  else if (modalType==='appointment') {
+    body={status:v('f-status'),reason:v('f-reason')};
+    const dt=v('f-dt'); if(dt) body.appointment_datetime=dt.replace('T',' ')+':00';
+    url=`/api/admin/appointments/${editId}`; method='PUT';
+  }
+  else if (modalType==='invoice') {
+    body={status:v('f-status'),total_amount:v('f-amount')};
+    url=`/api/admin/invoices/${editId}`; method='PUT';
+  }
+  else if (modalType==='labuser') {
+    body={username:v('f-uname'),full_name:v('f-fullname')};
+    if(v('f-pass')) body.password=v('f-pass');
+    if(document.getElementById('f-active')) body.is_active=+v('f-active');
+    if (!body.username||!body.full_name) { showAlrt('اسم المستخدم والاسم مطلوبان'); return; }
+    url = editId ? `/api/admin/lab-users/${editId}` : '/api/admin/lab-users';
+    if (editId) method='PUT';
+  }
+
+  const res = await fetch(BASE+url,{method,credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const data = await res.json();
+  if (data.success) {
+    closeModal();
+    const reloaders={doctor:loadDoctors,patient:loadPatients,department:loadDepartments,
+                     appointment:loadAppointments,invoice:loadInvoices,labuser:loadLabUsers};
+    if(reloaders[modalType]) reloaders[modalType]();
+    loadStats();
+  } else showAlrt(data.message||'حدث خطأ');
+}
+
+function showAlrt(msg) {
+  const a=document.getElementById('modal-alert');
+  a.className='alert a-d'; a.textContent=msg; a.classList.remove('hidden');
+}
+
+function closeModal() { document.getElementById('modal-bg').classList.remove('on'); modalType=editId=null; }
+
+// ---- EDIT HELPERS ----
+function editDoctor(d)      { editId=d.doctor_id;      openModal('doctor',d); }
+function editPatient(p)     { editId=p.patient_id;     openModal('patient',p); }
+function editDept(d)        { editId=d.department_id;  openModal('department',d); }
+function editAppt(a)        { editId=a.appointment_id; openModal('appointment',a); }
+function editInvoice(i)     { editId=i.invoice_id;     openModal('invoice',i); }
+function editLabUser(u)     { editId=u.lab_user_id;    openModal('labuser',u); }
+
+// ---- DELETE ----
+async function del(resource, id) {
+  if (!confirm('هل أنت متأكد من الحذف؟ لا يمكن التراجع.')) return;
+  const data = await api('/api/admin/'+resource+'/'+id, 'DELETE');
+  if (data) {
+    const reloaders={doctors:loadDoctors,patients:loadPatients,departments:loadDepartments,
+                     appointments:loadAppointments,'lab-tests':loadLab};
+    const key=resource; if(reloaders[key]) reloaders[key]();
+    loadStats();
+  }
+}
+
+// ---- API HELPER ----
+async function api(url, method='GET', body=null) {
+  try {
+    const opts={method,credentials:'include',headers:{'Content-Type':'application/json'}};
+    if(body) opts.body=JSON.stringify(body);
+    const res = await fetch(BASE+url,opts);
+    const data= await res.json();
+    if(!data.success && res.status===401) { location.href='admin-login.html'; return null; }
+    return data.success ? data.data : null;
+  } catch { return null; }
+}
+
+function v(id) { const el=document.getElementById(id); return el?el.value.trim():''; }
+
+// ---- NEWS ----
+let newsEditId = null;
+
+async function loadNews() {
+  const data = await api('/api/admin/news');
+  const tbody = document.getElementById('news-tbody');
+  if (!data) { tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#dc3545">تعذّر التحميل</td></tr>'; return; }
+  if (!data.length) { tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#6c757d">لا توجد أخبار</td></tr>'; return; }
+  tbody.innerHTML = data.map(n => `
+    <tr>
+      <td>${n.news_id}</td>
+      <td style="max-width:300px;white-space:normal;font-weight:600">${esc2(n.title)}</td>
+      <td>${n.published_at ? n.published_at.substring(0,10) : '—'}</td>
+      <td><span class="badge ${n.is_published==1?'b-green':'b-yellow'}">${n.is_published==1?'منشور':'مسودة'}</span></td>
+      <td>${esc2(n.created_by_name||'—')}</td>
+      <td>
+        <button class="btn btn-w" onclick="editNewsItem(${JSON.stringify(n).replace(/"/g,'&quot;')})"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-d" onclick="delNews(${n.news_id})"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>`).join('');
+}
+
+function esc2(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function openNewsModal(n=null) {
+  newsEditId = n ? n.news_id : null;
+  document.getElementById('news-modal-title').textContent = n ? 'تعديل الخبر' : 'إضافة خبر جديد';
+  document.getElementById('nm-title').value     = n ? (n.title||'')   : '';
+  document.getElementById('nm-content').value   = n ? (n.content||'') : '';
+  document.getElementById('nm-image').value     = n ? (n.image_url||'') : '';
+  document.getElementById('nm-published').value = n ? (n.is_published??1) : '1';
+  const dt = n && n.published_at ? n.published_at.replace(' ','T').substring(0,16) : new Date().toISOString().substring(0,16);
+  document.getElementById('nm-date').value = dt;
+  document.getElementById('news-modal-alert').classList.add('hidden');
+  document.getElementById('news-modal-bg').classList.add('on');
+}
+
+function editNewsItem(n) { openNewsModal(n); }
+
+function closeNewsModal() {
+  document.getElementById('news-modal-bg').classList.remove('on');
+  newsEditId = null;
+}
+
+async function saveNews() {
+  const title   = document.getElementById('nm-title').value.trim();
+  const content = document.getElementById('nm-content').value.trim();
+  if (!title || !content) {
+    const al = document.getElementById('news-modal-alert');
+    al.className='alert a-d'; al.textContent='العنوان والمحتوى مطلوبان'; al.classList.remove('hidden'); return;
+  }
+  const body = {
+    title, content,
+    image_url: document.getElementById('nm-image').value.trim() || null,
+    published_at: document.getElementById('nm-date').value.replace('T',' ')+':00',
+    is_published: parseInt(document.getElementById('nm-published').value),
+  };
+  const url    = newsEditId ? `/api/admin/news/${newsEditId}` : '/api/admin/news';
+  const method = newsEditId ? 'PUT' : 'POST';
+  const res = await fetch(BASE+url,{method,credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const data = await res.json();
+  if (data.success) { closeNewsModal(); loadNews(); }
+  else {
+    const al = document.getElementById('news-modal-alert');
+    al.className='alert a-d'; al.textContent=data.message||'حدث خطأ'; al.classList.remove('hidden');
+  }
+}
+
+async function delNews(id) {
+  if (!confirm('حذف هذا الخبر؟')) return;
+  const res  = await fetch(BASE+'/api/admin/news/'+id,{method:'DELETE',credentials:'include'});
+  const data = await res.json();
+  if (data.success) loadNews();
+}
+
+init();
+</script>
+</body>
+</html>

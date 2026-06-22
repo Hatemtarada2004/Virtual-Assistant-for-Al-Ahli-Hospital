@@ -3,104 +3,608 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦ Ã¢â‚¬â€ Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </title>
+  <title>الأقسام الطبية — المستشفى الأهلي</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <link href="../public/assets/css/main.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link href="../public/assets/css/ahli-site.css" rel="stylesheet">
   <link href="../public/assets/css/chatbot.css" rel="stylesheet">
+  <style>
+    body { background: #f5f7fa; }
+    .page-content { max-width: 1200px; margin: 0 auto; padding: 36px 20px 60px; }
+
+    .search-bar {
+      background: #fff; border-radius: 12px; padding: 18px 20px;
+      box-shadow: 0 2px 12px rgba(0,43,91,.08); margin-bottom: 28px;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .search-input {
+      flex: 1; min-width: 220px; border: 1px solid #dde8f0; border-radius: 8px;
+      padding: 10px 14px; font-family: 'Cairo',sans-serif; font-size: 14px;
+      outline: none; transition: border .2s;
+    }
+    .search-input:focus { border-color: #0062a7; }
+    #dept-count { font-size: 13px; color: #6b7a8d; }
+
+    /* شبكة الأقسام */
+    .depts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 20px; margin-bottom: 48px; }
+    .dept-card {
+      background: #fff; border-radius: 14px; overflow: hidden;
+      box-shadow: 0 4px 18px rgba(0,43,91,.08); border: 1px solid #dde8f0;
+      transition: all .25s; cursor: pointer;
+    }
+    .dept-card:hover { transform: translateY(-5px); box-shadow: 0 12px 36px rgba(0,43,91,.15); }
+    .dept-card-img {
+      height: 130px; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .dept-card-img .dept-bg-pattern {
+      position: absolute; inset: 0; opacity: .07;
+      background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+      background-size: 18px 18px;
+    }
+    .dept-card-img .dept-big-icon { font-size: 52px; color: rgba(255,255,255,.9); position: relative; z-index: 1; }
+    .dept-card-top { padding: 16px 18px 12px; display: flex; align-items: flex-start; gap: 12px; }
+    .dept-icon { width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; }
+    .dept-info h3 { font-size: 14px; font-weight: 700; color: #002b5b; margin-bottom: 4px; line-height: 1.35; }
+    .dept-info p  { font-size: 11.5px; color: #6b7a8d; display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+    .dept-footer {
+      background: #f0f6ff; padding: 9px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 12px; color: #0062a7; font-weight: 600;
+    }
+    .dept-footer .arrow { font-size: 11px; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0,10,30,.65); backdrop-filter: blur(4px);
+      align-items: flex-start; justify-content: center;
+      padding: 30px 16px; overflow-y: auto;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #fff; border-radius: 20px; width: 100%; max-width: 860px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25); overflow: hidden;
+      animation: slideUp .3s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* هيدر الـ modal */
+    .modal-hero {
+      padding: 36px 36px 28px; position: relative; overflow: hidden;
+      min-height: 160px; display: flex; flex-direction: column; justify-content: flex-end;
+    }
+    .modal-hero .bg-pattern {
+      position: absolute; inset: 0; opacity: .06;
+      background-image: radial-gradient(circle, #fff 1.5px, transparent 1.5px);
+      background-size: 22px 22px;
+    }
+    .modal-hero .close-btn {
+      position: absolute; top: 16px; left: 16px; z-index: 2;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,.2); border: none; cursor: pointer;
+      color: #fff; font-size: 16px; display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .modal-hero .close-btn:hover { background: rgba(255,255,255,.35); }
+    .modal-hero-icon { font-size: 48px; color: rgba(255,255,255,.85); margin-bottom: 14px; position: relative; z-index: 1; }
+    .modal-hero h2 { font-size: 24px; font-weight: 900; color: #fff; position: relative; z-index: 1; }
+    .modal-hero .meta { display: flex; gap: 18px; margin-top: 10px; position: relative; z-index: 1; }
+    .modal-hero .meta span { font-size: 12.5px; color: rgba(255,255,255,.8); display: flex; align-items: center; gap: 5px; }
+    .modal-hero .meta i { color: rgba(255,255,255,.6); }
+
+    /* تبويبات */
+    .modal-tabs { display: flex; border-bottom: 2px solid #f0f6ff; padding: 0 20px; background: #fff; }
+    .modal-tab {
+      padding: 14px 18px; font-size: 14px; font-weight: 600; color: #6b7a8d;
+      cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px;
+      transition: all .2s; display: flex; align-items: center; gap: 6px;
+    }
+    .modal-tab.active { color: #0062a7; border-bottom-color: #0062a7; }
+    .modal-tab:hover { color: #002b5b; }
+
+    /* محتوى التبويب */
+    .modal-content { padding: 28px 32px 32px; }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* نبذة عن القسم */
+    .dept-desc-text { font-size: 15px; line-height: 2; color: #2c3e50; margin-bottom: 24px; }
+    .dept-stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+    .dept-stat-box {
+      flex: 1; min-width: 130px; background: #f0f6ff; border-radius: 10px; padding: 14px 16px; text-align: center;
+    }
+    .dept-stat-box i { font-size: 20px; color: #0062a7; margin-bottom: 6px; }
+    .dept-stat-box .val { font-size: 18px; font-weight: 900; color: #002b5b; }
+    .dept-stat-box .lbl { font-size: 11px; color: #6b7a8d; font-weight: 600; }
+
+    /* صور القسم */
+    .dept-photos-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 12px;
+    }
+    .dept-photo-box {
+      border-radius: 12px; overflow: hidden; height: 130px;
+      display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    .dept-photo-box .photo-icon { font-size: 36px; color: rgba(255,255,255,.7); z-index: 1; }
+    .dept-photo-box .photo-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.6), transparent);
+      padding: 8px 12px 10px; font-size: 11px; font-weight: 600; color: #fff; z-index: 2;
+    }
+    .dept-photo-bg-pattern { position: absolute; inset: 0; opacity: .06; background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 14px 14px; }
+
+    /* الأطباء */
+    .docs-grid-modal {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 14px;
+    }
+    .doc-mini-card {
+      background: #f8fbff; border-radius: 12px; padding: 16px 14px; text-align: center;
+      border: 1px solid #dde8f0; transition: all .2s; cursor: default;
+    }
+    .doc-mini-card:hover { background: #f0f6ff; border-color: #0062a7; }
+    .doc-mini-photo {
+      width: 64px; height: 64px; border-radius: 50%; object-fit: cover;
+      border: 2px solid #dde8f0; margin: 0 auto 10px;
+    }
+    .doc-mini-avatar {
+      width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 10px;
+      background: linear-gradient(135deg, #0062a7, #002b5b);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; color: #fff;
+    }
+    .doc-mini-name { font-size: 13px; font-weight: 700; color: #002b5b; margin-bottom: 4px; }
+    .doc-mini-spec { font-size: 11px; color: #6b7a8d; }
+    .doc-mini-contact { font-size: 11px; color: #0062a7; margin-top: 4px; display: flex; flex-direction: column; gap: 2px; }
+    .doc-mini-contact a { color: #0062a7; transition: color .2s; }
+    .doc-mini-contact a:hover { color: #e87a1e; }
+
+    .no-docs { text-align: center; color: #6b7a8d; padding: 32px; font-size: 14px; }
+
+    /* الخدمات قسم */
+    .services-list { display: flex; flex-direction: column; gap: 8px; }
+    .service-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      background: #f8fbff; border-radius: 8px; border: 1px solid #dde8f0; font-size: 13px;
+    }
+    .service-item i { color: #0062a7; width: 16px; flex-shrink: 0; }
+    .service-item .cost { margin-right: auto; background: #f0f6ff; color: #0062a7; font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 12px; }
+
+    .loading-state { text-align: center; padding: 40px; color: #6b7a8d; }
+    .loading-state i { font-size: 28px; display: block; margin-bottom: 10px; color: #0062a7; }
+    .empty-state { text-align: center; padding: 50px 20px; color: #6b7a8d; }
+    .empty-state i { font-size: 40px; margin-bottom: 14px; display: block; color: #b0bec5; }
+  </style>
 </head>
 <body>
 
-<header class="ahli-navbar">
-  <a href="index.html" class="brand"><i class="fas fa-hospital-alt"></i> Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </a>
-  <nav class="nav-links">
-    <a href="index.html">Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â¦Ã™Å Ã˜Â³Ã™Å Ã˜Â©</a>
-    <a href="dashboard.html">Ã™â€žÃ™Ë†Ã˜Â­Ã˜Â© Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™Æ’Ã™â€¦</a>
-    <a href="doctors.html">Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â·Ã˜Â¨Ã˜Â§Ã˜Â¡</a>
-    <a href="departments.html" class="active">Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦</a>
-    <a href="appointments.html">Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</a>
-    <a href="patients.html">Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã˜Â¶Ã™â€°</a>
-  </nav>
+<div class="topbar">
+  <div class="container inner">
+    <div class="tb-info">
+      <span><i class="fas fa-phone"></i> +970-2-2229247</span>
+      <span><i class="fas fa-calendar-check"></i> حجز: 1700200400</span>
+      <span><i class="fas fa-envelope"></i> info@ahli.org</span>
+    </div>
+    <div class="tb-social">
+      <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container inner">
+    <a href="index.html" class="site-logo">
+      <div class="logo-icon"><i class="fas fa-hospital-alt"></i></div>
+      <div class="logo-text">
+        <h1>المستشفى الأهلي</h1>
+        <p>Al-Ahli Hospital | الخليل، فلسطين</p>
+      </div>
+    </a>
+    <div class="header-contact">
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-phone-alt"></i></div>
+        <div class="hc-text"><p>هاتف المستشفى</p><p>+970-2-2229247</p></div>
+      </div>
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-calendar-alt"></i></div>
+        <div class="hc-text"><p>حجز العيادات</p><p>1700200400</p></div>
+      </div>
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-clock"></i></div>
+        <div class="hc-text"><p>الطوارئ</p><p>24 ساعة / 7 أيام</p></div>
+      </div>
+    </div>
+  </div>
 </header>
 
-<main class="page-container">
-  <div class="page-header">
-    <div>
-      <h1><i class="fas fa-hospital" style="color:var(--primary)"></i> Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦ Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â¨Ã™Å Ã˜Â©</h1>
-      <p id="dept-count">Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€žÃ¢â‚¬Â¦</p>
+<nav class="main-nav">
+  <div class="container inner">
+    <ul class="nav-links-main">
+      <li><a href="index.html">الرئيسية</a></li>
+      <li><a href="about.html">من نحن</a></li>
+      <li><a href="departments.html" class="active">الأقسام والوحدات الطبية</a></li>
+      <li><a href="doctors.html">الأطباء</a></li>
+      <li><a href="news.html">الأخبار</a></li>
+      <li><a href="donations.html">المشاريع والتبرعات</a></li>
+      <li><a href="visitor.html">للزائر والمريض</a></li>
+      <li><a href="education.html">التعليم والتدريب</a></li>
+    </ul>
+    <a href="#" class="nav-btn" onclick="document.getElementById('ahli-chat-btn')?.click();return false;">
+      <i class="fas fa-comments"></i> المساعد الذكي
+    </a>
+  </div>
+</nav>
+
+<div class="page-banner">
+  <div class="container inner">
+    <div class="pb-icon"><i class="fas fa-hospital"></i></div>
+    <div class="pb-text">
+      <h1>الأقسام الطبية</h1>
+      <p id="dept-count-banner">أقسام طبية متخصصة بأحدث التقنيات</p>
+    </div>
+    <div class="pb-breadcrumb">
+      <a href="index.html">الرئيسية</a>
+      <span class="sep"><i class="fas fa-chevron-left"></i></span>
+      <span>الأقسام الطبية</span>
     </div>
   </div>
+</div>
 
+<div class="page-content">
   <div class="search-bar">
-    <input type="text" class="search-input" id="search" placeholder="Ã˜Â§Ã˜Â¨Ã˜Â­Ã˜Â« Ã˜Â¨Ã˜Â§Ã˜Â³Ã™â€¦ Ã˜Â§Ã™â€žÃ™â€šÃ˜Â³Ã™â€¦ Ã˜Â£Ã™Ë† Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã™â€šÃ˜Â¹Ã¢â‚¬Â¦" oninput="filter()">
+    <input type="text" class="search-input" id="search" placeholder="ابحث باسم القسم…" oninput="filterDepts()">
+    <span id="dept-count"></span>
   </div>
-
-  <div class="cards-grid" id="depts-grid">
-    <div class="loading"><div class="spinner"></div> Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦Ã¢â‚¬Â¦</div>
+  <div class="depts-grid" id="depts-grid">
+    <div class="loading-state" style="grid-column:1/-1"><i class="fas fa-spinner fa-spin"></i><p>جارٍ تحميل الأقسام…</p></div>
   </div>
+</div>
 
-  <!-- Ã˜Â§Ã™â€žÃ˜Â®Ã˜Â¯Ã™â€¦Ã˜Â§Ã˜Âª -->
-  <div class="section" style="margin-top:32px">
-    <h2 class="section-title"><i class="fas fa-stethoscope" style="color:var(--primary)"></i> Ã˜Â§Ã™â€žÃ˜Â®Ã˜Â¯Ã™â€¦Ã˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â¨Ã™Å Ã˜Â© Ã˜Â§Ã™â€žÃ™â€¦Ã˜ÂªÃ˜Â§Ã˜Â­Ã˜Â©</h2>
-    <div class="cards-grid" id="services-grid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">
-      <div class="loading"><div class="spinner"></div> Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€žÃ¢â‚¬Â¦</div>
+<!-- ── Modal ── -->
+<div class="modal-overlay" id="dept-modal" onclick="closeDeptModal(event)">
+  <div class="modal-box" id="modal-box">
+    <!-- يُملأ ديناميكياً -->
+  </div>
+</div>
+
+<div class="contact-strip">
+  <div class="container">
+    <div class="inner">
+      <div class="cs-item"><div class="cs-icon"><i class="fas fa-map-marker-alt"></i></div><div class="cs-text"><p>عنوان المستشفى</p><p>الخليل، فرش الهوى — فلسطين</p></div></div>
+      <div class="cs-item"><div class="cs-icon"><i class="fas fa-phone-alt"></i></div><div class="cs-text"><p>هاتف المستشفى</p><p>+970-2-2229247</p></div></div>
+      <div class="cs-item"><div class="cs-icon"><i class="fas fa-calendar-check"></i></div><div class="cs-text"><p>حجز العيادات الخارجية</p><p>1700200400</p></div></div>
+      <div class="cs-item"><div class="cs-icon"><i class="fas fa-envelope"></i></div><div class="cs-text"><p>البريد الإلكتروني</p><p>info@ahli.org</p></div></div>
     </div>
   </div>
-</main>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><i class="fas fa-hospital-alt"></i><span>المستشفى الأهلي</span></div>
+        <p>المستشفى الأهلي في الخليل — فلسطين. نقدم رعاية صحية شاملة منذ عام 1978.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>روابط سريعة</h4><ul>
+        <li><a href="index.html">الرئيسية</a></li>
+        <li><a href="departments.html">الأقسام الطبية</a></li>
+        <li><a href="doctors.html">الأطباء</a></li>
+        <li><a href="#" onclick="document.getElementById('ahli-chat-btn')?.click();return false;">حجز موعد</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>الأقسام الرئيسية</h4><ul>
+        <li><a href="departments.html">مركز القلب والشرايين</a></li>
+        <li><a href="departments.html">قسم الطوارئ</a></li>
+        <li><a href="departments.html">النسائية والتوليد</a></li>
+        <li><a href="departments.html">الأطفال والمواليد</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>خدمات أخرى</h4><ul>
+        <li><a href="lab-login.html">المختبر</a></li>
+        <li><a href="admin-login.html">لوحة الإدارة</a></li>
+        <li><a href="news.html">الأخبار</a></li>
+        <li><a href="dashboard.html">الإحصائيات</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 المستشفى الأهلي — جمعية أصدقاء المريض. جميع الحقوق محفوظة. | الخليل، فلسطين</p></div>
+  </div>
+</footer>
 
 <script>
 const API_BASE = (() => {
   const m = location.pathname.match(/^(\/[^/]+\/)/);
-  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/Hospital/public';
+  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/hospital-chatbot/public';
 })();
 
-let allDepts = [];
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-const DEPT_ICONS = ['fa-heart','fa-baby','fa-ambulance','fa-x-ray','fa-flask','fa-cut','fa-bone','fa-eye'];
+let allDepts = [], allDocs = [], allServices = [];
+
+// ── قاموس ألوان وأيقونات الأقسام ──
+const DEPT_STYLE = [
+  { color:'#e74c3c', icon:'fa-heartbeat' },
+  { color:'#3498db', icon:'fa-baby' },
+  { color:'#9b59b6', icon:'fa-x-ray' },
+  { color:'#27ae60', icon:'fa-procedures' },
+  { color:'#e67e22', icon:'fa-cut' },
+  { color:'#1abc9c', icon:'fa-stethoscope' },
+  { color:'#e91e63', icon:'fa-female' },
+  { color:'#c0392b', icon:'fa-ambulance' },
+  { color:'#2980b9', icon:'fa-eye' },
+  { color:'#8e44ad', icon:'fa-bone' },
+  { color:'#16a085', icon:'fa-ear-deaf' },
+  { color:'#f39c12', icon:'fa-spa' },
+  { color:'#2c3e50', icon:'fa-brain' },
+  { color:'#c0392b', icon:'fa-tint' },
+  { color:'#607d8b', icon:'fa-lungs' },
+  { color:'#00897b', icon:'fa-shield-alt' },
+  { color:'#5c6bc0', icon:'fa-project-diagram' },
+  { color:'#ef6c00', icon:'fa-project-diagram' },
+  { color:'#e53935', icon:'fa-fire' },
+  { color:'#00acc1', icon:'fa-tooth' },
+  { color:'#7cb342', icon:'fa-syringe' }
+];
+
+// ── أوصاف الأقسام ──
+const DEPT_DESC_MAP = {
+  'قلب': 'يُقدّم مركز الأهلي للقلب والشرايين خدمات تشخيص وعلاج شاملة لأمراض القلب والأوعية الدموية. يضم فريقاً من أمهر أطباء القلب والشرايين المتخصصين، مجهّزاً بأحدث أجهزة القثطرة القلبية والأشعة التداخلية. يغطي القسم قثطرة القلب التشخيصية والعلاجية، تركيب الدعامات، جراحات القلب المفتوح، وعلاج اضطرابات نظم القلب.',
+  'أطفال': 'يتخصص قسم الأطفال وحديثي الولادة في تقديم الرعاية الصحية الشاملة للأطفال من الولادة حتى سن الثامنة عشرة. يضم وحدة عناية مركزة لحديثي الولادة مجهّزة بأحدث الأجهزة الطبية، مع كادر متخصص في طب الأطفال وجراحتهم وأمراض الدم وغيرها من التخصصات الدقيقة.',
+  'أشعة': 'يوفر قسم الأشعة والتصوير الطبي خدمات تصوير متكاملة تشمل الأشعة السينية، التصوير بالرنين المغناطيسي (MRI)، التصوير المقطعي (CT)، وتصوير الصدى (Ultrasound). يعمل القسم بأحدث الأجهزة الرقمية مع فريق متخصص في قراءة وتفسير الصور.',
+  'هضمي': 'يتميز قسم الجهاز الهضمي والتنظير بتقديم خدمات التشخيص والعلاج لأمراض الجهاز الهضمي كافة، بما فيها تنظير المعدة والأمعاء، تنظير القولون، علاج القرح وأمراض الكبد والبنكرياس. يعمل في القسم أطباء متخصصون بخبرة واسعة في جراحة المناظير.',
+  'جراح': 'تضم الأقسام الجراحية نخبة من الجراحين المتخصصين في مجالات متعددة: الجراحة العامة، جراحة المناظير، جراحة الأوعية الدموية، والجراحة الانتقائية والطارئة. تتوفر غرف عمليات مجهّزة بأحدث التقنيات الجراحية.',
+  'باطن': 'يختص قسم الأمراض الباطنية بتشخيص وعلاج الأمراض الداخلية المزمنة والحادة بما فيها أمراض السكري، ارتفاع ضغط الدم، أمراض الغدة الدرقية، وأمراض الروماتيزم. يقدم القسم خدمات متكاملة للفحص والمتابعة الدورية.',
+  'نسائية': 'يوفر قسم النسائية والتوليد رعاية متكاملة للمرأة في جميع مراحل حياتها، مع تخصيص عناية خاصة بمتابعة الحمل والولادة والرعاية ما بعد الوضع. يضم القسم وحدة للمواليد ووحدة للعناية المركزة للأم والمولود.',
+  'طوارئ': 'يعمل قسم الإسعاف والطوارئ على مدار الساعة طوال أيام الأسبوع لتلقي ومعالجة الحالات الطارئة والإسعافية. يضم فريقاً مدرّباً على التعامل مع الحالات الحرجة، مع توافر أجهزة الإنعاش وعربات الإسعاف.',
+  'عيون': 'يقدم قسم العيون خدمات طبية وجراحية متخصصة لأمراض وإصابات العين، بما فيها جراحة الماء الأبيض (الكتاراكت)، تصحيح الإبصار بالليزر، علاج الجلوكوما، وأمراض شبكية العين. يعمل في القسم أطباء متخصصون بخبرات دولية.',
+  'عظام': 'يُعنى قسم العظام والمفاصل بعلاج كسور العظام وإصابات الجهاز العضلي الهيكلي وأمراض المفاصل كالتهاب المفاصل. يقدم القسم جراحات استبدال المفاصل (الركبة والورك)، وإصلاح الكسور، وعلاج الانزلاق الغضروفي.',
+  'أنف': 'يتخصص قسم الأنف والأذن والحنجرة في تشخيص وعلاج اضطرابات الجهاز التنفسي العلوي والسمع والبلع. يقدم القسم جراحات الأذن الوسطى، تصحيح انحراف الحاجز الأنفي، استئصال اللوزتين، وعلاج الاضطرابات الصوتية.',
+  'جلدية': 'يعتني قسم الأمراض الجلدية بتشخيص وعلاج أمراض الجلد والشعر والأظافر، مع تقديم خدمات طبية تجميلية متخصصة. يشمل ذلك علاج الصدفية، الأكزيما، حب الشباب، والإجراءات التجميلية باستخدام الليزر والحقن.',
+  'أعصاب': 'يقدم قسم الأعصاب والجراحة العصبية خدمات متخصصة لتشخيص وعلاج أمراض الجهاز العصبي المركزي والمحيطي. يشمل اختصاص القسم جراحات الدماغ والعمود الفقري، علاج الصرع، السكتة الدماغية، والأورام العصبية.',
+  'دم': 'يعتني قسم أمراض الدم والأورام بتشخيص وعلاج أمراض الدم كالأنيميا وسرطانات الدم، إضافة إلى خدمات العلاج الكيميائي والهرموني للأورام السرطانية. يضم القسم وحدة مخصصة للعلاج الكيميائي مع فريق تمريضي متخصص.',
+  'صدر': 'يختص قسم الصدرية والرئتين بتشخيص وعلاج أمراض الجهاز التنفسي بما فيها الربو، مرض الانسداد الرئوي المزمن، أمراض الجنب، وسرطانات الرئة. يقدم القسم خدمات التنظير القصبي وتحاليل وظائف التنفس.',
+  'روماتيزم': 'يعنى قسم الروماتيزم والمناعة بعلاج أمراض المفاصل الالتهابية والأمراض المناعية الذاتية كالذئبة الحمراء والتهاب المفاصل الروماتويدي. يقدم القسم خدمات علاجية متخصصة مع متابعة دورية شاملة.',
+  'كلى': 'يوفر قسم الكلى والمسالك البولية خدمات تشخيص وعلاج أمراض الكلى والجهاز البولي، بما يشمل تفتيت الحصوات، علاج الكلى المزمن، والتحضير للغسيل الكلوي. يتوفر بالقسم كادر متخصص في جراحة المسالك التنظيرية.',
+  'أوردة': 'يتخصص قسم جراحة الأوردة والشرايين في علاج أمراض الجهاز الوعائي بما فيها دوالي الأوردة، انسداد الشرايين، وأمراض الشريان الأبهر. يعتمد القسم أحدث التقنيات في الجراحة التداخلية الوعائية.',
+  'تجميل': 'يجمع قسم جراحة التجميل والحروق بين الترميم الجراحي للحروق والحوادث وتقديم الخدمات التجميلية. يضم فريقاً من المتخصصين في جراحة إعادة البناء وإعادة التأهيل لمرضى الحروق.',
+  'أسنان': 'يوفر قسم طب الأسنان خدمات شاملة لصحة الفم والأسنان تشمل طب الأسنان العام، التقويم، زراعة الأسنان، والجراحة الفموية. يعمل في القسم أطباء أسنان متخصصون في مختلف تخصصات طب الأسنان.',
+  'ألم': 'يختص قسم علاج الألم التداخلي بتخفيف آلام العمود الفقري والمفاصل والآلام المزمنة باستخدام أحدث التقنيات التداخلية كالحقن الهرمونية، التخثير الحراري، وتركيب مضخات الألم. يهدف القسم لتحسين جودة حياة المرضى.'
+};
+
+function getDeptDesc(name) {
+  for (const [key, val] of Object.entries(DEPT_DESC_MAP)) {
+    if (name.includes(key)) return val;
+  }
+  return 'يقدم هذا القسم خدمات طبية متخصصة بأعلى معايير الجودة والسلامة، بكادر طبي وتمريضي مؤهل وأجهزة طبية حديثة.';
+}
+
+// صورة حقيقية لكل قسم من Unsplash
+function getDeptImg(name, sig) {
+  const kwMap = {
+    'قلب':      'cardiology+heart+ecg+hospital',
+    'أطفال':    'pediatric+children+hospital+neonatal',
+    'أشعة':     'radiology+MRI+xray+scanner',
+    'هضمي':     'endoscopy+gastroenterology+medical',
+    'جراح':     'surgery+operating+room+medical',
+    'باطن':     'internal+medicine+doctor+hospital',
+    'نسائية':   'maternity+obstetrics+gynecology+hospital',
+    'طوارئ':    'emergency+room+ambulance+hospital',
+    'عيون':     'ophthalmology+eye+exam+clinic',
+    'عظام':     'orthopedics+bone+xray+joint',
+    'أنف':      'ENT+ear+nose+throat+clinic',
+    'جلدية':    'dermatology+skin+clinic+medical',
+    'أعصاب':    'neurology+brain+mri+scan',
+    'دم':       'blood+hematology+lab+oncology',
+    'صدر':      'pulmonology+lung+chest+xray',
+    'كلى':      'kidney+urology+dialysis+hospital',
+    'روماتيزم': 'rheumatology+joints+physical+therapy',
+    'تجميل':    'plastic+surgery+hospital+medical',
+    'أسنان':    'dentistry+dental+clinic+oral',
+    'ألم':      'pain+management+spine+medical',
+  };
+  let kw = 'hospital+medical+clinic+healthcare';
+  for (const [k, v] of Object.entries(kwMap)) {
+    if (name.includes(k)) { kw = v; break; }
+  }
+  return `https://source.unsplash.com/featured/800x450/?${kw}&sig=${sig}`;
+}
+
+// صور القسم في المودال (3 صور موضوعاتية)
+function getDeptPhotoBoxes(style, deptName, deptId) {
+  const labels = ['غرفة العمليات','الكشف والمتابعة','التجهيزات الحديثة'];
+  const icons   = ['fa-procedures','fa-stethoscope','fa-microscope'];
+  return labels.map((lbl, i) => {
+    const imgUrl = getDeptImg(deptName, deptId * 10 + i + 1);
+    return `
+    <div class="dept-photo-box" style="background:${style.color}">
+      <img src="${imgUrl}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0" loading="lazy" onerror="this.style.display='none'">
+      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,.1));z-index:1"></div>
+      <div class="dept-photo-bg-pattern"></div>
+      <i class="fas ${icons[i]} photo-icon" style="position:relative;z-index:2"></i>
+      <div class="photo-label" style="z-index:2">${lbl}</div>
+    </div>`;
+  }).join('');
+}
 
 function renderDepts(list) {
   const g = document.getElementById('depts-grid');
-  if(!list.length){ g.innerHTML='<div class="empty-state"><i class="fas fa-search"></i><p>Ã™â€žÃ˜Â§ Ã˜ÂªÃ™Ë†Ã˜Â¬Ã˜Â¯ Ã™â€ Ã˜ÂªÃ˜Â§Ã˜Â¦Ã˜Â¬</p></div>'; return; }
-  g.innerHTML = list.map((d,i) => `
-    <div class="info-card">
-      <div class="avatar" style="background:linear-gradient(135deg,${['#0075a7','#27ae60','#e74c3c','#8e44ad','#e67e22','#1abc9c','#2980b9','#c0392b'][i%8]},${['#00a8e8','#2ecc71','#c0392b','#9b59b6','#f39c12','#16a085','#3498db','#e74c3c'][i%8]})">
-        <i class="fas ${DEPT_ICONS[i%8]}"></i>
+  if (!list.length) {
+    g.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-search"></i><p>لا توجد نتائج</p></div>';
+    return;
+  }
+  g.innerHTML = list.map((d, i) => {
+    const s = DEPT_STYLE[i % DEPT_STYLE.length];
+    const origIdx = allDepts.indexOf(d);
+    const style = DEPT_STYLE[origIdx % DEPT_STYLE.length];
+    return `
+    <div class="dept-card" onclick="openDept(${d.department_id})">
+      <div class="dept-card-img" style="background:${style.color}">
+        <img src="${getDeptImg(d.name, d.department_id)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0" loading="lazy" onerror="this.style.display='none'">
+        <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.5));z-index:1"></div>
+        <div class="dept-bg-pattern"></div>
+        <i class="fas ${style.icon} dept-big-icon" style="position:relative;z-index:2"></i>
       </div>
-      <h3>${esc(d.name)}</h3>
-      <p class="sub"><i class="fas fa-map-marker-alt"></i> ${esc(d.location||'')}</p>
-      <p class="sub"><i class="fas fa-clock"></i> ${esc(d.working_hours||'')}</p>
-    </div>`).join('');
+      <div class="dept-card-top">
+        <div class="dept-icon" style="background:${style.color}">
+          <i class="fas ${style.icon}"></i>
+        </div>
+        <div class="dept-info">
+          <h3>${esc(d.name)}</h3>
+          ${d.location ? `<p><i class="fas fa-map-marker-alt"></i> ${esc(d.location)}</p>` : ''}
+          ${d.working_hours ? `<p><i class="fas fa-clock"></i> ${esc(d.working_hours)}</p>` : ''}
+        </div>
+      </div>
+      <div class="dept-footer">
+        <span>عرض التفاصيل والأطباء</span>
+        <i class="fas fa-arrow-left arrow"></i>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function filter() {
+function filterDepts() {
   const q = document.getElementById('search').value.trim().toLowerCase();
-  renderDepts(allDepts.filter(d =>
-    d.name.toLowerCase().includes(q) || (d.location||'').toLowerCase().includes(q)
-  ));
+  const filtered = allDepts.filter(d => d.name.toLowerCase().includes(q) || (d.location||'').toLowerCase().includes(q));
+  document.getElementById('dept-count').textContent = `${filtered.length} قسم`;
+  renderDepts(filtered);
 }
 
-fetch(`${API_BASE}/api/departments`).then(r=>r.json()).then(j=>{
-  if(!j.success) throw new Error(j.message);
-  allDepts = j.data;
-  document.getElementById('dept-count').textContent = `${allDepts.length} Ã™â€šÃ˜Â³Ã™â€¦ Ã˜Â·Ã˜Â¨Ã™Å  Ã™â€¦Ã˜ÂªÃ˜Â§Ã˜Â­`;
-  renderDepts(allDepts);
-}).catch(e=>{
-  document.getElementById('depts-grid').innerHTML = `<div style="color:var(--danger);padding:24px;text-align:center"><i class="fas fa-exclamation-triangle"></i> Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž</div>`;
-  document.getElementById('dept-count').textContent = 'Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž';
-});
+function openDept(id) {
+  const d = allDepts.find(x => x.department_id == id);
+  if (!d) return;
+  const idx = allDepts.indexOf(d);
+  const style = DEPT_STYLE[idx % DEPT_STYLE.length];
+  const deptDocs = allDocs.filter(doc => doc.department_id == id);
+  const deptSvcs = allServices.filter(s => s.department_id == id);
+  const desc = getDeptDesc(d.name);
 
-fetch(`${API_BASE}/api/services`).then(r=>r.json()).then(j=>{
-  const g = document.getElementById('services-grid');
-  if(!j.success||!j.data.length){ g.innerHTML='<p style="color:var(--muted)">Ã™â€žÃ˜Â§ Ã˜ÂªÃ™Ë†Ã˜Â¬Ã˜Â¯ Ã˜Â®Ã˜Â¯Ã™â€¦Ã˜Â§Ã˜Âª</p>'; return; }
-  g.innerHTML = j.data.map(s=>`
-    <div class="service-card">
-      <h4>${esc(s.name)}</h4>
-      <p class="sub" style="display:block;margin-top:4px;font-size:12px">${esc(s.department_name||'')}</p>
-      ${s.description ? `<p style="font-size:12px;color:var(--muted);margin-top:6px">${esc(s.description.substring(0,80))}Ã¢â‚¬Â¦</p>` : ''}
-      <div class="service-cost">${Number(s.base_cost).toLocaleString('ar-SA')} Ã¢â€šÂª</div>
-    </div>`).join('');
-}).catch(()=>{ document.getElementById('services-grid').innerHTML='<p style="color:var(--danger)">Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž</p>'; });
+  document.getElementById('modal-box').innerHTML = `
+    <div class="modal-hero" style="background:linear-gradient(135deg,${style.color}dd,${style.color}88)">
+      <div class="bg-pattern"></div>
+      <button class="close-btn" onclick="closeDeptModal()"><i class="fas fa-times"></i></button>
+      <i class="fas ${style.icon} modal-hero-icon"></i>
+      <h2>${esc(d.name)}</h2>
+      <div class="meta">
+        ${d.location    ? `<span><i class="fas fa-map-marker-alt"></i>${esc(d.location)}</span>` : ''}
+        ${d.working_hours ? `<span><i class="fas fa-clock"></i>${esc(d.working_hours)}</span>` : ''}
+        <span><i class="fas fa-user-md"></i>${deptDocs.length} طبيب</span>
+      </div>
+    </div>
+
+    <div class="modal-tabs">
+      <div class="modal-tab active" onclick="switchTab(this,'tab-about')"><i class="fas fa-info-circle"></i> نبذة عن القسم</div>
+      <div class="modal-tab" onclick="switchTab(this,'tab-photos')"><i class="fas fa-images"></i> صور القسم</div>
+      <div class="modal-tab" onclick="switchTab(this,'tab-docs')"><i class="fas fa-user-md"></i> الأطباء (${deptDocs.length})</div>
+      ${deptSvcs.length ? `<div class="modal-tab" onclick="switchTab(this,'tab-svcs')"><i class="fas fa-stethoscope"></i> الخدمات (${deptSvcs.length})</div>` : ''}
+    </div>
+
+    <div class="modal-content">
+
+      <div class="tab-pane active" id="tab-about">
+        <p class="dept-desc-text">${esc(desc)}</p>
+        <div class="dept-stats-row">
+          <div class="dept-stat-box">
+            <i class="fas fa-user-md"></i>
+            <div class="val">${deptDocs.length}</div>
+            <div class="lbl">طبيب متخصص</div>
+          </div>
+          <div class="dept-stat-box">
+            <i class="fas fa-stethoscope"></i>
+            <div class="val">${deptSvcs.length || '—'}</div>
+            <div class="lbl">خدمة طبية</div>
+          </div>
+          <div class="dept-stat-box">
+            <i class="fas fa-clock"></i>
+            <div class="val" style="font-size:13px">${esc(d.working_hours || '—')}</div>
+            <div class="lbl">ساعات العمل</div>
+          </div>
+          <div class="dept-stat-box">
+            <i class="fas fa-map-marker-alt"></i>
+            <div class="val" style="font-size:13px">${esc(d.location || '—')}</div>
+            <div class="lbl">الموقع</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="tab-photos">
+        <div class="dept-photos-grid">${getDeptPhotoBoxes(style, d.name, d.department_id)}</div>
+      </div>
+
+      <div class="tab-pane" id="tab-docs">
+        ${deptDocs.length ? `
+        <div class="docs-grid-modal">
+          ${deptDocs.map(doc => {
+            const photoEl = doc.photo_url
+              ? `<img src="${esc(doc.photo_url)}" class="doc-mini-photo" alt="${esc(doc.full_name)}" onerror="this.outerHTML='<div class=\\'doc-mini-avatar\\'><i class=\\'fas fa-user-md\\'></i></div>'">`
+              : `<div class="doc-mini-avatar"><i class="fas fa-user-md"></i></div>`;
+            return `
+            <div class="doc-mini-card">
+              ${photoEl}
+              <div class="doc-mini-name">${esc(doc.full_name)}</div>
+              <div class="doc-mini-spec">${esc(doc.specialty||'')}</div>
+              <div class="doc-mini-contact">
+                ${doc.phone ? `<a href="tel:${esc(doc.phone)}"><i class="fas fa-phone"></i> ${esc(doc.phone)}</a>` : ''}
+                ${doc.email ? `<a href="mailto:${esc(doc.email)}"><i class="fas fa-envelope"></i> ${esc(doc.email)}</a>` : ''}
+              </div>
+            </div>`;
+          }).join('')}
+        </div>` : '<div class="no-docs"><i class="fas fa-user-md" style="font-size:36px;color:#b0bec5;display:block;margin-bottom:12px"></i>لا يوجد أطباء مسجلون في هذا القسم حالياً</div>'}
+      </div>
+
+      ${deptSvcs.length ? `
+      <div class="tab-pane" id="tab-svcs">
+        <div class="services-list">
+          ${deptSvcs.map(s => `
+          <div class="service-item">
+            <i class="fas fa-check-circle"></i>
+            <span>${esc(s.name)}</span>
+            ${s.base_cost ? `<span class="cost">${Number(s.base_cost).toLocaleString('ar-SA')} ₪</span>` : ''}
+          </div>`).join('')}
+        </div>
+      </div>` : ''}
+    </div>`;
+
+  document.getElementById('dept-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function switchTab(el, paneId) {
+  el.closest('.modal-box').querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+  el.closest('.modal-box').querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(paneId)?.classList.add('active');
+}
+
+function closeDeptModal(e) {
+  if (e && e.target !== document.getElementById('dept-modal')) return;
+  document.getElementById('dept-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDeptModal(); } });
+
+// ── جلب البيانات ──
+Promise.all([
+  fetch(`${API_BASE}/api/departments`).then(r=>r.json()),
+  fetch(`${API_BASE}/api/doctors`).then(r=>r.json()),
+  fetch(`${API_BASE}/api/services`).then(r=>r.json())
+]).then(([dj, docj, svj]) => {
+  if (dj.success)  allDepts    = dj.data;
+  if (docj.success) allDocs    = docj.data;
+  if (svj.success)  allServices = svj.data;
+
+  document.getElementById('dept-count-banner').textContent = `${allDepts.length} قسماً طبياً متخصصاً`;
+  document.getElementById('dept-count').textContent = `${allDepts.length} قسم`;
+  renderDepts(allDepts);
+}).catch(() => {
+  document.getElementById('depts-grid').innerHTML =
+    '<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-exclamation-triangle" style="color:#e74c3c"></i><p>تعذّر تحميل البيانات</p></div>';
+});
 </script>
-  <script src="../public/assets/js/chatbot.js?v=20260416-page-session-reset"></script>
+<script src="../public/assets/js/chatbot.js?v=20260518-no-auth"></script>
 </body>
 </html>

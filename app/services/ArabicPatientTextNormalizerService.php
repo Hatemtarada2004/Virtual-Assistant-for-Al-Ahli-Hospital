@@ -37,6 +37,11 @@ class ArabicPatientTextNormalizerService
         '/\b(?:فاتوره|فاتورة|فواتير)\b/u' => 'فاتورة',
         '/\b(?:شكوه|شكوى|شكاية)\b/u' => 'شكوى',
         '/\b(?:ملاحظه|ملاحظة|اقتراح)\b/u' => 'ملاحظة',
+        '/\b(?:يلي|يلى|يللي)\b/u' => 'اللي',
+        '/\b(?:هيك|هكذا|كذا)\b/u' => 'هكذا',
+        '/\b(?:هلق|هلأ|هلا|هلقيت|هلقيه)\b/u' => 'الان',
+        '/\b(?:كمان|برضو|برضه|ايضا|أيضا)\b/u' => 'ايضا',
+        '/\b(?:زي|متل|مثل)\b/u' => 'مثل',
     ];
 
     public function variants(string $message): array
@@ -70,6 +75,8 @@ class ArabicPatientTextNormalizerService
         $text = str_replace(['أ', 'إ', 'آ', 'ٱ'], 'ا', $text);
         $text = str_replace(['ؤ', 'ئ'], ['و', 'ي'], $text);
         $text = str_replace(['ى', 'ة'], ['ي', 'ه'], $text);
+        // إزالة علامات الترقيم العربية قبل التنظيف العام (؟ و ، في نطاق \p{Arabic} ببعض إصدارات PCRE)
+        $text = str_replace(['؟', '،', '؛', '»', '«', '﴿', '﴾', '٪', '٫', '٬'], ' ', $text);
         $text = preg_replace('/([\p{Arabic}])\1{2,}/u', '$1', $text) ?? $text;
         $text = preg_replace('/[^\p{Arabic}\p{Latin}\p{N}\s:#\-\/]/u', ' ', $text) ?? $text;
 

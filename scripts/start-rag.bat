@@ -1,5 +1,6 @@
 @echo off
-cd /d C:\xampp\htdocs\Hospital
+set "PROJECT_ROOT=%~dp0.."
+cd /d "%PROJECT_ROOT%"
 if not exist ".venv-rag\Scripts\uvicorn.exe" (
   echo RAG environment is missing.
   echo Run scripts\setup-rag.bat first, then start RAG again.

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>للزائر والمريض — المستشفى الأهلي</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link href="../public/assets/css/chatbot.css" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--navy:#002b5b;--blue:#0062a7;--orange:#e87a1e;--white:#fff;--light:#f0f6ff;--gray:#f5f7fa;--text:#2c3e50;--muted:#6b7a8d;--border:#dde8f0;--radius:12px}
+    body{font-family:'Cairo',sans-serif;background:var(--white);color:var(--text);direction:rtl}
+    a{text-decoration:none;color:inherit}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+    .topbar{background:var(--navy);color:rgba(255,255,255,.85);font-size:13px;padding:7px 0}
+    .topbar .inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+    .topbar .tb-info{display:flex;gap:20px;align-items:center}
+    .topbar .tb-info span{display:flex;align-items:center;gap:6px}
+    .topbar .tb-info i{color:var(--orange)}
+    .topbar .tb-social{display:flex;gap:10px}
+    .topbar .tb-social a{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px}
+    .topbar .tb-social a:hover{background:var(--orange)}
+
+    .site-header{background:var(--white);padding:14px 0;border-bottom:2px solid var(--border)}
+    .site-header .inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .site-logo{display:flex;align-items:center;gap:14px}
+    .logo-icon{width:60px;height:60px;background:linear-gradient(135deg,var(--blue),var(--navy));border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;flex-shrink:0}
+    .logo-text h1{font-size:22px;font-weight:900;color:var(--navy);line-height:1.2}
+    .logo-text p{font-size:12px;color:var(--muted);margin-top:2px}
+    .header-contact{display:flex;gap:18px}
+    .hc-item{display:flex;align-items:center;gap:8px}
+    .hc-icon{width:38px;height:38px;border-radius:50%;background:var(--light);display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:14px;flex-shrink:0}
+    .hc-text p:first-child{font-size:11px;color:var(--muted)}
+    .hc-text p:last-child{font-size:13px;font-weight:700;color:var(--navy);direction:ltr}
+
+    .main-nav{background:var(--blue);position:sticky;top:0;z-index:1000;box-shadow:0 3px 12px rgba(0,98,167,.35)}
+    .main-nav .inner{display:flex;align-items:center;justify-content:space-between}
+    .nav-links{display:flex;list-style:none}
+    .nav-links li a{display:block;padding:15px 16px;color:rgba(255,255,255,.88);font-size:13px;font-weight:600;transition:background .2s,color .2s;white-space:nowrap;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+    .nav-links li a:hover,.nav-links li a.active{background:rgba(255,255,255,.15);color:#fff}
+    .nav-links li a.active{border-bottom:3px solid var(--orange)}
+    .nav-btn{background:var(--orange);color:#fff !important;border-radius:6px;padding:8px 16px !important;margin:8px 0;font-weight:700 !important;white-space:nowrap}
+    .nav-btn:hover{background:#d06a10 !important}
+
+    .page-hero{background:linear-gradient(135deg,#003366 0%,var(--blue) 100%);padding:55px 0;color:#fff;text-align:center}
+    .page-hero h2{font-size:36px;font-weight:900;margin-bottom:10px}
+    .page-hero p{font-size:15px;color:rgba(255,255,255,.8);max-width:600px;margin:0 auto}
+    .breadcrumb{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:14px;font-size:13px;color:rgba(255,255,255,.7)}
+    .breadcrumb a{color:rgba(255,255,255,.7)}
+    .breadcrumb i{font-size:10px}
+
+    /* layout رئيسي */
+    .page-body{display:grid;grid-template-columns:280px 1fr;gap:30px;padding:40px 0 60px}
+    .sidebar{position:sticky;top:80px;align-self:start}
+    .sidebar-menu{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;box-shadow:0 4px 20px rgba(0,43,91,.06)}
+    .sidebar-title{background:var(--navy);color:#fff;padding:14px 18px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+    .sidebar-title i{color:var(--orange)}
+    .sidebar-menu a{display:flex;align-items:center;gap:10px;padding:12px 18px;font-size:13px;color:var(--text);border-bottom:1px solid var(--border);transition:all .2s}
+    .sidebar-menu a:last-child{border-bottom:none}
+    .sidebar-menu a:hover,.sidebar-menu a.active{background:var(--light);color:var(--blue);font-weight:600}
+    .sidebar-menu a.active{border-right:4px solid var(--orange)}
+    .sidebar-menu a i{width:20px;text-align:center;color:var(--orange);font-size:14px}
+
+    /* محتوى */
+    .content-area{}
+    .section-card{display:none;background:var(--white);border-radius:16px;border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,43,91,.06);overflow:hidden;margin-bottom:24px}
+    .section-card.active{display:block}
+    .card-header{background:linear-gradient(135deg,var(--navy),var(--blue));padding:24px 28px;color:#fff}
+    .card-header h2{font-size:20px;font-weight:900;display:flex;align-items:center;gap:12px}
+    .card-header h2 i{color:var(--orange)}
+    .card-body{padding:28px}
+    .card-body p{font-size:14px;line-height:2;color:var(--text);margin-bottom:14px}
+    .card-body p:last-child{margin-bottom:0}
+
+    /* قوائم الأوراق */
+    .docs-list{list-style:none;margin-top:10px}
+    .docs-list li{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);font-size:14px;line-height:1.7}
+    .docs-list li:last-child{border-bottom:none}
+    .docs-list li::before{content:counter(item);counter-increment:item;background:var(--orange);color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px}
+    .docs-list{counter-reset:item}
+
+    /* حقوق المريض */
+    .rights-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:8px}
+    .rights-box{border-radius:var(--radius);padding:20px}
+    .rights-box.rights{background:#e8f4fb}
+    .rights-box.duties{background:#fff3e0}
+    .rights-box h3{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .rights-box.rights h3{color:var(--blue)}
+    .rights-box.duties h3{color:var(--orange)}
+    .rights-box ul{list-style:none}
+    .rights-box ul li{padding:6px 0;font-size:13px;color:var(--text);display:flex;align-items:flex-start;gap:8px;line-height:1.6}
+    .rights-box ul li::before{content:"✓";color:var(--blue);font-weight:700;flex-shrink:0}
+    .rights-box.duties ul li::before{content:"●";color:var(--orange);font-size:8px;margin-top:6px}
+
+    /* التأمينات */
+    .ins-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+    .ins-item{background:var(--light);border-radius:8px;padding:14px;font-size:13px;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:8px}
+    .ins-item i{color:var(--blue);font-size:14px}
+
+    /* مواقف */
+    .parking-list{list-style:none;margin-top:10px}
+    .parking-list li{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--light);border-radius:8px;margin-bottom:8px;font-size:14px}
+    .parking-list li i{color:var(--orange);font-size:18px;width:24px;text-align:center}
+
+    /* تعليمات القلب */
+    .instructions-list{counter-reset:inst;list-style:none;margin-top:8px}
+    .instructions-list li{counter-increment:inst;display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);font-size:14px;line-height:1.8}
+    .instructions-list li:last-child{border-bottom:none}
+    .instructions-list li::before{content:counter(inst);background:var(--blue);color:#fff;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px}
+    .food-box{background:#e8f5e9;border-radius:var(--radius);padding:20px;margin-top:20px}
+    .food-box h3{font-size:15px;font-weight:700;color:#2e7d32;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .food-box ul{list-style:none}
+    .food-box ul li{padding:5px 0;font-size:13px;display:flex;align-items:flex-start;gap:8px}
+    .food-box ul li::before{content:"🍎";font-size:14px}
+
+    /* info boxes */
+    .info-box{background:var(--light);border-right:4px solid var(--blue);border-radius:0 8px 8px 0;padding:16px 18px;margin-bottom:16px;font-size:14px;line-height:1.8}
+    .warn-box{background:#fff3e0;border-right:4px solid var(--orange);border-radius:0 8px 8px 0;padding:16px 18px;margin:16px 0;font-size:13px;color:#7b3f00}
+
+    /* فوتر */
+    .site-footer{background:var(--navy);color:rgba(255,255,255,.8);padding:40px 0 0}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:16px 0;text-align:center;font-size:12px;color:rgba(255,255,255,.5)}
+
+    @media(max-width:900px){
+      .page-body{grid-template-columns:1fr}
+      .sidebar{position:static}
+      .rights-grid,.ins-grid{grid-template-columns:1fr}
+      .header-contact{display:none}
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="container inner">
+    <div class="tb-info">
+      <span><i class="fas fa-phone"></i> +970-2-2229247</span>
+      <span><i class="fas fa-calendar-check"></i> حجز: 1700200400</span>
+      <span><i class="fas fa-envelope"></i> info@ahli.org</span>
+    </div>
+    <div class="tb-social">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container inner">
+    <a href="index.html" class="site-logo">
+      <div class="logo-icon"><i class="fas fa-hospital-alt"></i></div>
+      <div class="logo-text"><h1>المستشفى الأهلي</h1><p>Al-Ahli Hospital | الخليل، فلسطين</p></div>
+    </a>
+    <div class="header-contact">
+      <div class="hc-item"><div class="hc-icon"><i class="fas fa-phone-alt"></i></div><div class="hc-text"><p>هاتف المستشفى</p><p>+970-2-2229247</p></div></div>
+      <div class="hc-item"><div class="hc-icon"><i class="fas fa-calendar-alt"></i></div><div class="hc-text"><p>حجز العيادات</p><p>1700200400</p></div></div>
+      <div class="hc-item"><div class="hc-icon"><i class="fas fa-clock"></i></div><div class="hc-text"><p>الطوارئ</p><p>24 ساعة / 7 أيام</p></div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="main-nav">
+  <div class="container inner">
+    <ul class="nav-links">
+      <li><a href="index.html">الرئيسية</a></li>
+      <li><a href="about.html">من نحن</a></li>
+      <li><a href="departments.html">الأقسام والوحدات الطبية</a></li>
+      <li><a href="doctors.html">الأطباء</a></li>
+      <li><a href="news.html">الأخبار</a></li>
+      <li><a href="donations.html">المشاريع والتبرعات</a></li>
+      <li><a href="visitor.html" class="active">للزائر والمريض</a></li>
+      <li><a href="education.html">التعليم والتدريب</a></li>
+    </ul>
+    <a href="#" class="nav-btn" onclick="document.getElementById('ahli-chat-btn')?.click();return false;"><i class="fas fa-comments"></i> المساعد الذكي</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <h2><i class="fas fa-user-injured" style="color:var(--orange);margin-left:12px"></i>للزائر والمريض</h2>
+  <p>كل ما تحتاجه كمريض أو زائر في مكان واحد</p>
+  <div class="breadcrumb">
+    <a href="index.html">الرئيسية</a>
+    <i class="fas fa-chevron-left"></i>
+    <span>للزائر والمريض</span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="page-body">
+
+    <!-- سايدبار -->
+    <aside class="sidebar">
+      <div class="sidebar-menu">
+        <div class="sidebar-title"><i class="fas fa-list"></i> المحتويات</div>
+        <a href="#" class="active" onclick="showSection('clinics',this);return false"><i class="fas fa-calendar-alt"></i> مواعيد العيادات الخارجية</a>
+        <a href="#" onclick="showSection('rights',this);return false"><i class="fas fa-shield-alt"></i> حقوق وواجبات المريض</a>
+        <a href="#" onclick="showSection('birth',this);return false"><i class="fas fa-baby"></i> أوراق تبليغ الولادة</a>
+        <a href="#" onclick="showSection('death',this);return false"><i class="fas fa-file-alt"></i> أوراق شهادة الوفاة</a>
+        <a href="#" onclick="showSection('parking',this);return false"><i class="fas fa-parking"></i> مواقف السيارات</a>
+        <a href="#" onclick="showSection('atm',this);return false"><i class="fas fa-credit-card"></i> خدمة الصراف الآلي ATM</a>
+        <a href="#" onclick="showSection('cafeteria',this);return false"><i class="fas fa-coffee"></i> الكافتيريا</a>
+        <a href="#" onclick="showSection('gifts',this);return false"><i class="fas fa-gift"></i> متجر الهدايا</a>
+        <a href="#" onclick="showSection('barber',this);return false"><i class="fas fa-cut"></i> صالون الحلاقة</a>
+        <a href="#" onclick="showSection('insurance',this);return false"><i class="fas fa-file-medical"></i> شركات التأمين المعتمدة</a>
+        <a href="#" onclick="showSection('heart',this);return false"><i class="fas fa-heartbeat"></i> تعليمات بعد عملية القلب المفتوح</a>
+        <a href="#" onclick="showSection('valve',this);return false"><i class="fas fa-procedures"></i> تعليمات بعد زراعة الصمام</a>
+        <a href="#" onclick="showSection('ref-heart',this);return false"><i class="fas fa-notes-medical"></i> تحويلة قلب مفتوح</a>
+        <a href="#" onclick="showSection('ref-moh',this);return false"><i class="fas fa-hospital"></i> تحويلة وزارة الصحة</a>
+        <a href="#" onclick="showSection('ref-mil',this);return false"><i class="fas fa-star-and-crescent"></i> تحويلة خدمات عسكرية</a>
+        <a href="#" onclick="showSection('ref-newborn',this);return false"><i class="fas fa-baby-carriage"></i> تحويلة المولود الجديد</a>
+      </div>
+    </aside>
+
+    <!-- المحتوى -->
+    <div class="content-area">
+
+      <!-- مواعيد العيادات -->
+      <div class="section-card active" id="sec-clinics">
+        <div class="card-header"><h2><i class="fas fa-calendar-alt"></i> مواعيد العيادات الخارجية</h2></div>
+        <div class="card-body">
+          <div class="info-box"><strong>رقم الحجز المركزي:</strong> 1700200400<br>ساعات العمل: السبت – الخميس من 8:00 صباحاً حتى 8:00 مساءً<br>الإجازة الأسبوعية: الجمعة</div>
+          <p>يمكنك حجز موعدك في العيادات الخارجية عبر الاتصال برقم الحجز المركزي أو عبر المساعد الذكي في الموقع.</p>
+          <p>قسم الطوارئ والنسائية والتوليد والجراحة تعمل على مدار الساعة 24/7 دون الحاجة لحجز مسبق.</p>
+          <a href="#" onclick="document.getElementById('ahli-chat-btn')?.click();return false;" style="display:inline-flex;align-items:center;gap:8px;background:var(--orange);color:#fff;padding:12px 24px;border-radius:8px;font-weight:700;margin-top:10px"><i class="fas fa-calendar-plus"></i> احجز موعدك الآن</a>
+        </div>
+      </div>
+
+      <!-- حقوق وواجبات المريض -->
+      <div class="section-card" id="sec-rights">
+        <div class="card-header"><h2><i class="fas fa-shield-alt"></i> حقوق وواجبات المريض</h2></div>
+        <div class="card-body">
+          <p style="color:var(--blue);font-weight:600">نحن بعون الله نرعاكم</p>
+          <div class="rights-grid">
+            <div class="rights-box rights">
+              <h3><i class="fas fa-heart"></i> حقوق المريض</h3>
+              <ul>
+                <li>معاملة محترمة في بيئة آمنة</li>
+                <li>رعاية طوارئ فورية بصرف النظر عن الوضع المادي</li>
+                <li>رعاية طبية مناسبة مع شرح كامل بلغة مفهومة</li>
+                <li>الحق في طلب رأي طبي ثانٍ</li>
+                <li>حماية الخصوصية والسرية</li>
+                <li>الحصول على فاتورة تفصيلية</li>
+                <li>معرفة اسم وتخصص الطاقم المعالج</li>
+              </ul>
+            </div>
+            <div class="rights-box duties">
+              <h3><i class="fas fa-tasks"></i> واجبات المريض</h3>
+              <ul>
+                <li>الالتزام بسياسات وأنظمة المستشفى</li>
+                <li>الالتزام بمواعيد الحجز</li>
+                <li>تقديم تاريخ طبي كامل ودقيق</li>
+                <li>الإبلاغ الفوري عن أي تغيير في الحالة الصحية</li>
+                <li>اتباع تعليمات الفريق الطبي</li>
+                <li>تسوية الحسابات لدعم رسالة المستشفى الإنسانية</li>
+              </ul>
+            </div>
+          </div>
+          <div class="rights-grid" style="margin-top:20px">
+            <div class="rights-box rights">
+              <h3><i class="fas fa-users"></i> حقوق الزائر</h3>
+              <ul>
+                <li>زيارة المريض خلال أوقات الزيارة الرسمية</li>
+                <li>الوصول إلى المرافق العامة</li>
+                <li>المعاملة باحترام</li>
+                <li>الحصول على إجابات واضحة لاستفساراتهم</li>
+              </ul>
+            </div>
+            <div class="rights-box duties">
+              <h3><i class="fas fa-exclamation-circle"></i> واجبات الزائر</h3>
+              <ul>
+                <li>عدم التدخين داخل المستشفى</li>
+                <li>الحفاظ على النظافة والهدوء</li>
+                <li>تعقيم اليدين قبل وبعد الزيارة</li>
+                <li>احترام خصوصية المرضى</li>
+                <li>عدم التدخل في عمل الطاقم الطبي</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- أوراق الولادة -->
+      <div class="section-card" id="sec-birth">
+        <div class="card-header"><h2><i class="fas fa-baby"></i> الأوراق المطلوبة لعمل تبليغ الولادة</h2></div>
+        <div class="card-body">
+          <div class="info-box">أهلاً وسهلاً بكم، وألف مبارك لكم المولود/ة الجديد</div>
+          <ol class="docs-list">
+            <li>هوية الأب وهوية الأم</li>
+            <li>عقد الزواج</li>
+            <li>دفتر التطعيم الأزرق</li>
+            <li>ورقة الخروج من المستشفى</li>
+          </ol>
+          <div class="warn-box"><i class="fas fa-info-circle" style="margin-left:6px"></i> يرجى إحضار جميع الأوراق إلى قسم شؤون المرضى في المستشفى</div>
+        </div>
+      </div>
+
+      <!-- أوراق الوفاة -->
+      <div class="section-card" id="sec-death">
+        <div class="card-header"><h2><i class="fas fa-file-alt"></i> الأوراق المطلوبة لعمل شهادة وفاة</h2></div>
+        <div class="card-body">
+          <ol class="docs-list">
+            <li>قريب من الدرجة الأولى</li>
+            <li>هوية المتوفى</li>
+            <li>ورقة الخروج من المستشفى</li>
+          </ol>
+          <div class="warn-box"><i class="fas fa-info-circle" style="margin-left:6px"></i> للاستفسار: قسم شؤون المرضى — +970-2-2229247</div>
+        </div>
+      </div>
+
+      <!-- مواقف السيارات -->
+      <div class="section-card" id="sec-parking">
+        <div class="card-header"><h2><i class="fas fa-parking"></i> مواقف السيارات</h2></div>
+        <div class="card-body">
+          <p>مواقف السيارات الرسمية في المستشفى الأهلي:</p>
+          <ul class="parking-list">
+            <li><i class="fas fa-map-marker-alt"></i> موقف السيارات الرئيسي (مدفوع)</li>
+            <li><i class="fas fa-map-marker-alt"></i> موقف مبنى السعدية — الطابق B1</li>
+            <li><i class="fas fa-map-marker-alt"></i> موقف مبنى السعدية — الطابق B2</li>
+            <li><i class="fas fa-map-marker-alt"></i> الموقف خلف كلية التمريض</li>
+            <li><i class="fas fa-map-marker-alt"></i> الطريق الخلفي لكلية التمريض (يسار)</li>
+          </ul>
+          <div class="warn-box"><i class="fas fa-exclamation-triangle" style="margin-left:6px"></i> يُرجى وقوف السيارات في المواقف المخصصة فقط حفاظاً على سلامة المرضى وانسيابية الحركة</div>
+        </div>
+      </div>
+
+      <!-- ATM -->
+      <div class="section-card" id="sec-atm">
+        <div class="card-header"><h2><i class="fas fa-credit-card"></i> خدمة الصراف الآلي ATM</h2></div>
+        <div class="card-body">
+          <div class="info-box"><i class="fas fa-info-circle" style="margin-left:6px"></i> يتوفر في المستشفى جهاز صراف آلي لخدمة المرضى والزوار على مدار الساعة</div>
+          <p>يقع الصراف الآلي في المبنى الرئيسي بالقرب من المدخل الرئيسي، ويقبل جميع بطاقات الشبكة الفلسطينية وبطاقات الدفع الدولية.</p>
+        </div>
+      </div>
+
+      <!-- الكافتيريا -->
+      <div class="section-card" id="sec-cafeteria">
+        <div class="card-header"><h2><i class="fas fa-coffee"></i> الكافتيريا</h2></div>
+        <div class="card-body">
+          <div class="info-box">الكافتيريا في المستشفى الأهلي تخدم المرضى والزوار والكادر الطبي</div>
+          <p>تقدم الكافتيريا مجموعة متنوعة من المأكولات والمشروبات الساخنة والباردة والوجبات السريعة. أوقات العمل: من الساعة 7:00 صباحاً حتى 10:00 مساءً.</p>
+          <p>الموقع: الطابق الأرضي، جناح أ، بالقرب من المدخل الرئيسي.</p>
+        </div>
+      </div>
+
+      <!-- متجر الهدايا -->
+      <div class="section-card" id="sec-gifts">
+        <div class="card-header"><h2><i class="fas fa-gift"></i> متجر الهدايا</h2></div>
+        <div class="card-body">
+          <div class="info-box">متجر الهدايا في المستشفى الأهلي — هدية تجلب الابتسامة للمريض</div>
+          <p>يوفر متجر الهدايا باقات ورود، هدايا تذكارية، مواد للعناية الشخصية، ومستلزمات يحتاجها المرضى أثناء إقامتهم في المستشفى.</p>
+          <p>الموقع: الطابق الأرضي. أوقات العمل: السبت – الخميس 9:00 صباحاً – 8:00 مساءً.</p>
+        </div>
+      </div>
+
+      <!-- صالون الحلاقة -->
+      <div class="section-card" id="sec-barber">
+        <div class="card-header"><h2><i class="fas fa-cut"></i> صالون الحلاقة</h2></div>
+        <div class="card-body">
+          <div class="info-box">صالون حلاقة متاح للمرضى المقيمين في المستشفى</div>
+          <p>يقدم الصالون خدمات الحلاقة وتهذيب الشعر للمرضى المقيمين في المستشفى. يمكن التواصل مع ممرضة الجناح لترتيب الزيارة.</p>
+        </div>
+      </div>
+
+      <!-- التأمينات -->
+      <div class="section-card" id="sec-insurance">
+        <div class="card-header"><h2><i class="fas fa-file-medical"></i> شركات التأمين الصحي المعتمدة لدينا</h2></div>
+        <div class="card-body">
+          <p>يتعامل المستشفى الأهلي مع شركات التأمين الصحي التالية:</p>
+          <div class="ins-grid">
+            <div class="ins-item"><i class="fas fa-check-circle"></i> غلوب مد</div>
+            <div class="ins-item"><i class="fas fa-check-circle"></i> العالمية المتحدة</div>
+            <div class="ins-item"><i class="fas fa-check-circle"></i> ترست العالمية</div>
+            <div class="ins-item"><i class="fas fa-check-circle"></i> سمارت هيلث</div>
+            <div class="ins-item"><i class="fas fa-check-circle"></i> فلسطين للتأمين</div>
+            <div class="ins-item"><i class="fas fa-check-circle"></i> التكافل الفلسطينية</div>
+            <div class="ins-item"><i class="fas fa-check-circle"></i> الوطنية للتأمين</div>
+            <div class="ins-item"><i class="fas fa-check-circle"></i> تمكين</div>
+            <div class="ins-item"><i class="fas fa-check-circle"></i> وي كير</div>
+            <div class="ins-item"><i class="fas fa-check-circle"></i> المشرق للتأمين</div>
+            <div class="ins-item"><i class="fas fa-check-circle"></i> البركة للتأمين</div>
+            <div class="ins-item"><i class="fas fa-check-circle"></i> بنك الاستثمار الفلسطيني</div>
+            <div class="ins-item"><i class="fas fa-check-circle"></i> جمعية خريجي الجامعات</div>
+            <div class="ins-item"><i class="fas fa-check-circle"></i> أطباء بلا حدود</div>
+          </div>
+          <div class="warn-box" style="margin-top:16px"><i class="fas fa-info-circle" style="margin-left:6px"></i> أحضر بطاقة التأمين وبطاقة الهوية عند الزيارة. بعض الإجراءات تحتاج موافقة مسبقة من شركة التأمين.</div>
+        </div>
+      </div>
+
+      <!-- تعليمات القلب المفتوح -->
+      <div class="section-card" id="sec-heart">
+        <div class="card-header"><h2><i class="fas fa-heartbeat"></i> تعليمات للمريض بعد عملية القلب المفتوح</h2></div>
+        <div class="card-body">
+          <div class="info-box">نهنئك بالسلامة ونتمنى لك التماثل السريع للشفاء والعودة القريبة إلى نشاطك وحياتك العادية</div>
+          <ol class="instructions-list">
+            <li>عظمة القص تحتاج شهرين للالتئام الكامل. تصبح بعدها قوية كما كانت.</li>
+            <li>يمنع خلال الشهرين الأولين: قيادة السيارة، ورفع أوزان تزيد عن 2 كغم في كل يد.</li>
+            <li>انتفاخ القدمين طبيعي ويختفي بعد أسابيع. ارفع الرجل قليلاً عند النوم.</li>
+            <li>تصريف خفيف من الجرح مؤقت. إذا ازداد أو تغير لونه راجع الطبيب فوراً.</li>
+            <li>الشعور بالحر الزائد أو التعرق أو سرعة دقات القلب في الأسابيع الأولى عادةً مؤقت.</li>
+            <li>الاستحمام يومياً وتنظيف الجروح بالماء والصابون مع تنشيف جيد.</li>
+            <li>المشي غير المجهد 1-2 كيلومتر يومياً في شارع مستوٍ بعيداً عن الحر والبرد.</li>
+            <li>الالتزام بالوصفة الطبية ولا تتوقف عن الأدوية دون استشارة الطبيب.</li>
+            <li>تناول المسكنات عند الألم — الألم يؤثر على التنفس ويزيد احتمالات الالتهابات.</li>
+            <li>راقب درجة الحرارة والنبض وضغط الدم مرة يومياً ودوّن الملاحظات للطبيب.</li>
+            <li>المراجعة الأولى بعد أسبوع إلى أسبوعين من الخروج مع أشعة صدر وفحص دم.</li>
+          </ol>
+          <div class="food-box">
+            <h3><i class="fas fa-apple-alt"></i> النصائح الغذائية بعد العملية</h3>
+            <ul>
+              <li>تجنب الدهنيات بجميع أشكالها — تناول منتجات الألبان خفيفة الدسم</li>
+              <li>تجنب اللحوم الدسمة (لحم الخروف) — مرتين أسبوعياً كحد أقصى</li>
+              <li>نزع جلد الدواجن قبل الطهي — الدهون تتركز تحت الجلد</li>
+              <li>السمك مسموح بحرية — تجنب الصدفيات كالجمبري</li>
+              <li>قلّل المكسرات المالحة وشرب القهوة والشاي والمشروبات الغازية</li>
+              <li>البيض مسموح مرتين-ثلاث مرات أسبوعياً مع إزالة الصفار</li>
+              <li>الفواكه والخضار الطازجة مسموحة بحرية</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- تعليمات الصمام -->
+      <div class="section-card" id="sec-valve">
+        <div class="card-header"><h2><i class="fas fa-procedures"></i> تعليمات بعد عملية زراعة الصمام الاصطناعي</h2></div>
+        <div class="card-body">
+          <div class="info-box">تعليمات مهمة لمرضى الصمام الاصطناعي المعدني</div>
+          <ol class="instructions-list">
+            <li>الصمام المعدني يستلزم استخدام مميعات الدم (وارفارين) باستمرار — لا تتوقف عنها دون استشارة طبيبك.</li>
+            <li>قياس INR بانتظام — المستوى المستهدف بين 2 و3 عادةً (حسب تعليمات طبيبك).</li>
+            <li>تجنب الأطعمة الغنية بفيتامين K (الخضار الورقية، البقوليات، فول الصويا) لأنها تؤثر على فاعلية الوارفارين.</li>
+            <li>تناول الوارفارين في نفس الوقت يومياً (يفضل السادسة مساءً).</li>
+            <li>أي دواء جديد قد يؤثر على مستوى الوارفارين — أخبر طبيبك بكل دواء تتناوله.</li>
+            <li>راجع الطبيب فوراً إذا لاحظت نزيفاً غير عادي أو كدمات.</li>
+          </ol>
+          <div class="warn-box"><i class="fas fa-exclamation-triangle" style="margin-left:6px"></i> عدم انتظام مستوى INR قد يسبب جلطات أو نزيفاً خطيراً — الالتزام بالمتابعة الدورية ضروري جداً.</div>
+        </div>
+      </div>
+
+      <!-- تحويلة قلب مفتوح -->
+      <div class="section-card" id="sec-ref-heart">
+        <div class="card-header"><h2><i class="fas fa-notes-medical"></i> الأوراق المطلوبة للحصول على تحويلة قلب مفتوح</h2></div>
+        <div class="card-body">
+          <ol class="docs-list">
+            <li>تقرير طبي من طبيب جراحة القلب المتابع في المستشفى الأهلي</li>
+            <li>تقرير طبي تحويلة من المستشفى الحكومي مع توقيع وختم المستشفى</li>
+            <li>صورة عن هوية المريض</li>
+            <li>تقرير إيكو القلب (Echocardiogram)</li>
+            <li>تقرير قسطرة القلب (Catheterization)</li>
+            <li>تقديم الطلب إلى مجمع فلسطين الطبي للحصول على الموافقة</li>
+            <li>تقديم الطلب إلى مكتب التحويلات في رام الله والبيرة</li>
+          </ol>
+          <div class="warn-box"><i class="fas fa-info-circle" style="margin-left:6px"></i> لمزيد من المعلومات تواصل مع مكتب التحويلات في المستشفى الأهلي</div>
+        </div>
+      </div>
+
+      <!-- تحويلة وزارة الصحة -->
+      <div class="section-card" id="sec-ref-moh">
+        <div class="card-header"><h2><i class="fas fa-hospital"></i> الأوراق المطلوبة للحصول على تحويلة وزارة الصحة</h2></div>
+        <div class="card-body">
+          <ol class="docs-list">
+            <li>التقرير الطبي المحوَّل به المريض من المستشفى الحكومي</li>
+            <li>الحصول على سريان التأمين من وزارة الصحة في المحافظة</li>
+            <li>صورة عن هوية المريض</li>
+            <li>تقديم الأوراق إلى قسم التحويلات في المستشفى الحكومي</li>
+            <li>إحضار ورقة التأمين الموقّعة مع التقرير الطبي إلى المستشفى الأهلي وتسليمها لسكرتيرة القسم</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- تحويلة عسكرية -->
+      <div class="section-card" id="sec-ref-mil">
+        <div class="card-header"><h2><i class="fas fa-star-and-crescent"></i> الأوراق المطلوبة للحصول على تحويلة خدمات طبية عسكرية</h2></div>
+        <div class="card-body">
+          <ol class="docs-list">
+            <li>الحصول على نموذج تحويلة من الخدمات الطبية العسكرية حسب المحافظة</li>
+            <li>استلام النموذج مع التقرير الطبي من المستشفى المحوِّل</li>
+            <li>ختم التقرير الطبي من إدارة المستشفى الحكومي</li>
+            <li>ختم الطبيب المختص على التقرير الطبي</li>
+            <li>إحضار كشف راتب</li>
+            <li>صورة عن هوية المريض وبطاقة التأمين الصحي</li>
+            <li>تقديم جميع الأوراق إلى مكتب التحويلات في المستشفى الأهلي</li>
+            <li>التوقيع على سند عند الخروج لحين وصول التحويلة الرسمية</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- تحويلة المولود -->
+      <div class="section-card" id="sec-ref-newborn">
+        <div class="card-header"><h2><i class="fas fa-baby-carriage"></i> الأوراق المطلوبة لتحويلة المولود الجديد</h2></div>
+        <div class="card-body">
+          <div class="info-box">للأطفال الخدّج أو المواليد الذين يحتاجون رعاية مستمرة</div>
+          <ol class="docs-list">
+            <li>صورة عن شهادة الميلاد أو تبليغ الولادة</li>
+            <li>صورة عن هوية الأم والأب</li>
+            <li>تقرير طبي من قسم الخداج يوضح حالة المولود ووزنه</li>
+            <li>تقرير طبي للأم من المستشفى الحكومي أو ورقة التحويلة الرسمية</li>
+            <li>تأمين صحي ساري المفعول مضاف إليه اسم الطفل مع نسخة عن دفتر التأمين</li>
+          </ol>
+          <div class="warn-box"><i class="fas fa-info-circle" style="margin-left:6px"></i> تُقدَّم جميع الأوراق إلى قسم التحويلات في المستشفى الأهلي</div>
+        </div>
+      </div>
+
+    </div><!-- end content-area -->
+  </div><!-- end page-body -->
+</div>
+
+<footer class="site-footer">
+  <div class="container" style="padding:30px 20px">
+    <p style="text-align:center;color:rgba(255,255,255,.6);font-size:13px">المستشفى الأهلي — الخليل، فلسطين | +970-2-2229247 | info@ahli.org</p>
+  </div>
+  <div class="footer-bottom">© 2026 المستشفى الأهلي — جميع الحقوق محفوظة.</div>
+</footer>
+
+<script>
+function showSection(id, el) {
+  document.querySelectorAll('.section-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+  window.scrollTo({top: document.querySelector('.page-body').offsetTop - 90, behavior: 'smooth'});
+}
+
+// open section from URL hash
+const hash = window.location.hash.replace('#','');
+if (hash) showSection(hash);
+</script>
+
+<script>
+const API_BASE = (() => {
+  const m = location.pathname.match(/^(\/[^/]+\/)/);
+  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/hospital-chatbot/public';
+})();
+</script>
+<script src="../public/assets/js/chatbot.js?v=20260518-no-auth"></script>
+
+</body>
+</html>

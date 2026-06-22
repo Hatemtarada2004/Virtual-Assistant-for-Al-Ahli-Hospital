@@ -1,10 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ã™â€žÃ™Ë†Ã˜Â­Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â¥Ã˜Â­Ã˜ÂµÃ˜Â§Ã˜Â¦Ã™Å Ã˜Â§Ã˜Âª Ã¢â‚¬â€ Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </title>
+  <title>لوحة الإحصائيات — المستشفى الأهلي</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link href="../public/assets/css/ahli-site.css" rel="stylesheet">
   <link href="../public/assets/css/main.css" rel="stylesheet">
   <link href="../public/assets/css/chatbot.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -27,111 +29,161 @@
 </head>
 <body>
 
-<!-- Ã¢â€â‚¬Ã¢â€â‚¬ Ã˜Â§Ã™â€žÃ˜Â´Ã˜Â±Ã™Å Ã˜Â· Ã˜Â§Ã™â€žÃ˜Â¹Ã™â€žÃ™Ë†Ã™Å  Ã¢â€â‚¬Ã¢â€â‚¬ -->
-<header class="ahli-navbar">
-  <a href="index.html" class="brand"><i class="fas fa-hospital-alt"></i> Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â´Ã™ÂÃ™â€° Ã˜Â§Ã™â€žÃ˜Â£Ã™â€¡Ã™â€žÃ™Å </a>
-  <nav class="nav-links">
-    <a href="index.html">Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â¦Ã™Å Ã˜Â³Ã™Å Ã˜Â©</a>
-    <a href="dashboard.html" class="active">Ã™â€žÃ™Ë†Ã˜Â­Ã˜Â© Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™Æ’Ã™â€¦</a>
-    <a href="doctors.html">Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â·Ã˜Â¨Ã˜Â§Ã˜Â¡</a>
-    <a href="departments.html">Ã˜Â§Ã™â€žÃ˜Â£Ã™â€šÃ˜Â³Ã˜Â§Ã™â€¦</a>
-    <a href="appointments.html">Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</a>
-    <a href="patients.html">Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã˜Â¶Ã™â€°</a>
-  </nav>
+<div class="topbar">
+  <div class="container inner">
+    <div class="tb-info">
+      <span><i class="fas fa-phone"></i> +970-2-2229247</span>
+      <span><i class="fas fa-calendar-check"></i> حجز: 1700200400</span>
+      <span><i class="fas fa-envelope"></i> info@ahli.org</span>
+    </div>
+    <div class="tb-social">
+      <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container inner">
+    <a href="index.html" class="site-logo">
+      <div class="logo-icon"><i class="fas fa-hospital-alt"></i></div>
+      <div class="logo-text">
+        <h1>المستشفى الأهلي</h1>
+        <p>Al-Ahli Hospital | الخليل، فلسطين</p>
+      </div>
+    </a>
+    <div class="header-contact">
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-phone-alt"></i></div>
+        <div class="hc-text"><p>هاتف المستشفى</p><p>+970-2-2229247</p></div>
+      </div>
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-calendar-alt"></i></div>
+        <div class="hc-text"><p>حجز العيادات</p><p>1700200400</p></div>
+      </div>
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-clock"></i></div>
+        <div class="hc-text"><p>الطوارئ</p><p>24 ساعة / 7 أيام</p></div>
+      </div>
+    </div>
+  </div>
 </header>
 
-<!-- Ã¢â€â‚¬Ã¢â€â‚¬ Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â­Ã˜ÂªÃ™Ë†Ã™â€° Ã¢â€â‚¬Ã¢â€â‚¬ -->
+<nav class="main-nav">
+  <div class="container inner">
+    <ul class="nav-links-main">
+      <li><a href="index.html">الرئيسية</a></li>
+      <li><a href="about.html">من نحن</a></li>
+      <li><a href="departments.html">الأقسام والوحدات الطبية</a></li>
+      <li><a href="doctors.html">الأطباء</a></li>
+      <li><a href="news.html">الأخبار</a></li>
+      <li><a href="donations.html">المشاريع والتبرعات</a></li>
+      <li><a href="visitor.html">للزائر والمريض</a></li>
+      <li><a href="education.html">التعليم والتدريب</a></li>
+    </ul>
+    <a href="#" class="nav-btn" onclick="document.getElementById('ahli-chat-btn')?.click();return false;">
+      <i class="fas fa-comments"></i> المساعد الذكي
+    </a>
+  </div>
+</nav>
+
+<div class="page-banner">
+  <div class="container inner">
+    <div class="pb-icon"><i class="fas fa-chart-pie"></i></div>
+    <div class="pb-text">
+      <h1>لوحة الإحصائيات والتحليلات</h1>
+      <p id="last-update">يتم تحميل البيانات…</p>
+    </div>
+    <div class="pb-breadcrumb">
+      <a href="index.html">الرئيسية</a>
+      <span class="sep"><i class="fas fa-chevron-left"></i></span>
+      <span>الإحصائيات</span>
+    </div>
+  </div>
+</div>
+
 <main class="page-container">
 
-  <div class="page-header">
-    <div>
-      <h1><i class="fas fa-chart-pie" style="color:var(--primary)"></i> Ã™â€žÃ™Ë†Ã˜Â­Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â¥Ã˜Â­Ã˜ÂµÃ˜Â§Ã˜Â¦Ã™Å Ã˜Â§Ã˜Âª Ã™Ë†Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€žÃ™Å Ã™â€žÃ˜Â§Ã˜Âª</h1>
-      <p id="last-update">Ã™Å Ã˜ÂªÃ™â€¦ Ã˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â¨Ã™Å Ã˜Â§Ã™â€ Ã˜Â§Ã˜ÂªÃ¢â‚¬Â¦</p>
-    </div>
+  <div class="page-header" style="justify-content:flex-end;border-bottom:none;padding-bottom:0;margin-bottom:16px">
     <button class="refresh-btn" onclick="loadStats()">
-      <i class="fas fa-sync-alt"></i> Ã˜ÂªÃ˜Â­Ã˜Â¯Ã™Å Ã˜Â«
+      <i class="fas fa-sync-alt"></i> تحديث البيانات
     </button>
   </div>
 
-  <!-- Ã¢â€â‚¬Ã¢â€â‚¬ Ã˜Â¨Ã˜Â·Ã˜Â§Ã™â€šÃ˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â¤Ã˜Â´Ã˜Â±Ã˜Â§Ã˜Âª Ã¢â€â‚¬Ã¢â€â‚¬ -->
   <div class="kpi-grid" id="kpi-grid">
-    <div class="loading"><div class="spinner"></div> Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€žÃ¢â‚¬Â¦</div>
+    <div class="loading"><div class="spinner"></div> جارٍ التحميل…</div>
   </div>
 
-  <!-- Ã¢â€â‚¬Ã¢â€â‚¬ Ã™â€ Ã˜Â³Ã˜Â¨Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â¥Ã˜Â´Ã˜ÂºÃ˜Â§Ã™â€ž Ã¢â€â‚¬Ã¢â€â‚¬ -->
   <div class="occupancy-card" id="occupancy-card" style="display:none">
     <div class="occupancy-header">
-      <span class="occupancy-label"><i class="fas fa-bed" style="color:var(--primary);margin-left:6px"></i> Ã™â€ Ã˜Â³Ã˜Â¨Ã˜Â© Ã˜Â¥Ã˜Â´Ã˜ÂºÃ˜Â§Ã™â€ž Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</span>
+      <span class="occupancy-label"><i class="fas fa-bed" style="color:var(--primary);margin-left:6px"></i> نسبة إشغال المواعيد</span>
       <span class="occupancy-pct" id="occ-pct">0%</span>
     </div>
     <div class="occupancy-bar"><div class="occupancy-fill" id="occ-fill" style="width:0%"></div></div>
-    <p class="occupancy-desc">Ã˜Â¨Ã™â€ Ã˜Â§Ã˜Â¡Ã™â€¹ Ã˜Â¹Ã™â€žÃ™â€° Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯ Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â­Ã˜Â¬Ã™Ë†Ã˜Â²Ã˜Â© Ã™â€¦Ã˜Â³Ã˜ÂªÃ™â€šÃ˜Â¨Ã™â€žÃ˜Â§Ã™â€¹ Ã™â€¦Ã™â€šÃ˜Â§Ã˜Â±Ã™â€ Ã˜Â©Ã™â€¹ Ã˜Â¨Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â§Ã™â€šÃ˜Â© Ã˜Â§Ã™â€žÃ˜Â§Ã˜Â³Ã˜ÂªÃ™Å Ã˜Â¹Ã˜Â§Ã˜Â¨Ã™Å Ã˜Â© Ã™â€žÃ™â€žÃ˜Â£Ã˜Â·Ã˜Â¨Ã˜Â§Ã˜Â¡ (5 Ã™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯/Ã˜Â·Ã˜Â¨Ã™Å Ã˜Â¨/Ã™Å Ã™Ë†Ã™â€¦).</p>
+    <p class="occupancy-desc">بناءً على المواعيد المحجوزة مستقبلاً مقارنةً بالطاقة الاستيعابية للأطباء (5 مواعيد/طبيب/يوم).</p>
   </div>
 
-  <!-- Ã¢â€â‚¬Ã¢â€â‚¬ Ã˜Â§Ã™â€žÃ˜Â±Ã˜Â³Ã™Ë†Ã™â€¦ Ã˜Â§Ã™â€žÃ˜Â¨Ã™Å Ã˜Â§Ã™â€ Ã™Å Ã˜Â© Ã¢â€â‚¬Ã¢â€â‚¬ -->
   <div class="chart-grid" id="chart-grid" style="display:none">
     <div class="chart-card">
-      <div class="chart-title"><i class="fas fa-calendar-check" style="color:#1565c0"></i> Ã˜Â­Ã˜Â§Ã™â€žÃ˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</div>
+      <div class="chart-title"><i class="fas fa-calendar-check" style="color:#1565c0"></i> حالات المواعيد</div>
       <div class="chart-canvas-wrap"><canvas id="apptChart"></canvas></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title"><i class="fas fa-file-invoice-dollar" style="color:#2e7d32"></i> Ã˜Â­Ã˜Â§Ã™â€žÃ˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ™ÂÃ™Ë†Ã˜Â§Ã˜ÂªÃ™Å Ã˜Â±</div>
+      <div class="chart-title"><i class="fas fa-file-invoice-dollar" style="color:#2e7d32"></i> حالات الفواتير</div>
       <div class="chart-canvas-wrap"><canvas id="invChart"></canvas></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title"><i class="fas fa-flask" style="color:#e65100"></i> Ã˜Â­Ã˜Â§Ã™â€žÃ˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã˜Â§Ã™â€žÃ™Å Ã™â€ž</div>
+      <div class="chart-title"><i class="fas fa-flask" style="color:#e65100"></i> حالات التحاليل</div>
       <div class="chart-canvas-wrap"><canvas id="labChart"></canvas></div>
     </div>
   </div>
 
-  <!-- Ã¢â€â‚¬Ã¢â€â‚¬ Ã™â€¦Ã™â€žÃ˜Â®Ã˜Âµ Ã˜Â§Ã™â€žÃ™ÂÃ™Ë†Ã˜Â§Ã˜ÂªÃ™Å Ã˜Â± + Ã˜Â¬Ã˜Â¯Ã™Ë†Ã™â€ž Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯ Ã¢â€â‚¬Ã¢â€â‚¬ -->
   <div class="two-col" id="bottom-section" style="display:none">
 
-    <!-- Ã˜Â¬Ã˜Â¯Ã™Ë†Ã™â€ž Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯ Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â®Ã™Å Ã˜Â±Ã˜Â© -->
     <div class="data-table-card">
       <div class="data-table-header">
-        <span><i class="fas fa-calendar-alt" style="color:var(--primary);margin-left:6px"></i> Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯ Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â®Ã™Å Ã˜Â±Ã˜Â©</span>
-        <a href="appointments.html" style="font-size:12px;color:var(--primary)">Ã˜Â¹Ã˜Â±Ã˜Â¶ Ã˜Â§Ã™â€žÃ™Æ’Ã™â€ž Ã¢â€ Â</a>
+        <span><i class="fas fa-calendar-alt" style="color:var(--primary);margin-left:6px"></i> المواعيد الأخيرة</span>
+        <a href="admin.html" style="font-size:12px;color:var(--primary)">عرض الكل ←</a>
       </div>
       <div class="table-wrap">
         <table class="data-table">
           <thead>
             <tr>
               <th>#</th>
-              <th>Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â±Ã™Å Ã˜Â¶</th>
-              <th>Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â¨Ã™Å Ã˜Â¨</th>
-              <th>Ã˜Â§Ã™â€žÃ™â€šÃ˜Â³Ã™â€¦</th>
-              <th>Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â§Ã˜Â±Ã™Å Ã˜Â®</th>
-              <th>Ã˜Â§Ã™â€žÃ˜Â­Ã˜Â§Ã™â€žÃ˜Â©</th>
+              <th>المريض</th>
+              <th>الطبيب</th>
+              <th>القسم</th>
+              <th>التاريخ</th>
+              <th>الحالة</th>
             </tr>
           </thead>
-          <tbody id="appt-tbody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Ã˜Â¬Ã˜Â§Ã˜Â±Ã™Â Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€žÃ¢â‚¬Â¦</td></tr></tbody>
+          <tbody id="appt-tbody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">جارٍ التحميل…</td></tr></tbody>
         </table>
       </div>
     </div>
 
-    <!-- Ã™â€¦Ã™â€žÃ˜Â®Ã˜Âµ Ã™â€¦Ã˜Â§Ã™â€žÃ™Å  -->
     <div>
       <div class="chart-card" style="margin-bottom:20px">
-        <div class="chart-title"><i class="fas fa-coins" style="color:#f39c12"></i> Ã˜Â§Ã™â€žÃ™â€¦Ã™â€žÃ˜Â®Ã˜Âµ Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â§Ã™â€žÃ™Å </div>
-        <div class="revenue-big" id="rev-big">Ã¢â‚¬â€</div>
-        <div class="revenue-sub">Ã˜Â¥Ã˜Â¬Ã™â€¦Ã˜Â§Ã™â€žÃ™Å  Ã˜Â§Ã™â€žÃ˜Â¥Ã™Å Ã˜Â±Ã˜Â§Ã˜Â¯Ã˜Â§Ã˜Âª Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â­Ã˜ÂµÃ™â€˜Ã™â€žÃ˜Â© (Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â©)</div>
+        <div class="chart-title"><i class="fas fa-coins" style="color:#f39c12"></i> الملخص المالي</div>
+        <div class="revenue-big" id="rev-big">—</div>
+        <div class="revenue-sub">إجمالي الإيرادات المحصّلة (مدفوعة)</div>
         <hr style="margin:14px 0;border-color:var(--border)">
-        <div class="outstanding-big" id="out-big">Ã¢â‚¬â€</div>
-        <div class="revenue-sub" style="color:var(--danger)">Ã™â€¦Ã˜Â¨Ã˜Â§Ã™â€žÃ˜Âº Ã˜ÂºÃ™Å Ã˜Â± Ã™â€¦Ã˜Â­Ã˜ÂµÃ™â€˜Ã™â€žÃ˜Â© (Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â­Ã™â€šÃ˜Â©)</div>
+        <div class="outstanding-big" id="out-big">—</div>
+        <div class="revenue-sub" style="color:var(--danger)">مبالغ غير محصّلة (مستحقة)</div>
         <hr style="margin:14px 0;border-color:var(--border)">
-        <div class="stat-row"><span>Ã˜Â¥Ã˜Â¬Ã™â€¦Ã˜Â§Ã™â€žÃ™Å  Ã˜Â§Ã™â€žÃ™ÂÃ™Ë†Ã˜Â§Ã˜ÂªÃ™Å Ã˜Â±</span> <b id="inv-total">Ã¢â‚¬â€</b></div>
-        <div class="stat-row"><span>Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â©</span>          <b id="inv-paid" style="color:var(--success)">Ã¢â‚¬â€</b></div>
-        <div class="stat-row"><span>Ã˜ÂºÃ™Å Ã˜Â± Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â©</span>      <b id="inv-unpaid" style="color:var(--danger)">Ã¢â‚¬â€</b></div>
-        <div class="stat-row"><span>Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â© Ã˜Â¬Ã˜Â²Ã˜Â¦Ã™Å Ã˜Â§Ã™â€¹</span>   <b id="inv-partial" style="color:var(--warning)">Ã¢â‚¬â€</b></div>
+        <div class="stat-row"><span>إجمالي الفواتير</span> <b id="inv-total">—</b></div>
+        <div class="stat-row"><span>مدفوعة</span>          <b id="inv-paid" style="color:var(--success)">—</b></div>
+        <div class="stat-row"><span>غير مدفوعة</span>      <b id="inv-unpaid" style="color:var(--danger)">—</b></div>
+        <div class="stat-row"><span>مدفوعة جزئياً</span>   <b id="inv-partial" style="color:var(--warning)">—</b></div>
       </div>
 
       <div class="chart-card">
-        <div class="chart-title"><i class="fas fa-info-circle" style="color:var(--info)"></i> Ã™â€¦Ã™â€žÃ˜Â®Ã˜Âµ Ã˜Â³Ã˜Â±Ã™Å Ã˜Â¹</div>
-        <div class="stat-row"><span>Ã™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯ Ã˜Â§Ã™â€žÃ™Å Ã™Ë†Ã™â€¦</span>    <b id="s-today"   style="color:var(--primary)">Ã¢â‚¬â€</b></div>
-        <div class="stat-row"><span>Ã˜ÂªÃ˜Â­Ã˜Â§Ã™â€žÃ™Å Ã™â€ž Ã˜Â¬Ã˜Â§Ã™â€¡Ã˜Â²Ã˜Â©</span>   <b id="s-ready"   style="color:var(--success)">Ã¢â‚¬â€</b></div>
-        <div class="stat-row"><span>Ã˜ÂªÃ˜Â­Ã˜Â§Ã™â€žÃ™Å Ã™â€ž Ã˜Â¨Ã˜Â§Ã™â€ Ã˜ÂªÃ˜Â¸Ã˜Â§Ã˜Â±</span> <b id="s-pending" style="color:var(--warning)">Ã¢â‚¬â€</b></div>
-        <div class="stat-row"><span>Ã™â€¦Ã™â€žÃ˜Â§Ã˜Â­Ã˜Â¸Ã˜Â§Ã˜Âª Ã™Ë†Ã˜Â´Ã™Æ’Ã˜Â§Ã™Ë†Ã™â€°</span> <b id="s-feed"    style="color:var(--info)">Ã¢â‚¬â€</b></div>
+        <div class="chart-title"><i class="fas fa-info-circle" style="color:var(--info)"></i> ملخص سريع</div>
+        <div class="stat-row"><span>مواعيد اليوم</span>    <b id="s-today"   style="color:var(--primary)">—</b></div>
+        <div class="stat-row"><span>تحاليل جاهزة</span>   <b id="s-ready"   style="color:var(--success)">—</b></div>
+        <div class="stat-row"><span>تحاليل بانتظار</span> <b id="s-pending" style="color:var(--warning)">—</b></div>
+        <div class="stat-row"><span>ملاحظات وشكاوى</span> <b id="s-feed"    style="color:var(--info)">—</b></div>
       </div>
     </div>
 
@@ -139,17 +191,89 @@
 
 </main>
 
+<div class="contact-strip">
+  <div class="container">
+    <div class="inner">
+      <div class="cs-item">
+        <div class="cs-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="cs-text"><p>عنوان المستشفى</p><p>الخليل، فرش الهوى — فلسطين</p></div>
+      </div>
+      <div class="cs-item">
+        <div class="cs-icon"><i class="fas fa-phone-alt"></i></div>
+        <div class="cs-text"><p>هاتف المستشفى</p><p>+970-2-2229247</p></div>
+      </div>
+      <div class="cs-item">
+        <div class="cs-icon"><i class="fas fa-calendar-check"></i></div>
+        <div class="cs-text"><p>حجز العيادات الخارجية</p><p>1700200400</p></div>
+      </div>
+      <div class="cs-item">
+        <div class="cs-icon"><i class="fas fa-envelope"></i></div>
+        <div class="cs-text"><p>البريد الإلكتروني</p><p>info@ahli.org</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><i class="fas fa-hospital-alt"></i><span>المستشفى الأهلي</span></div>
+        <p>المستشفى الأهلي في الخليل — فلسطين. نقدم رعاية صحية شاملة بأعلى المعايير منذ عام 1978.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>روابط سريعة</h4>
+        <ul>
+          <li><a href="index.html">الرئيسية</a></li>
+          <li><a href="departments.html">الأقسام الطبية</a></li>
+          <li><a href="doctors.html">الأطباء</a></li>
+          <li><a href="#" onclick="document.getElementById('ahli-chat-btn')?.click();return false;">حجز موعد</a></li>
+          <li><a href="patients.html">المرضى</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>الأقسام الرئيسية</h4>
+        <ul>
+          <li><a href="departments.html">مركز القلب والشرايين</a></li>
+          <li><a href="departments.html">قسم الطوارئ</a></li>
+          <li><a href="departments.html">النسائية والتوليد</a></li>
+          <li><a href="departments.html">الأطفال والمواليد</a></li>
+          <li><a href="departments.html">الأعصاب وجراحتها</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>خدمات أخرى</h4>
+        <ul>
+          <li><a href="lab-login.html">المختبر</a></li>
+          <li><a href="admin-login.html">لوحة الإدارة</a></li>
+          <li><a href="doctor-login.html">بوابة الطبيب</a></li>
+          <li><a href="dashboard.html">الإحصائيات</a></li>
+      <li><a href="news.html">الأخبار</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 المستشفى الأهلي — جمعية أصدقاء المريض. جميع الحقوق محفوظة. | الخليل، فلسطين</p>
+    </div>
+  </div>
+</footer>
+
 <script>
 const API_BASE = (() => {
   const m = location.pathname.match(/^(\/[^/]+\/)/);
-  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/Hospital/public';
+  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/hospital-chatbot/public';
 })();
 
 const STATUS_MAP = {
-  Booked:    { label:'Ã™â€¦Ã˜Â­Ã˜Â¬Ã™Ë†Ã˜Â²',       cls:'badge-booked'    },
-  Completed: { label:'Ã™â€¦Ã™Æ’Ã˜ÂªÃ™â€¦Ã™â€ž',       cls:'badge-completed' },
-  Cancelled: { label:'Ã™â€¦Ã™â€žÃ˜ÂºÃ™Å ',        cls:'badge-cancelled' },
-  NoShow:    { label:'Ã™â€žÃ™â€¦ Ã™Å Ã˜Â­Ã˜Â¶Ã˜Â±',    cls:'badge-noshow'    },
+  Booked:    { label:'محجوز',       cls:'badge-booked'    },
+  Completed: { label:'مكتمل',       cls:'badge-completed' },
+  Cancelled: { label:'ملغي',        cls:'badge-cancelled' },
+  NoShow:    { label:'لم يحضر',    cls:'badge-noshow'    },
 };
 
 let apptChart, invChart, labChart;
@@ -164,11 +288,11 @@ async function loadStats() {
     renderFinancial(j.data);
     loadRecentAppointments();
     document.getElementById('last-update').textContent =
-      'Ã˜Â¢Ã˜Â®Ã˜Â± Ã˜ÂªÃ˜Â­Ã˜Â¯Ã™Å Ã˜Â«: ' + new Date().toLocaleTimeString('ar-SA');
+      'آخر تحديث: ' + new Date().toLocaleTimeString('ar-SA');
   } catch(e) {
     document.getElementById('kpi-grid').innerHTML =
       `<div style="grid-column:1/-1;color:var(--danger);padding:20px;text-align:center">
-         <i class="fas fa-exclamation-triangle"></i> Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â¨Ã™Å Ã˜Â§Ã™â€ Ã˜Â§Ã˜Âª: ${e.message}
+         <i class="fas fa-exclamation-triangle"></i> تعذّر تحميل البيانات: ${e.message}
        </div>`;
   }
 }
@@ -176,14 +300,14 @@ async function loadStats() {
 function renderKPI(d) {
   const ov = d.overview, ap = d.appointments, inv = d.invoices;
   const cards = [
-    { val:ov.doctors,     label:'Ã˜Â·Ã˜Â¨Ã™Å Ã˜Â¨',           icon:'fa-user-md',       cls:'kpi-card',            ic:'bg-blue'   },
-    { val:ov.patients,    label:'Ã™â€¦Ã˜Â±Ã™Å Ã˜Â¶',            icon:'fa-procedures',    cls:'kpi-card kpi-success', ic:'bg-green'  },
-    { val:ov.departments, label:'Ã™â€šÃ˜Â³Ã™â€¦ Ã˜Â·Ã˜Â¨Ã™Å ',         icon:'fa-hospital',      cls:'kpi-card kpi-info',    ic:'bg-sky'    },
-    { val:ap.today,       label:'Ã™â€¦Ã™Ë†Ã˜Â¹Ã˜Â¯ Ã˜Â§Ã™â€žÃ™Å Ã™Ë†Ã™â€¦',      icon:'fa-calendar-day',  cls:'kpi-card kpi-warning', ic:'bg-orange' },
-    { val:ap.booked,      label:'Ã™â€¦Ã™Ë†Ã˜Â¹Ã˜Â¯ Ã™â€¦Ã˜Â­Ã˜Â¬Ã™Ë†Ã˜Â²',      icon:'fa-calendar-check',cls:'kpi-card',             ic:'bg-blue'   },
-    { val:inv.paid,       label:'Ã™ÂÃ˜Â§Ã˜ÂªÃ™Ë†Ã˜Â±Ã˜Â© Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â©',   icon:'fa-check-circle',  cls:'kpi-card kpi-success', ic:'bg-green'  },
-    { val:inv.unpaid,     label:'Ã™ÂÃ˜Â§Ã˜ÂªÃ™Ë†Ã˜Â±Ã˜Â© Ã™â€¦Ã˜Â³Ã˜ÂªÃ˜Â­Ã™â€šÃ˜Â©',   icon:'fa-exclamation',   cls:'kpi-card kpi-danger',  ic:'bg-red'    },
-    { val:ov.services,    label:'Ã˜Â®Ã˜Â¯Ã™â€¦Ã˜Â© Ã˜Â·Ã˜Â¨Ã™Å Ã˜Â©',       icon:'fa-stethoscope',   cls:'kpi-card kpi-secondary',ic:'bg-teal'  },
+    { val:ov.doctors,     label:'طبيب',           icon:'fa-user-md',       cls:'kpi-card',            ic:'bg-blue'   },
+    { val:ov.patients,    label:'مريض',            icon:'fa-procedures',    cls:'kpi-card kpi-success', ic:'bg-green'  },
+    { val:ov.departments, label:'قسم طبي',         icon:'fa-hospital',      cls:'kpi-card kpi-info',    ic:'bg-sky'    },
+    { val:ap.today,       label:'موعد اليوم',      icon:'fa-calendar-day',  cls:'kpi-card kpi-warning', ic:'bg-orange' },
+    { val:ap.booked,      label:'موعد محجوز',      icon:'fa-calendar-check',cls:'kpi-card',             ic:'bg-blue'   },
+    { val:inv.paid,       label:'فاتورة مدفوعة',   icon:'fa-check-circle',  cls:'kpi-card kpi-success', ic:'bg-green'  },
+    { val:inv.unpaid,     label:'فاتورة مستحقة',   icon:'fa-exclamation',   cls:'kpi-card kpi-danger',  ic:'bg-red'    },
+    { val:ov.services,    label:'خدمة طبية',       icon:'fa-stethoscope',   cls:'kpi-card kpi-secondary',ic:'bg-teal'  },
   ];
   document.getElementById('kpi-grid').innerHTML = cards.map(c =>
     `<div class="${c.cls}">
@@ -195,7 +319,6 @@ function renderKPI(d) {
      </div>`
   ).join('');
 
-  // occupancy
   const occ = d.occupancy_rate;
   document.getElementById('occ-pct').textContent  = occ + '%';
   document.getElementById('occ-fill').style.width = occ + '%';
@@ -212,7 +335,7 @@ function renderCharts(d) {
   apptChart = new Chart(document.getElementById('apptChart'), {
     type:'doughnut',
     data:{
-      labels:['Ã™â€¦Ã™Æ’Ã˜ÂªÃ™â€¦Ã™â€žÃ˜Â©','Ã™â€¦Ã˜Â­Ã˜Â¬Ã™Ë†Ã˜Â²Ã˜Â©','Ã™â€¦Ã™â€žÃ˜ÂºÃ˜Â§Ã˜Â©','Ã™â€žÃ™â€¦ Ã™Å Ã˜Â­Ã˜Â¶Ã˜Â±'],
+      labels:['مكتملة','محجوزة','ملغاة','لم يحضر'],
       datasets:[{ data:[ap.completed, ap.booked, ap.cancelled, ap.noshow],
         backgroundColor:['#27ae60','#1565c0','#e74c3c','#f39c12'], borderWidth:2, borderColor:'#fff' }]
     },
@@ -223,7 +346,7 @@ function renderCharts(d) {
   invChart = new Chart(document.getElementById('invChart'), {
     type:'doughnut',
     data:{
-      labels:['Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â©','Ã˜ÂºÃ™Å Ã˜Â± Ã™â€¦Ã˜Â¯Ã™ÂÃ™Ë†Ã˜Â¹Ã˜Â©','Ã˜Â¬Ã˜Â²Ã˜Â¦Ã™Å Ã˜Â©'],
+      labels:['مدفوعة','غير مدفوعة','جزئية'],
       datasets:[{ data:[inv.paid, inv.unpaid, inv.partial],
         backgroundColor:['#27ae60','#e74c3c','#f39c12'], borderWidth:2, borderColor:'#fff' }]
     },
@@ -234,7 +357,7 @@ function renderCharts(d) {
   labChart = new Chart(document.getElementById('labChart'), {
     type:'doughnut',
     data:{
-      labels:['Ã˜Â¬Ã˜Â§Ã™â€¡Ã˜Â²Ã˜Â©','Ã˜Â¨Ã˜Â§Ã™â€ Ã˜ÂªÃ˜Â¸Ã˜Â§Ã˜Â±'],
+      labels:['جاهزة','بانتظار'],
       datasets:[{ data:[lab.ready, lab.pending],
         backgroundColor:['#27ae60','#f39c12'], borderWidth:2, borderColor:'#fff' }]
     },
@@ -244,8 +367,8 @@ function renderCharts(d) {
 
 function renderFinancial(d) {
   const inv = d.invoices, ap = d.appointments, lab = d.lab_tests;
-  document.getElementById('rev-big').textContent   = fmt(inv.revenue)    + ' Ã¢â€šÂª';
-  document.getElementById('out-big').textContent   = fmt(inv.outstanding) + ' Ã¢â€šÂª';
+  document.getElementById('rev-big').textContent   = fmt(inv.revenue)    + ' ₪';
+  document.getElementById('out-big').textContent   = fmt(inv.outstanding) + ' ₪';
   document.getElementById('inv-total').textContent = inv.total;
   document.getElementById('inv-paid').textContent  = inv.paid;
   document.getElementById('inv-unpaid').textContent= inv.unpaid;
@@ -274,10 +397,10 @@ async function loadRecentAppointments() {
         <td style="font-size:12px;white-space:nowrap">${dt}</td>
         <td><span class="badge ${st.cls}">${st.label}</span></td>
       </tr>`;
-    }).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Ã™â€žÃ˜Â§ Ã˜ÂªÃ™Ë†Ã˜Â¬Ã˜Â¯ Ã™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</td></tr>';
+    }).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">لا توجد مواعيد</td></tr>';
   } catch(e) {
     document.getElementById('appt-tbody').innerHTML =
-      '<tr><td colspan="6" style="color:var(--danger);text-align:center;padding:16px">Ã˜ÂªÃ˜Â¹Ã˜Â°Ã™â€˜Ã˜Â± Ã˜ÂªÃ˜Â­Ã™â€¦Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ™â€¦Ã™Ë†Ã˜Â§Ã˜Â¹Ã™Å Ã˜Â¯</td></tr>';
+      '<tr><td colspan="6" style="color:var(--danger);text-align:center;padding:16px">تعذّر تحميل المواعيد</td></tr>';
   }
 }
 
@@ -286,6 +409,6 @@ function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'
 
 loadStats();
 </script>
-  <script src="../public/assets/js/chatbot.js?v=20260416-page-session-reset"></script>
+<script src="../public/assets/js/chatbot.js?v=20260518-no-auth"></script>
 </body>
 </html>

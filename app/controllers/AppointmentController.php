@@ -6,13 +6,6 @@ require_once __DIR__ . '/../helpers/Response.php';
 require_once __DIR__ . '/../helpers/Request.php';
 require_once __DIR__ . '/../helpers/SessionAuth.php';
 
-/**
- * AppointmentController
- * ---------------------
- * GET /api/appointments/available?doctor_id=1&date=2026-03-20
- * POST /api/appointments
- * PUT  /api/appointments/{id}/cancel
- */
 class AppointmentController
 {
     private AppointmentService $service;
@@ -28,7 +21,7 @@ class AppointmentController
             Response::methodNotAllowed();
         }
 
-        $pdo  = Database::getInstance();
+        $pdo = Database::getInstance();
         $rows = $pdo->query("
             SELECT a.appointment_id,
                    a.appointment_datetime,
@@ -55,7 +48,7 @@ class AppointmentController
         }
 
         $doctorId = Request::query('doctor_id');
-        $date     = Request::query('date');
+        $date = Request::query('date');
 
         if (empty($doctorId) || empty($date)) {
             Response::error(
@@ -114,11 +107,35 @@ class AppointmentController
             Response::methodNotAllowed();
         }
 
-        SessionAuth::requirePatient();
+        $patient = SessionAuth::requirePatient();
 
         try {
-            $appointment = $this->service->cancel($id);
+            $appointment = $this->service->cancel($id, (int) $patient['patient_id']);
             Response::success($appointment, 'تم إلغاء الموعد بنجاح');
+        } catch (InvalidArgumentException $e) {
+            Response::error($e->getMessage(), null, 422);
+        } catch (Throwable $e) {
+            Response::serverError($e->getMessage());
+        }
+    }
+
+    public function reschedule(int $id): void
+    {
+        if (!Request::isMethod('PUT')) {
+            Response::methodNotAllowed();
+        }
+
+        $patient = SessionAuth::requirePatient();
+        $body = Request::body();
+        $newDatetime = trim((string) ($body['appointment_datetime'] ?? ''));
+
+        if ($newDatetime === '') {
+            Response::error('appointment_datetime مطلوب بصيغة YYYY-MM-DD HH:MM:SS', null, 422);
+        }
+
+        try {
+            $appointment = $this->service->reschedule($id, (int) $patient['patient_id'], $newDatetime);
+            Response::success($appointment, 'تم تعديل الموعد بنجاح');
         } catch (InvalidArgumentException $e) {
             Response::error($e->getMessage(), null, 422);
         } catch (Throwable $e) {

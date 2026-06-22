@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة الإحصائيات - المستشفى الأهلي</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="../public/assets/css/main.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    body{background:#f0f4f8;margin:0}
+    .layout{display:flex;min-height:calc(100vh - 70px)}
+    .sidebar{width:230px;background:#1a2e4a;color:#fff;flex-shrink:0;display:flex;flex-direction:column}
+    .sidebar .admin-info{text-align:center;padding:1.2rem 1rem;border-bottom:1px solid rgba(255,255,255,.15)}
+    .sidebar .admin-info .av{width:60px;height:60px;background:#fd7e14;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .6rem;font-size:1.6rem}
+    .sidebar .admin-info h3{margin:0 0 .2rem;font-size:.9rem}
+    .sidebar .admin-info p{margin:0;font-size:.75rem;color:#aab;background:#fd7e1466;border-radius:20px;padding:.15rem .5rem;display:inline-block}
+    .sidebar nav{flex:1;padding-top:.5rem}
+    .sidebar nav a{display:flex;align-items:center;gap:.5rem;padding:.65rem 1.2rem;color:rgba(255,255,255,.8);text-decoration:none;font-size:.88rem;transition:all .2s;cursor:pointer}
+    .sidebar nav a:hover,.sidebar nav a.active{background:rgba(255,255,255,.12);color:#fff;border-right:3px solid #fd7e14}
+    .sidebar nav a i{width:16px;text-align:center}
+    .sidebar .nav-section{padding:.4rem 1.2rem .2rem;font-size:.72rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em;margin-top:.5rem}
+    .btn-logout{background:none;border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.7);padding:.45rem .9rem;border-radius:6px;cursor:pointer;margin:1rem;font-family:inherit;font-size:.85rem;width:calc(100% - 2rem)}
+    .main{flex:1;padding:1.5rem;overflow-y:auto}
+    .page-title{font-size:1.3rem;font-weight:700;color:#1a2e4a;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem}
+    /* KPI Cards */
+    .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem}
+    .kpi{background:#fff;border-radius:12px;padding:1.1rem 1rem;box-shadow:0 2px 10px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:center;text-align:center;border-top:4px solid transparent}
+    .kpi .icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:.6rem}
+    .kpi .num{font-size:1.9rem;font-weight:800;line-height:1}
+    .kpi .lbl{font-size:.78rem;color:#6c757d;margin-top:.3rem}
+    .kpi-blue  {border-color:#0d6efd} .kpi-blue  .icon{background:#e7f1ff;color:#0d6efd}  .kpi-blue  .num{color:#0d6efd}
+    .kpi-green {border-color:#198754} .kpi-green .icon{background:#d1fae5;color:#198754}  .kpi-green .num{color:#198754}
+    .kpi-orange{border-color:#fd7e14} .kpi-orange .icon{background:#fff3e0;color:#fd7e14} .kpi-orange .num{color:#fd7e14}
+    .kpi-purple{border-color:#6f42c1} .kpi-purple .icon{background:#ede9fe;color:#6f42c1} .kpi-purple .num{color:#6f42c1}
+    .kpi-cyan  {border-color:#0dcaf0} .kpi-cyan  .icon{background:#e0f7fa;color:#0dcaf0}  .kpi-cyan  .num{color:#0dcaf0}
+    .kpi-red   {border-color:#dc3545} .kpi-red   .icon{background:#fde8ea;color:#dc3545}  .kpi-red   .num{color:#dc3545}
+    /* Charts */
+    .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem}
+    .charts-grid.full{grid-template-columns:1fr}
+    .chart-card{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.08);padding:1.2rem}
+    .chart-card h3{font-size:.95rem;color:#1a2e4a;margin:0 0 1rem;display:flex;align-items:center;gap:.4rem;border-bottom:2px solid #f0f0f0;padding-bottom:.6rem}
+    .chart-wrap{position:relative;height:240px}
+    .chart-wrap.tall{height:300px}
+    .back-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:#1a2e4a;color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.88rem;cursor:pointer;margin-bottom:1rem;text-decoration:none}
+    .back-btn:hover{background:#243d5e}
+    .refresh-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:#fd7e14;color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.88rem;cursor:pointer;margin-bottom:1rem;margin-right:.5rem}
+    .refresh-btn:hover{background:#e06800}
+    @media(max-width:800px){.charts-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<header class="ahli-navbar">
+  <a href="index.html" class="brand"><i class="fas fa-hospital-alt"></i> المستشفى الأهلي</a>
+  <nav class="nav-links"><span id="nav-admin" style="color:#fff;font-weight:600"></span></nav>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="admin-info">
+      <div class="av"><i class="fas fa-user-shield"></i></div>
+      <h3 id="s-name">جاري...</h3>
+      <p id="s-role"></p>
+    </div>
+    <nav>
+      <a href="admin.html"><i class="fas fa-tachometer-alt"></i> الرئيسية</a>
+      <div class="nav-section">الموارد البشرية</div>
+      <a href="admin.html" onclick="sessionStorage.setItem('go','doctors')"><i class="fas fa-user-md"></i> الأطباء</a>
+      <a href="admin.html" onclick="sessionStorage.setItem('go','patients')"><i class="fas fa-users"></i> المرضى</a>
+      <a href="admin.html" onclick="sessionStorage.setItem('go','departments')"><i class="fas fa-building"></i> الأقسام</a>
+      <div class="nav-section">العمليات</div>
+      <a href="admin.html" onclick="sessionStorage.setItem('go','appointments')"><i class="fas fa-calendar-check"></i> المواعيد</a>
+      <a href="appointments.html" style="padding-right:2rem;font-size:.82rem;opacity:.75"><i class="fas fa-external-link-alt"></i> صفحة المواعيد الكاملة</a>
+      <a href="admin.html" onclick="sessionStorage.setItem('go','lab')"><i class="fas fa-vials"></i> المختبر</a>
+      <a href="admin.html" onclick="sessionStorage.setItem('go','invoices')"><i class="fas fa-file-invoice-dollar"></i> الفواتير</a>
+      <div class="nav-section">أخرى</div>
+      <a href="admin-stats.html" class="active"><i class="fas fa-chart-bar"></i> الإحصائيات</a>
+      <a href="admin.html" onclick="sessionStorage.setItem('go','feedback')"><i class="fas fa-comments"></i> الملاحظات</a>
+      <a href="admin.html" onclick="sessionStorage.setItem('go','labusers')"><i class="fas fa-flask"></i> مستخدمو المختبر</a>
+      <a href="admin.html" onclick="sessionStorage.setItem('go','news')"><i class="fas fa-newspaper"></i> الأخبار</a>
+    </nav>
+    <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+  </aside>
+
+  <main class="main">
+    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem">
+      <a href="admin.html" class="back-btn"><i class="fas fa-arrow-right"></i> رجوع للإدارة</a>
+      <button class="refresh-btn" onclick="loadAll()"><i class="fas fa-sync-alt"></i> تحديث</button>
+    </div>
+
+    <div class="page-title"><i class="fas fa-chart-bar" style="color:#fd7e14"></i> لوحة الإحصائيات الشاملة</div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi kpi-blue">
+        <div class="icon"><i class="fas fa-user-md"></i></div>
+        <div class="num" id="k-doctors">-</div>
+        <div class="lbl">طبيب</div>
+      </div>
+      <div class="kpi kpi-green">
+        <div class="icon"><i class="fas fa-users"></i></div>
+        <div class="num" id="k-patients">-</div>
+        <div class="lbl">مريض مسجل</div>
+      </div>
+      <div class="kpi kpi-orange">
+        <div class="icon"><i class="fas fa-building"></i></div>
+        <div class="num" id="k-depts">-</div>
+        <div class="lbl">قسم</div>
+      </div>
+      <div class="kpi kpi-purple">
+        <div class="icon"><i class="fas fa-calendar-check"></i></div>
+        <div class="num" id="k-appts">-</div>
+        <div class="lbl">موعد إجمالي</div>
+      </div>
+      <div class="kpi kpi-cyan">
+        <div class="icon"><i class="fas fa-vials"></i></div>
+        <div class="num" id="k-labs">-</div>
+        <div class="lbl">فحص مختبر</div>
+      </div>
+      <div class="kpi kpi-green">
+        <div class="icon"><i class="fas fa-coins"></i></div>
+        <div class="num" id="k-revenue">-</div>
+        <div class="lbl">إيرادات (₪)</div>
+      </div>
+    </div>
+
+    <!-- Row 1: Appt by status + Lab by status -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3><i class="fas fa-circle-half-stroke" style="color:#6f42c1"></i> المواعيد حسب الحالة</h3>
+        <div class="chart-wrap"><canvas id="chart-appt-status"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3><i class="fas fa-vials" style="color:#0dcaf0"></i> فحوصات المختبر حسب الحالة</h3>
+        <div class="chart-wrap"><canvas id="chart-lab-status"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Row 2: Appt by month -->
+    <div class="charts-grid full">
+      <div class="chart-card">
+        <h3><i class="fas fa-chart-line" style="color:#0d6efd"></i> المواعيد خلال الأشهر الستة الماضية</h3>
+        <div class="chart-wrap tall"><canvas id="chart-appt-month"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Row 3: Appt by dept + Doctors by dept -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3><i class="fas fa-building" style="color:#fd7e14"></i> المواعيد حسب القسم</h3>
+        <div class="chart-wrap tall"><canvas id="chart-appt-dept"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3><i class="fas fa-user-md" style="color:#198754"></i> الأطباء حسب القسم</h3>
+        <div class="chart-wrap tall"><canvas id="chart-doctors-dept"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Row 4: Invoice -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3><i class="fas fa-file-invoice-dollar" style="color:#198754"></i> الفواتير حسب الحالة</h3>
+        <div class="chart-wrap"><canvas id="chart-invoice"></canvas></div>
+      </div>
+      <div class="chart-card" style="display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.7rem">
+        <h3 style="width:100%"><i class="fas fa-info-circle" style="color:#6f42c1"></i> ملخص سريع</h3>
+        <div id="quick-summary" style="width:100%;font-size:.88rem;color:#555;line-height:2"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const BASE = (location.pathname.match(/^(\/[^/]+\/)/) || [,''])[1] + 'public';
+const PALETTE = ['#0d6efd','#198754','#fd7e14','#6f42c1','#0dcaf0','#dc3545','#ffc107','#20c997','#e83e8c','#6c757d'];
+
+async function api(url) {
+  try {
+    const res  = await fetch(BASE + url, { credentials: 'include' });
+    const json = await res.json();
+    if (!json.success && res.status === 401) { location.href = 'admin-login.html'; return null; }
+    return json.success ? json.data : null;
+  } catch { return null; }
+}
+
+function makeDonut(id, labels, values, colors) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  if (ctx._chart) ctx._chart.destroy();
+  ctx._chart = new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data: values, backgroundColor: colors || PALETTE, borderWidth: 2 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { family: 'inherit', size: 12 } } } } }
+  });
+}
+
+function makeBar(id, labels, values, label, color) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  if (ctx._chart) ctx._chart.destroy();
+  ctx._chart = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets: [{ label: label||'العدد', data: values, backgroundColor: color || '#0d6efd', borderRadius: 6 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+  });
+}
+
+function makeLine(id, labels, values) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  if (ctx._chart) ctx._chart.destroy();
+  ctx._chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets: [{ label: 'المواعيد', data: values, borderColor: '#0d6efd', backgroundColor: 'rgba(13,110,253,.1)', fill: true, tension: 0.4, pointRadius: 5, pointBackgroundColor: '#0d6efd' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+  });
+}
+
+const statusLabel = { Booked:'محجوز', Completed:'مكتمل', Cancelled:'ملغي', NoShow:'لم يحضر', Pending:'معلّق', Ready:'جاهز', Paid:'مدفوع', Unpaid:'غير مدفوع', PartiallyPaid:'جزئي' };
+const statusColor = { Booked:'#0d6efd', Completed:'#198754', Cancelled:'#dc3545', NoShow:'#ffc107', Pending:'#ffc107', Ready:'#198754', Paid:'#198754', Unpaid:'#dc3545', PartiallyPaid:'#fd7e14' };
+
+async function loadAll() {
+  const [basic, detail] = await Promise.all([api('/api/admin/stats'), api('/api/admin/stats/detailed')]);
+
+  if (basic) {
+    document.getElementById('k-doctors').textContent  = basic.doctors;
+    document.getElementById('k-patients').textContent = basic.patients;
+    document.getElementById('k-depts').textContent    = basic.departments;
+    document.getElementById('k-appts').textContent    = basic.appointments;
+    document.getElementById('k-labs').textContent     = basic.lab_tests;
+    document.getElementById('k-revenue').textContent  = (+basic.revenue).toLocaleString();
+  }
+
+  if (detail) {
+    // Appt by status
+    if (detail.appt_by_status?.length) {
+      makeDonut('chart-appt-status',
+        detail.appt_by_status.map(r => statusLabel[r.status] || r.status),
+        detail.appt_by_status.map(r => +r.total),
+        detail.appt_by_status.map(r => statusColor[r.status] || '#6c757d')
+      );
+    }
+
+    // Lab by status
+    if (detail.lab_by_status?.length) {
+      makeDonut('chart-lab-status',
+        detail.lab_by_status.map(r => statusLabel[r.status] || r.status),
+        detail.lab_by_status.map(r => +r.total),
+        detail.lab_by_status.map(r => statusColor[r.status] || '#6c757d')
+      );
+    }
+
+    // Appt by month
+    if (detail.appt_by_month?.length) {
+      makeLine('chart-appt-month',
+        detail.appt_by_month.map(r => r.month),
+        detail.appt_by_month.map(r => +r.total)
+      );
+    }
+
+    // Appt by dept
+    if (detail.appt_by_dept?.length) {
+      makeBar('chart-appt-dept',
+        detail.appt_by_dept.map(r => r.department),
+        detail.appt_by_dept.map(r => +r.total),
+        'مواعيد', '#6f42c1'
+      );
+    }
+
+    // Doctors by dept
+    if (detail.doctors_by_dept?.length) {
+      makeBar('chart-doctors-dept',
+        detail.doctors_by_dept.map(r => r.department),
+        detail.doctors_by_dept.map(r => +r.total),
+        'أطباء', '#198754'
+      );
+    }
+
+    // Invoice
+    if (detail.invoice_by_status?.length) {
+      makeDonut('chart-invoice',
+        detail.invoice_by_status.map(r => statusLabel[r.status] || r.status),
+        detail.invoice_by_status.map(r => +r.total),
+        detail.invoice_by_status.map(r => statusColor[r.status] || '#6c757d')
+      );
+    }
+
+    // Quick summary
+    if (basic && detail) {
+      const paidInv = detail.invoice_by_status?.find(r => r.status === 'Paid');
+      const pendingLab = detail.lab_by_status?.find(r => r.status === 'Pending');
+      const bookedAppt = detail.appt_by_status?.find(r => r.status === 'Booked');
+      document.getElementById('quick-summary').innerHTML = `
+        <div>📅 <strong>${bookedAppt?.total || 0}</strong> موعد محجوز قادم</div>
+        <div>🔬 <strong>${pendingLab?.total || 0}</strong> فحص مختبر معلّق</div>
+        <div>💰 إيرادات الفواتير المدفوعة: <strong>₪${(+(paidInv?.amount||0)).toLocaleString()}</strong></div>
+        <div>👨‍⚕️ <strong>${basic.doctors}</strong> طبيب | <strong>${basic.departments}</strong> قسم</div>
+        <div>👥 <strong>${basic.patients}</strong> مريض مسجل</div>
+      `;
+    }
+  }
+}
+
+function roleLabel(r) { return {super_admin:'مدير عام',admin:'أدمن',support:'دعم'}[r]||r; }
+
+async function init() {
+  const res = await fetch(BASE + '/api/admin/me', { credentials: 'include' });
+  const data = await res.json().catch(() => null);
+  if (!data?.success) { location.href = 'admin-login.html'; return; }
+  document.getElementById('s-name').textContent = data.data.full_name || data.data.username;
+  document.getElementById('s-role').textContent = roleLabel(data.data.role);
+  document.getElementById('nav-admin').textContent = data.data.full_name || data.data.username;
+  loadAll();
+}
+
+async function logout() {
+  await fetch(BASE + '/api/admin/logout', { method: 'POST', credentials: 'include' });
+  location.href = 'admin-login.html';
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,103 +1,778 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>&#1605;&#1587;&#1578;&#1588;&#1601;&#1609; &#1575;&#1604;&#1571;&#1607;&#1604;&#1610; - &#1575;&#1604;&#1585;&#1574;&#1610;&#1587;&#1610;&#1577;</title>
+  <title>المستشفى الأهلي — الرئيسية</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <link href="../public/assets/css/main.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <link href="../public/assets/css/chatbot.css" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #002b5b;
+      --blue:    #0062a7;
+      --blue2:   #1a7bbf;
+      --orange:  #e87a1e;
+      --white:   #ffffff;
+      --light:   #f0f6ff;
+      --gray:    #f5f7fa;
+      --text:    #2c3e50;
+      --muted:   #6b7a8d;
+      --border:  #dde8f0;
+      --shadow:  0 4px 20px rgba(0,43,91,.10);
+      --radius:  12px;
+    }
+    body { font-family: 'Cairo', sans-serif; background: var(--white); color: var(--text); direction: rtl; }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    /* ── شريط علوي ── */
+    .topbar {
+      background: var(--navy);
+      color: rgba(255,255,255,.85);
+      font-size: 13px;
+      padding: 7px 0;
+    }
+    .topbar .inner {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;
+    }
+    .topbar .tb-info { display: flex; gap: 20px; align-items: center; }
+    .topbar .tb-info span { display: flex; align-items: center; gap: 6px; }
+    .topbar .tb-info i { color: var(--orange); }
+    .topbar .tb-social { display: flex; gap: 10px; }
+    .topbar .tb-social a {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 12px; transition: background .2s;
+    }
+    .topbar .tb-social a:hover { background: var(--orange); }
+
+    /* ── رأس الصفحة ── */
+    .site-header {
+      background: var(--white);
+      padding: 14px 0;
+      border-bottom: 2px solid var(--border);
+    }
+    .site-header .inner {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .site-logo { display: flex; align-items: center; gap: 14px; }
+    .logo-icon {
+      width: 60px; height: 60px;
+      background: linear-gradient(135deg, var(--blue), var(--navy));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 26px; flex-shrink: 0;
+    }
+    .logo-text h1 { font-size: 22px; font-weight: 900; color: var(--navy); line-height: 1.2; }
+    .logo-text p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .header-contact { display: flex; gap: 18px; }
+    .hc-item { display: flex; align-items: center; gap: 8px; }
+    .hc-icon { width: 38px; height: 38px; border-radius: 50%; background: var(--light); display: flex; align-items: center; justify-content: center; color: var(--blue); font-size: 14px; flex-shrink: 0; }
+    .hc-text p:first-child { font-size: 11px; color: var(--muted); }
+    .hc-text p:last-child  { font-size: 13px; font-weight: 700; color: var(--navy); direction: ltr; }
+
+    /* ── شريط التنقل ── */
+    .main-nav {
+      background: var(--blue);
+      position: sticky; top: 0; z-index: 1000;
+      box-shadow: 0 3px 12px rgba(0,98,167,.35);
+    }
+    .main-nav .inner { display: flex; align-items: center; justify-content: space-between; }
+    .nav-links { display: flex; list-style: none; }
+    .nav-links li a {
+      display: block; padding: 15px 18px;
+      color: rgba(255,255,255,.88); font-size: 14px; font-weight: 600;
+      transition: background .2s, color .2s; white-space: nowrap;
+      touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+    }
+    .nav-links li a:hover, .nav-links li a.active {
+      background: rgba(255,255,255,.15); color: #fff;
+    }
+    .nav-links li a.active { border-bottom: 3px solid var(--orange); }
+    .nav-btn {
+      background: var(--orange); color: #fff !important;
+      border-radius: 6px; padding: 8px 18px !important;
+      margin: 8px 0; font-weight: 700 !important;
+      transition: background .2s !important;
+    }
+    .nav-btn:hover { background: #d06a10 !important; }
+
+    /* ── هيرو ── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 60%, var(--blue2) 100%);
+      position: relative; overflow: hidden; padding: 70px 0 0;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><circle cx="900" cy="200" r="300" fill="rgba(255,255,255,.04)"/><circle cx="200" cy="500" r="200" fill="rgba(255,255,255,.03)"/></svg>') no-repeat center;
+      background-size: cover;
+    }
+    .hero .inner { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+    .hero-text { flex: 1; color: #fff; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3);
+      border-radius: 20px; padding: 5px 14px; font-size: 12px; margin-bottom: 18px;
+    }
+    .hero-badge i { color: var(--orange); }
+    .hero-text h2 {
+      font-size: clamp(28px, 4vw, 44px); font-weight: 900;
+      line-height: 1.25; margin-bottom: 16px;
+    }
+    .hero-text h2 span { color: var(--orange); }
+    .hero-text p {
+      font-size: 15px; color: rgba(255,255,255,.82);
+      line-height: 1.8; max-width: 520px; margin-bottom: 28px;
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--orange); color: #fff;
+      padding: 12px 26px; border-radius: 8px; font-size: 14px; font-weight: 700;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: background .2s, transform .2s; border: none; cursor: pointer;
+    }
+    .btn-primary:hover { background: #d06a10; transform: translateY(-1px); }
+    .btn-outline-white {
+      background: transparent; color: #fff;
+      padding: 11px 24px; border-radius: 8px; font-size: 14px; font-weight: 700;
+      border: 2px solid rgba(255,255,255,.5);
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all .2s; cursor: pointer;
+    }
+    .btn-outline-white:hover { background: rgba(255,255,255,.12); border-color: #fff; }
+    .hero-image { flex-shrink: 0; }
+    .hero-img-box {
+      width: 340px; height: 280px;
+      background: rgba(255,255,255,.1);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid rgba(255,255,255,.2);
+      position: relative; overflow: hidden;
+    }
+    .hero-img-box i { font-size: 80px; color: rgba(255,255,255,.3); }
+    .hero-img-grid {
+      position: absolute; inset: 0;
+      display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8px; padding: 16px;
+    }
+    .hero-img-cell {
+      background: rgba(255,255,255,.12); border-radius: 10px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: rgba(255,255,255,.8);
+    }
+    .hero-img-cell i { font-size: 22px; }
+    .hero-img-cell span { font-size: 11px; font-weight: 600; }
+
+    /* ── شريط الإحصائيات ── */
+    .stats-strip {
+      background: var(--white);
+      border-top: 4px solid var(--orange);
+      box-shadow: 0 6px 24px rgba(0,43,91,.12);
+    }
+    .stats-strip .inner {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0;
+    }
+    .stat-item {
+      padding: 22px 16px;
+      text-align: center;
+      border-left: 1px solid var(--border);
+      transition: background .2s;
+    }
+    .stat-item:last-child { border-left: none; }
+    .stat-item:hover { background: var(--light); }
+    .stat-icon { font-size: 22px; color: var(--blue); margin-bottom: 6px; }
+    .stat-num  { font-size: 26px; font-weight: 900; color: var(--navy); line-height: 1; }
+    .stat-lbl  { font-size: 11px; color: var(--muted); margin-top: 4px; font-weight: 600; }
+
+    /* ── عناوين الأقسام ── */
+    .section-hd {
+      text-align: center; margin-bottom: 36px;
+    }
+    .section-hd .tag {
+      display: inline-block; background: var(--light); color: var(--blue);
+      font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 20px;
+      margin-bottom: 10px; letter-spacing: .03em;
+    }
+    .section-hd h2 { font-size: 28px; font-weight: 900; color: var(--navy); margin-bottom: 10px; }
+    .section-hd p  { font-size: 14px; color: var(--muted); max-width: 520px; margin: 0 auto; line-height: 1.7; }
+    .section-hd .line {
+      width: 60px; height: 4px; background: var(--orange); border-radius: 2px; margin: 12px auto 0;
+    }
+
+    /* ── الخدمات السريعة ── */
+    .quick-services { background: var(--gray); padding: 60px 0; }
+    .qs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+    .qs-card {
+      background: var(--white); border-radius: var(--radius); padding: 24px 16px;
+      text-align: center; cursor: pointer;
+      border: 2px solid transparent;
+      box-shadow: var(--shadow); transition: all .25s;
+    }
+    .qs-card:hover { border-color: var(--blue); transform: translateY(-4px); }
+    .qs-icon {
+      width: 56px; height: 56px; border-radius: 14px; margin: 0 auto 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+    }
+    .qs-card h3 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .qs-card p  { font-size: 12px; color: var(--muted); }
+
+    /* ── الأقسام الطبية ── */
+    .depts-section { background: var(--white); padding: 60px 0; }
+    .depts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+    .dept-card {
+      background: var(--white); border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--shadow); border: 1px solid var(--border);
+      transition: all .25s; cursor: default;
+    }
+    .dept-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,43,91,.15); }
+    .dept-card-top {
+      padding: 24px 20px 18px;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .dept-icon {
+      width: 52px; height: 52px; border-radius: 12px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 21px; color: #fff;
+    }
+    .dept-info h3 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px; line-height: 1.35; }
+    .dept-info p  { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+    .dept-footer {
+      background: var(--light); padding: 9px 20px;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--blue); font-weight: 600;
+    }
+
+    /* ── الأطباء ── */
+    .doctors-section { background: var(--gray); padding: 60px 0; }
+    .docs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; }
+    .doc-card {
+      background: var(--white); border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--shadow); transition: all .25s; text-align: center;
+    }
+    .doc-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,43,91,.15); }
+    .doc-avatar-wrap {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--navy) 100%);
+      padding: 28px 0 16px; position: relative;
+    }
+    .doc-avatar {
+      width: 72px; height: 72px; border-radius: 50%; background: rgba(255,255,255,.2);
+      border: 3px solid rgba(255,255,255,.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; color: #fff; margin: 0 auto;
+    }
+    .doc-body { padding: 14px 12px 16px; }
+    .doc-body h3 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+    .doc-badge {
+      display: inline-block; background: var(--light);
+      color: var(--blue); font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px; margin-bottom: 5px;
+    }
+    .doc-dept { font-size: 11px; color: var(--muted); display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .view-all-wrap { text-align: center; margin-top: 28px; }
+    .btn-view-all {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blue); color: #fff;
+      padding: 11px 28px; border-radius: 8px; font-size: 14px; font-weight: 700;
+      transition: background .2s;
+    }
+    .btn-view-all:hover { background: var(--navy); }
+
+    /* ── الأخبار ── */
+    .news-section { background: var(--white); padding: 60px 0; }
+    .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 22px; }
+    .news-card {
+      background: var(--white); border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--shadow); border: 1px solid var(--border);
+      transition: all .25s; display: flex; flex-direction: column;
+    }
+    .news-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,43,91,.14); }
+    .news-img {
+      height: 160px; background: linear-gradient(135deg, var(--blue) 0%, var(--navy) 100%);
+      display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    .news-img i { font-size: 42px; color: rgba(255,255,255,.3); }
+    .news-cat {
+      position: absolute; bottom: 12px; right: 12px;
+      background: var(--orange); color: #fff;
+      font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+    }
+    .news-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+    .news-date { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 5px; margin-bottom: 9px; }
+    .news-date i { color: var(--blue); }
+    .news-body h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px; line-height: 1.45; }
+    .news-body p  { font-size: 13px; color: var(--muted); line-height: 1.7; flex: 1; }
+    .news-footer { padding: 12px 18px; border-top: 1px solid var(--border); background: var(--light); }
+    .news-footer a {
+      font-size: 13px; color: var(--blue); font-weight: 700;
+      display: flex; align-items: center; gap: 5px; transition: color .2s;
+    }
+    .news-footer a:hover { color: var(--orange); }
+    .no-news { text-align: center; padding: 40px; color: var(--muted); font-size: 14px; width: 100%; }
+
+    /* ── تواصل معنا (شريط) ── */
+    .contact-strip {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+      padding: 40px 0; color: #fff;
+    }
+    .contact-strip .inner {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px;
+    }
+    .cs-item { display: flex; align-items: center; gap: 14px; }
+    .cs-icon {
+      width: 50px; height: 50px; border-radius: 50%;
+      background: rgba(255,255,255,.15);
+      display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+    }
+    .cs-text p:first-child { font-size: 12px; color: rgba(255,255,255,.7); margin-bottom: 3px; }
+    .cs-text p:last-child  { font-size: 14px; font-weight: 700; direction: ltr; }
+
+    /* ── فوتر ── */
+    .site-footer {
+      background: #001a36; color: rgba(255,255,255,.75); padding: 40px 0 20px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 32px;
+    }
+    .footer-brand .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .footer-brand .logo i { font-size: 28px; color: var(--orange); }
+    .footer-brand .logo span { font-size: 18px; font-weight: 900; color: #fff; }
+    .footer-brand p { font-size: 13px; line-height: 1.8; }
+    .footer-brand .socials { display: flex; gap: 8px; margin-top: 14px; }
+    .footer-brand .socials a {
+      width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.1);
+      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; transition: background .2s;
+    }
+    .footer-brand .socials a:hover { background: var(--orange); }
+    .footer-col h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid rgba(255,255,255,.1); }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .footer-col ul li a { font-size: 13px; color: rgba(255,255,255,.7); transition: color .2s; display: flex; align-items: center; gap: 5px; }
+    .footer-col ul li a::before { content: '←'; font-size: 10px; color: var(--orange); }
+    .footer-col ul li a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.1); padding-top: 18px;
+      text-align: center; font-size: 12px; color: rgba(255,255,255,.45);
+    }
+
+    /* ── متجاوب ── */
+    @media (max-width: 900px) {
+      .stats-strip .inner { grid-template-columns: repeat(3, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .hero .inner { flex-direction: column; padding-bottom: 30px; }
+      .hero-img-box { width: 100%; max-width: 380px; height: 200px; }
+      .header-contact { display: none; }
+    }
+    @media (max-width: 600px) {
+      .topbar .tb-info { display: none; }
+      .stats-strip .inner { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr; }
+      .nav-links li a { padding: 13px 11px; font-size: 12.5px; }
+    }
+
+    /* ── رسوم متحركة للأرقام ── */
+    .count-up { display: inline-block; }
+  </style>
 </head>
 <body>
 
-<header class="ahli-navbar">
-  <a href="index.html" class="brand"><i class="fas fa-hospital-alt"></i> &#1605;&#1587;&#1578;&#1588;&#1601;&#1609; &#1575;&#1604;&#1571;&#1607;&#1604;&#1610;</a>
-  <nav class="nav-links">
-    <a href="index.html" class="active">&#1575;&#1604;&#1585;&#1574;&#1610;&#1587;&#1610;&#1577;</a>
-    <a href="dashboard.html">&#1604;&#1608;&#1581;&#1577; &#1575;&#1604;&#1578;&#1581;&#1603;&#1605;</a>
-    <a href="doctors.html">&#1575;&#1604;&#1571;&#1591;&#1576;&#1575;&#1569;</a>
-    <a href="departments.html">&#1575;&#1604;&#1571;&#1602;&#1587;&#1575;&#1605;</a>
-    <a href="appointments.html">&#1575;&#1604;&#1605;&#1608;&#1575;&#1593;&#1610;&#1583;</a>
-    <a href="patients.html">&#1575;&#1604;&#1605;&#1585;&#1590;&#1609;</a>
-  </nav>
+<!-- ── شريط علوي ── -->
+<div class="topbar">
+  <div class="container inner">
+    <div class="tb-info">
+      <span><i class="fas fa-phone"></i> +970-2-2229247</span>
+      <span><i class="fas fa-calendar-check"></i> حجز: 1700200400</span>
+      <span><i class="fas fa-envelope"></i> info@ahli.org</span>
+    </div>
+    <div class="tb-social">
+      <a href="https://www.facebook.com" target="_blank" title="فيسبوك"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com" target="_blank" title="إنستغرام"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com" target="_blank" title="يوتيوب"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+</div>
+
+<!-- ── رأس الصفحة ── -->
+<header class="site-header">
+  <div class="container inner">
+    <div class="site-logo">
+      <div class="logo-icon"><i class="fas fa-hospital-alt"></i></div>
+      <div class="logo-text">
+        <h1>المستشفى الأهلي</h1>
+        <p>Al-Ahli Hospital | الخليل، فلسطين</p>
+      </div>
+    </div>
+    <div class="header-contact">
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-phone-alt"></i></div>
+        <div class="hc-text">
+          <p>هاتف المستشفى</p>
+          <p>+970-2-2229247</p>
+        </div>
+      </div>
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-calendar-alt"></i></div>
+        <div class="hc-text">
+          <p>حجز العيادات</p>
+          <p>1700200400</p>
+        </div>
+      </div>
+      <div class="hc-item">
+        <div class="hc-icon"><i class="fas fa-clock"></i></div>
+        <div class="hc-text">
+          <p>الطوارئ</p>
+          <p>24 ساعة / 7 أيام</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </header>
 
-<section class="hero-section">
-  <div class="hero-content">
-    <h1><i class="fas fa-hospital-alt"></i> &#1605;&#1587;&#1578;&#1588;&#1601;&#1609; &#1575;&#1604;&#1571;&#1607;&#1604;&#1610;</h1>
-    <p>
-      &#1606;&#1602;&#1583;&#1605; &#1585;&#1593;&#1575;&#1610;&#1577; &#1589;&#1581;&#1610;&#1577; &#1605;&#1578;&#1603;&#1575;&#1605;&#1604;&#1577; &#1576;&#1571;&#1593;&#1604;&#1609; &#1605;&#1593;&#1575;&#1610;&#1610;&#1585; &#1575;&#1604;&#1580;&#1608;&#1583;&#1577; &#1608;&#1575;&#1604;&#1603;&#1601;&#1575;&#1569;&#1577;.<br>
-      &#1601;&#1585;&#1610;&#1602; &#1591;&#1576;&#1610; &#1605;&#1578;&#1582;&#1589;&#1589; &#1608;&#1571;&#1602;&#1587;&#1575;&#1605; &#1605;&#1578;&#1603;&#1575;&#1605;&#1604;&#1577; &#1601;&#1610; &#1582;&#1583;&#1605;&#1578;&#1603;&#1605;.
-    </p>
-    <div class="hero-btns">
-      <button class="btn-hero-primary" onclick="location.href='dashboard.html'">
-        <i class="fas fa-chart-bar"></i> &#1604;&#1608;&#1581;&#1577; &#1575;&#1604;&#1573;&#1581;&#1589;&#1575;&#1574;&#1610;&#1575;&#1578;
-      </button>
-      <button class="btn-hero-outline" onclick="document.getElementById('ahli-chat-btn')?.click()">
-        <i class="fas fa-comments"></i> &#1578;&#1581;&#1583;&#1579; &#1605;&#1593; &#1575;&#1604;&#1605;&#1587;&#1575;&#1593;&#1583;
-      </button>
+<!-- ── شريط التنقل ── -->
+<nav class="main-nav">
+  <div class="container inner">
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">الرئيسية</a></li>
+      <li><a href="about.html">من نحن</a></li>
+      <li><a href="departments.html">الأقسام والوحدات الطبية</a></li>
+      <li><a href="doctors.html">الأطباء</a></li>
+      <li><a href="news.html">الأخبار</a></li>
+      <li><a href="donations.html">المشاريع والتبرعات</a></li>
+      <li><a href="visitor.html">للزائر والمريض</a></li>
+      <li><a href="education.html">التعليم والتدريب</a></li>
+    </ul>
+    <a href="#" class="nav-btn" onclick="document.getElementById('ahli-chat-btn')?.click();return false;">
+      <i class="fas fa-comments"></i> المساعد الذكي
+    </a>
+  </div>
+</nav>
+
+<!-- ── هيرو ── -->
+<section class="hero">
+  <div class="container inner" style="padding-bottom: 0;">
+    <div class="hero-text">
+      <div class="hero-badge"><i class="fas fa-award"></i> رعاية صحية متكاملة منذ 1978</div>
+      <h2>نرعاكم بأرقى<br><span>المعايير الطبية</span><br>في فلسطين</h2>
+      <p>المستشفى الأهلي في الخليل — كادر طبي متخصص يضم أكثر من 77 طبيباً في 21 قسماً متكاملاً، يعمل على مدار الساعة لتقديم أفضل رعاية صحية لمرضانا.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="document.getElementById('ahli-chat-btn')?.click()">
+          <i class="fas fa-calendar-plus"></i> احجز موعداً
+        </button>
+        <button class="btn-outline-white" onclick="document.getElementById('ahli-chat-btn')?.click()">
+          <i class="fas fa-robot"></i> المساعد الذكي
+        </button>
+      </div>
     </div>
-    <div class="hero-stats">
-      <div class="hero-stat-item"><span class="hero-stat-value" id="stat-doctors">-</span><span class="hero-stat-label">&#1591;&#1576;&#1610;&#1576; &#1605;&#1578;&#1582;&#1589;&#1589;</span></div>
-      <div class="hero-stat-item"><span class="hero-stat-value" id="stat-depts">-</span><span class="hero-stat-label">&#1602;&#1587;&#1605; &#1591;&#1576;&#1610;</span></div>
-      <div class="hero-stat-item"><span class="hero-stat-value" id="stat-services">-</span><span class="hero-stat-label">&#1582;&#1583;&#1605;&#1577; &#1591;&#1576;&#1610;&#1577;</span></div>
-      <div class="hero-stat-item"><span class="hero-stat-value" id="stat-patients">-</span><span class="hero-stat-label">&#1605;&#1585;&#1610;&#1590; &#1605;&#1587;&#1580;&#1604;</span></div>
+    <div class="hero-image">
+      <div class="hero-img-box">
+        <div class="hero-img-grid">
+          <div class="hero-img-cell"><i class="fas fa-heartbeat"></i><span>مركز القلب</span></div>
+          <div class="hero-img-cell"><i class="fas fa-baby"></i><span>الأطفال</span></div>
+          <div class="hero-img-cell"><i class="fas fa-procedures"></i><span>الجراحة</span></div>
+          <div class="hero-img-cell"><i class="fas fa-ambulance"></i><span>الطوارئ</span></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<main class="page-container">
-  <div class="section">
-    <h2 class="section-title"><i class="fas fa-th-large" style="color:var(--primary)"></i> &#1608;&#1589;&#1608;&#1604; &#1587;&#1585;&#1610;&#1593;</h2>
-    <div class="cards-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
-      <a href="dashboard.html" class="info-card" style="text-align:center;text-decoration:none"><div class="avatar" style="margin:0 auto 12px"><i class="fas fa-chart-pie"></i></div><h3>&#1604;&#1608;&#1581;&#1577; &#1575;&#1604;&#1573;&#1581;&#1589;&#1575;&#1574;&#1610;&#1575;&#1578;</h3><p class="sub" style="justify-content:center">&#1573;&#1581;&#1589;&#1575;&#1574;&#1610;&#1575;&#1578; &#1575;&#1604;&#1605;&#1587;&#1578;&#1588;&#1601;&#1609;</p></a>
-      <a href="doctors.html" class="info-card" style="text-align:center;text-decoration:none"><div class="avatar" style="margin:0 auto 12px;background:linear-gradient(135deg,#27ae60,#2ecc71)"><i class="fas fa-user-md"></i></div><h3>&#1575;&#1604;&#1571;&#1591;&#1576;&#1575;&#1569;</h3><p class="sub" style="justify-content:center">&#1602;&#1575;&#1574;&#1605;&#1577; &#1571;&#1591;&#1576;&#1575;&#1569; &#1575;&#1604;&#1605;&#1587;&#1578;&#1588;&#1601;&#1609;</p></a>
-      <a href="departments.html" class="info-card" style="text-align:center;text-decoration:none"><div class="avatar" style="margin:0 auto 12px;background:linear-gradient(135deg,#8e44ad,#9b59b6)"><i class="fas fa-hospital"></i></div><h3>&#1575;&#1604;&#1571;&#1602;&#1587;&#1575;&#1605; &#1575;&#1604;&#1591;&#1576;&#1610;&#1577;</h3><p class="sub" style="justify-content:center">&#1575;&#1604;&#1571;&#1602;&#1587;&#1575;&#1605; &#1608;&#1605;&#1608;&#1575;&#1593;&#1610;&#1583; &#1575;&#1604;&#1583;&#1608;&#1575;&#1605;</p></a>
-      <a href="appointments.html" class="info-card" style="text-align:center;text-decoration:none"><div class="avatar" style="margin:0 auto 12px;background:linear-gradient(135deg,#e67e22,#f39c12)"><i class="fas fa-calendar-check"></i></div><h3>&#1575;&#1604;&#1605;&#1608;&#1575;&#1593;&#1610;&#1583;</h3><p class="sub" style="justify-content:center">&#1593;&#1585;&#1590; &#1608;&#1573;&#1583;&#1575;&#1585;&#1577; &#1575;&#1604;&#1605;&#1608;&#1575;&#1593;&#1610;&#1583;</p></a>
-      <a href="patients.html" class="info-card" style="text-align:center;text-decoration:none"><div class="avatar" style="margin:0 auto 12px;background:linear-gradient(135deg,#16a085,#1abc9c)"><i class="fas fa-procedures"></i></div><h3>&#1575;&#1604;&#1605;&#1585;&#1590;&#1609;</h3><p class="sub" style="justify-content:center">&#1587;&#1580;&#1604;&#1575;&#1578; &#1575;&#1604;&#1605;&#1585;&#1590;&#1609;</p></a>
+
+<!-- ── وصول سريع ── -->
+<section class="quick-services">
+  <div class="container">
+    <div class="section-hd">
+      <div class="tag">خدماتنا</div>
+      <h2>وصول سريع للخدمات</h2>
+      <p>كل ما تحتاجه في مكان واحد</p>
+      <div class="line"></div>
+    </div>
+    <div class="qs-grid">
+      <a href="#" onclick="document.getElementById('ahli-chat-btn')?.click();return false;" class="qs-card">
+        <div class="qs-icon" style="background:#e8f4fb;color:#0062a7"><i class="fas fa-calendar-check"></i></div>
+        <h3>حجز موعد</h3><p>احجز موعدك الآن</p>
+      </a>
+      <a href="doctors.html" class="qs-card">
+        <div class="qs-icon" style="background:#eafaf1;color:#27ae60"><i class="fas fa-user-md"></i></div>
+        <h3>الأطباء</h3><p>قائمة الكادر الطبي</p>
+      </a>
+      <a href="departments.html" class="qs-card">
+        <div class="qs-icon" style="background:#f3e5f5;color:#8e44ad"><i class="fas fa-building"></i></div>
+        <h3>الأقسام</h3><p>الأقسام ومواعيد الدوام</p>
+      </a>
+      <a href="news.html" class="qs-card">
+        <div class="qs-icon" style="background:#fff3e0;color:#e87a1e"><i class="fas fa-newspaper"></i></div>
+        <h3>الأخبار</h3><p>آخر أخبار المستشفى</p>
+      </a>
+      <a href="donations.html" class="qs-card">
+        <div class="qs-icon" style="background:#e3f2fd;color:#1565c0"><i class="fas fa-hand-holding-heart"></i></div>
+        <h3>التبرعات</h3><p>المشاريع والتبرعات</p>
+      </a>
+      <a href="lab-login.html" class="qs-card">
+        <div class="qs-icon" style="background:#e0f7f7;color:#00897b"><i class="fas fa-flask"></i></div>
+        <h3>المختبر</h3><p>نتائج التحاليل</p>
+      </a>
     </div>
   </div>
+</section>
 
-  <div class="section">
-    <h2 class="section-title"><i class="fas fa-hospital" style="color:var(--primary)"></i> &#1575;&#1604;&#1571;&#1602;&#1587;&#1575;&#1605; &#1575;&#1604;&#1591;&#1576;&#1610;&#1577;</h2>
-    <div class="cards-grid" id="depts-grid"><div class="loading"><div class="spinner"></div> &#1580;&#1575;&#1585;&#1610; &#1575;&#1604;&#1578;&#1581;&#1605;&#1610;&#1604;...</div></div>
+<!-- ── الأقسام الطبية ── -->
+<section class="depts-section">
+  <div class="container">
+    <div class="section-hd">
+      <div class="tag">أقسامنا الطبية</div>
+      <h2>21 قسماً طبياً متكاملاً</h2>
+      <p>نقدم خدماتنا عبر أقسام طبية متخصصة مجهزة بأحدث التقنيات الطبية</p>
+      <div class="line"></div>
+    </div>
+    <div class="depts-grid" id="depts-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--muted)">
+        <i class="fas fa-spinner fa-spin fa-2x"></i>
+      </div>
+    </div>
   </div>
+</section>
 
-  <div class="section">
-    <h2 class="section-title"><i class="fas fa-user-md" style="color:var(--primary)"></i> &#1603;&#1608;&#1575;&#1583;&#1585;&#1606;&#1575; &#1575;&#1604;&#1591;&#1576;&#1610;&#1577;</h2>
-    <div class="cards-grid" id="docs-grid"><div class="loading"><div class="spinner"></div> &#1580;&#1575;&#1585;&#1610; &#1575;&#1604;&#1578;&#1581;&#1605;&#1610;&#1604;...</div></div>
-    <div style="text-align:center;margin-top:16px"><a href="doctors.html" style="color:var(--primary);font-weight:700;font-size:14px">&#1593;&#1585;&#1590; &#1603;&#1604; &#1575;&#1604;&#1571;&#1591;&#1576;&#1575;&#1569;</a></div>
+<!-- ── الأطباء ── -->
+<section class="doctors-section">
+  <div class="container">
+    <div class="section-hd">
+      <div class="tag">كوادرنا الطبية</div>
+      <h2>نخبة من الأطباء المتخصصين</h2>
+      <p>كادر طبي من أفضل الكفاءات الطبية الفلسطينية والعربية</p>
+      <div class="line"></div>
+    </div>
+    <div class="docs-grid" id="docs-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--muted)">
+        <i class="fas fa-spinner fa-spin fa-2x"></i>
+      </div>
+    </div>
+    <div class="view-all-wrap">
+      <a href="doctors.html" class="btn-view-all"><i class="fas fa-users"></i> عرض جميع الأطباء</a>
+    </div>
   </div>
-</main>
+</section>
+
+<!-- ── الأخبار ── -->
+<section class="news-section">
+  <div class="container">
+    <div class="section-hd">
+      <div class="tag">الأخبار والفعاليات</div>
+      <h2>آخر الأخبار والمستجدات</h2>
+      <p>تابع أحدث أخبار وفعاليات المستشفى الأهلي</p>
+      <div class="line"></div>
+    </div>
+    <div class="news-grid" id="news-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--muted)">
+        <i class="fas fa-spinner fa-spin fa-2x"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── شريط التواصل ── -->
+<div class="contact-strip">
+  <div class="container">
+    <div class="inner">
+      <div class="cs-item">
+        <div class="cs-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="cs-text">
+          <p>عنوان المستشفى</p>
+          <p>الخليل، فرش الهوى — فلسطين</p>
+        </div>
+      </div>
+      <div class="cs-item">
+        <div class="cs-icon"><i class="fas fa-phone-alt"></i></div>
+        <div class="cs-text">
+          <p>هاتف المستشفى</p>
+          <p>+970-2-2229247</p>
+        </div>
+      </div>
+      <div class="cs-item">
+        <div class="cs-icon"><i class="fas fa-calendar-check"></i></div>
+        <div class="cs-text">
+          <p>حجز العيادات الخارجية</p>
+          <p>1700200400</p>
+        </div>
+      </div>
+      <div class="cs-item">
+        <div class="cs-icon"><i class="fas fa-envelope"></i></div>
+        <div class="cs-text">
+          <p>البريد الإلكتروني</p>
+          <p>info@ahli.org</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── فوتر ── -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><i class="fas fa-hospital-alt"></i><span>المستشفى الأهلي</span></div>
+        <p>المستشفى الأهلي في الخليل — فلسطين. نقدم رعاية صحية شاملة بأعلى المعايير العالمية منذ عام 1978، بكادر طبي متخصص من أكثر من 77 طبيباً في 21 قسماً طبياً.</p>
+        <div class="socials">
+          <a href="#" title="فيسبوك"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" title="إنستغرام"><i class="fab fa-instagram"></i></a>
+          <a href="#" title="يوتيوب"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>روابط سريعة</h4>
+        <ul>
+          <li><a href="index.html">الرئيسية</a></li>
+          <li><a href="departments.html">الأقسام الطبية</a></li>
+          <li><a href="doctors.html">الأطباء</a></li>
+          <li><a href="#" onclick="document.getElementById('ahli-chat-btn')?.click();return false;">حجز موعد</a></li>
+          <li><a href="news.html">الأخبار</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>الأقسام الرئيسية</h4>
+        <ul>
+          <li><a href="departments.html">مركز القلب والشرايين</a></li>
+          <li><a href="departments.html">قسم الطوارئ</a></li>
+          <li><a href="departments.html">النسائية والتوليد</a></li>
+          <li><a href="departments.html">الأطفال والمواليد</a></li>
+          <li><a href="departments.html">الأعصاب وجراحتها</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>خدمات أخرى</h4>
+        <ul>
+          <li><a href="lab-login.html">المختبر</a></li>
+          <li><a href="admin-login.html">لوحة الإدارة</a></li>
+          <li><a href="doctor-login.html">بوابة الطبيب</a></li>
+          <li><a href="about.html">من نحن</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 المستشفى الأهلي — جمعية أصدقاء المريض. جميع الحقوق محفوظة. | الخليل، فلسطين</p>
+    </div>
+  </div>
+</footer>
 
 <script>
 const API_BASE = (() => {
   const m = location.pathname.match(/^(\/[^/]+\/)/);
-  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/Hospital/public';
+  return m ? `${location.protocol}//${location.host}${m[1]}public` : 'http://localhost/hospital-chatbot/public';
 })();
-const T = {
-  noData: '\u0644\u0627 \u062a\u0648\u062c\u062f \u0628\u064a\u0627\u0646\u0627\u062a',
-  loadError: '\u062a\u0639\u0630\u0631 \u0627\u0644\u062a\u062d\u0645\u064a\u0644'
-};
+
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-fetch(`${API_BASE}/api/stats`).then(r=>r.json()).then(j=>{
-  if(!j.success) return;
-  document.getElementById('stat-doctors').textContent = j.data.overview.doctors;
-  document.getElementById('stat-depts').textContent = j.data.overview.departments;
-  document.getElementById('stat-services').textContent = j.data.overview.services;
-  document.getElementById('stat-patients').textContent = j.data.overview.patients;
-}).catch(()=>{});
+
+// ── تحريك الأرقام ──
+function animateCounters() {
+  document.querySelectorAll('.count-up').forEach(el => {
+    const target = parseInt(el.dataset.target || '0');
+    const duration = 1800;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = Math.floor(current).toLocaleString('ar');
+      if (current >= target) clearInterval(timer);
+    }, 16);
+  });
+}
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ animateCounters(); observer.disconnect(); } });
+}, { threshold: 0.3 });
+const strip = document.querySelector('.stats-strip');
+if (strip) observer.observe(strip);
+
+// ── ألوان الأقسام ──
+const deptColors = [
+  '#e74c3c','#e67e22','#f1c40f','#2ecc71','#1abc9c','#3498db',
+  '#9b59b6','#e91e63','#00bcd4','#ff9800','#4caf50','#2196f3',
+  '#673ab7','#f44336','#009688','#ff5722','#607d8b','#795548',
+  '#ef5350','#ab47bc','#26a69a'
+];
+const deptIcons = [
+  'fa-heartbeat','fa-baby','fa-x-ray','fa-stethoscope','fa-procedures',
+  'fa-notes-medical','fa-female','fa-ambulance','fa-eye','fa-bone',
+  'fa-ear-deaf','fa-spa','fa-brain','fa-tint','fa-lungs',
+  'fa-shield-alt','fa-kidneys','fa-project-diagram','fa-fire',
+  'fa-tooth','fa-syringe'
+];
+
+// ── الأقسام ──
 fetch(`${API_BASE}/api/departments`).then(r=>r.json()).then(j=>{
-  const grid=document.getElementById('depts-grid');
-  if(!j.success||!j.data.length){grid.innerHTML=`<p style="color:var(--muted)">${T.noData}</p>`;return;}
-  grid.innerHTML=j.data.slice(0,8).map(d=>`<div class="info-card"><div class="avatar"><i class="fas fa-hospital-user"></i></div><h3>${esc(d.name)}</h3><p class="sub"><i class="fas fa-map-marker-alt"></i>${esc(d.location||'')}</p><p class="sub"><i class="fas fa-clock"></i>${esc(d.working_hours||'')}</p></div>`).join('');
-}).catch(()=>{document.getElementById('depts-grid').innerHTML=`<p style="color:var(--danger)">${T.loadError}</p>`;});
+  const grid = document.getElementById('depts-grid');
+  if(!j.success||!j.data.length){ grid.innerHTML='<p style="color:var(--muted);grid-column:1/-1">لا توجد بيانات</p>'; return; }
+  grid.innerHTML = j.data.map((d,i)=>{
+    const color = deptColors[i % deptColors.length];
+    const icon  = deptIcons[i % deptIcons.length];
+    return `
+    <div class="dept-card">
+      <div class="dept-card-top">
+        <div class="dept-icon" style="background:${color}"><i class="fas ${icon}"></i></div>
+        <div class="dept-info">
+          <h3>${esc(d.name)}</h3>
+          <p><i class="fas fa-map-marker-alt"></i> ${esc(d.location||'—')}</p>
+        </div>
+      </div>
+      <div class="dept-footer"><i class="fas fa-clock"></i>${esc(d.working_hours||'—')}</div>
+    </div>`;
+  }).join('');
+}).catch(()=>{ document.getElementById('depts-grid').innerHTML='<p style="color:var(--danger);grid-column:1/-1">تعذّر تحميل الأقسام</p>'; });
+
+// ── الأطباء (أول 8) ──
 fetch(`${API_BASE}/api/doctors`).then(r=>r.json()).then(j=>{
-  const grid=document.getElementById('docs-grid');
-  if(!j.success||!j.data.length){grid.innerHTML=`<p style="color:var(--muted)">${T.noData}</p>`;return;}
-  grid.innerHTML=j.data.slice(0,8).map(d=>`<div class="info-card"><div class="avatar"><i class="fas fa-user-md"></i></div><h3>${esc(d.full_name)}</h3><p class="sub"><i class="fas fa-stethoscope"></i>${esc(d.specialty||'')}</p><p class="sub"><i class="fas fa-hospital"></i>${esc(d.department_name||'')}</p>${d.phone?`<p class="sub"><i class="fas fa-phone"></i>${esc(d.phone)}</p>`:''}</div>`).join('');
-}).catch(()=>{document.getElementById('docs-grid').innerHTML=`<p style="color:var(--danger)">${T.loadError}</p>`;});
+  const grid = document.getElementById('docs-grid');
+  if(!j.success||!j.data.length){ grid.innerHTML='<p style="color:var(--muted);grid-column:1/-1">لا توجد بيانات</p>'; return; }
+  grid.innerHTML = j.data.slice(0,8).map(d=>{
+    const avatarContent = d.photo_url
+      ? `<img src="${esc(d.photo_url)}" alt="${esc(d.full_name)}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.6)" onerror="this.outerHTML='<div class=\\'doc-avatar\\'><i class=\\'fas fa-user-md\\'></i></div>'">`
+      : `<div class="doc-avatar"><i class="fas fa-user-md"></i></div>`;
+    return `
+    <div class="doc-card">
+      <div class="doc-avatar-wrap">${avatarContent}</div>
+      <div class="doc-body">
+        <h3>${esc(d.full_name)}</h3>
+        <div class="doc-badge">${esc(d.specialty||'—')}</div>
+        <div class="doc-dept"><i class="fas fa-hospital"></i>${esc(d.department_name||'—')}</div>
+      </div>
+    </div>`;
+  }).join('');
+}).catch(()=>{ document.getElementById('docs-grid').innerHTML='<p style="color:var(--danger);grid-column:1/-1">تعذّر تحميل الأطباء</p>'; });
+
+// ── الأخبار ──
+const newsIcons = ['fa-newspaper','fa-bullhorn','fa-calendar-star','fa-award','fa-heartbeat','fa-stethoscope'];
+fetch(`${API_BASE}/api/news`).then(r=>r.json()).then(j=>{
+  const grid = document.getElementById('news-grid');
+  if(!j.success||!j.data||!j.data.length){
+    grid.innerHTML='<div class="no-news"><i class="fas fa-newspaper" style="font-size:40px;display:block;margin-bottom:12px;opacity:.3"></i>لا توجد أخبار منشورة حالياً</div>';
+    return;
+  }
+  grid.innerHTML = j.data.slice(0,6).map((n,i)=>{
+    const icon = newsIcons[i % newsIcons.length];
+    const date = n.published_at ? new Date(n.published_at).toLocaleDateString('ar-PS',{year:'numeric',month:'long',day:'numeric'}) : '';
+    const excerpt = esc(n.content||'').substring(0,120) + (n.content && n.content.length > 120 ? '...' : '');
+    return `
+    <div class="news-card" onclick="location.href='news.html?id='+${n.news_id}" style="cursor:pointer">
+      <div class="news-img">
+        ${n.image_url ? `<img src="${esc(n.image_url)}" alt="${esc(n.title)}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0">` : `<i class="fas ${icon}"></i>`}
+        <span class="news-cat">أخبار المستشفى</span>
+      </div>
+      <div class="news-body">
+        <div class="news-date"><i class="fas fa-calendar-alt"></i>${date}</div>
+        <h3>${esc(n.title)}</h3>
+        <p>${excerpt}</p>
+      </div>
+      <div class="news-footer"><a href="news.html?id=${n.news_id}" onclick="event.stopPropagation()">اقرأ المزيد <i class="fas fa-arrow-left"></i></a></div>
+    </div>`;
+  }).join('');
+}).catch(()=>{
+  document.getElementById('news-grid').innerHTML='<div class="no-news">تعذّر تحميل الأخبار</div>';
+});
 </script>
-  <script src="../public/assets/js/chatbot.js?v=20260416-page-session-reset"></script>
+
+<!-- ── الشات بوت ── -->
+<script src="../public/assets/js/chatbot-public.js?v=20260405-3"></script>
+<script src="../public/assets/js/chatbot.js?v=20260518-no-auth"></script>
 </body>
 </html>

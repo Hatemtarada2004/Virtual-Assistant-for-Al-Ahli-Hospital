@@ -1,73 +1,62 @@
-param(
-    [string]$BaseUrl = "http://localhost/Hospital/public"
-)
-
+﻿param([string]$BaseUrl = "http://localhost/hospital-chatbot/public")
 $ErrorActionPreference = "Stop"
-
-function U {
-    param([string]$Escaped)
-    return [System.Text.RegularExpressions.Regex]::Unescape($Escaped)
-}
-
+function U { param([string]$E); return [System.Text.RegularExpressions.Regex]::Unescape($E) }
 function Send-Chat {
-    param(
-        [Microsoft.PowerShell.Commands.WebRequestSession]$Session,
-        [string]$PageId,
-        [string]$Message
-    )
-
-    $body = @{ message = $Message; chat_page_id = $PageId } | ConvertTo-Json
-    Invoke-RestMethod -WebSession $Session -Uri "$BaseUrl/api/chat" -Method POST -ContentType "application/json; charset=utf-8" -Body $body -TimeoutSec 90
+    param([Microsoft.PowerShell.Commands.WebRequestSession]$Session,[string]$PageId,[string]$Message)
+    $body = @{ message=$Message; chat_page_id=$PageId } | ConvertTo-Json -Compress
+    return Invoke-RestMethod -WebSession $Session -Uri "$BaseUrl/api/chat" -Method POST -ContentType "application/json; charset=utf-8" -Body $body -TimeoutSec 90
 }
-
 $results = @()
-
-$hello = Send-Chat -Session (New-Object Microsoft.PowerShell.Commands.WebRequestSession) -PageId "eval-hello" -Message (U "\u0645\u0631\u062d\u0628\u0627")
-$results += [pscustomobject]@{ test = "greeting"; ok = ($hello.intent -eq "greeting"); intent = $hello.intent; reply = $hello.reply }
-
-$deptMessage = U "\u0648\u064a\u0646 \u0642\u0633\u0645 \u0627\u0644\u0642\u0644\u0628 \u0648\u0634\u0648 \u062f\u0648\u0627\u0645\u0647"
-$dept = Send-Chat -Session (New-Object Microsoft.PowerShell.Commands.WebRequestSession) -PageId "eval-dept" -Message $deptMessage
-$results += [pscustomobject]@{ test = "department"; ok = ($dept.intent -eq "ask_departments"); intent = $dept.intent; reply = $dept.reply }
-
-$doctorMessage = U "\u0645\u064a\u0646 \u062f\u0643\u0627\u062a\u0631\u0629 \u0627\u0644\u0642\u0644\u0628"
-$doctor = Send-Chat -Session (New-Object Microsoft.PowerShell.Commands.WebRequestSession) -PageId "eval-doctor" -Message $doctorMessage
-$results += [pscustomobject]@{ test = "doctor"; ok = ($doctor.intent -eq "ask_doctors"); intent = $doctor.intent; reply = $doctor.reply }
-
-$session = New-Object Microsoft.PowerShell.Commands.WebRequestSession
-$page = "eval-booking-" + [guid]::NewGuid().ToString("N")
-$email = "eval_" + (Get-Date -Format "yyyyMMddHHmmss") + "@example.com"
-
-$step1 = Send-Chat -Session $session -PageId $page -Message (U "\u0628\u062f\u064a \u0627\u062d\u062c\u0632 \u0639\u0646\u062f \u062f\u0643\u062a\u0648\u0631 \u0642\u0644\u0628")
-$step2 = Send-Chat -Session $session -PageId $page -Message (U "\u0627\u0646\u0633")
-$step3 = Send-Chat -Session $session -PageId $page -Message (U "2026-05-22 \u0627\u0644\u0633\u0627\u0639\u0629 10:30")
-$step4 = Send-Chat -Session $session -PageId $page -Message (U "\u0645\u0631\u0627\u062c\u0639\u0629 \u0639\u0627\u0645\u0629")
-$step5 = Send-Chat -Session $session -PageId $page -Message $email
-$wrong = Send-Chat -Session $session -PageId $page -Message "111111"
-
-$codeMatch = [regex]::Match($step5.reply, "\b\d{6}\b")
-$final = $null
-if ($codeMatch.Success) {
-    $final = Send-Chat -Session $session -PageId $page -Message $codeMatch.Value
+$r = Send-Chat (New-Object Microsoft.PowerShell.Commands.WebRequestSession) "g1" (U "مرحبا")
+$results += [pscustomobject]@{ test="greeting"; ok=($r.intent -eq "greeting"); intent=$r.intent }
+$r = Send-Chat (New-Object Microsoft.PowerShell.Commands.WebRequestSession) "d1" (U "وين قسم القلب")
+$results += [pscustomobject]@{ test="department"; ok=($r.intent -eq "ask_departments"); intent=$r.intent }
+$r = Send-Chat (New-Object Microsoft.PowerShell.Commands.WebRequestSession) "dr1" (U "مين دكاترة القلب")
+$results += [pscustomobject]@{ test="doctor"; ok=($r.intent -eq "ask_doctors"); intent=$r.intent }
+$r = Send-Chat (New-Object Microsoft.PowerShell.Commands.WebRequestSession) "em1" (U "عندي ألم صدر شديد ومش قادر اتنفس")
+$results += [pscustomobject]@{ test="emergency"; ok=($r.intent -eq "medical_emergency"); intent=$r.intent }
+$sess = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+$page = "bk-" + [guid]::NewGuid().ToString("N")
+[void](Send-Chat $sess $page (U "بدي احجز عند دكتور قلب"))
+$s2 = Send-Chat $sess $page (U "انس")
+$results += [pscustomobject]@{ test="booking_doctor"; ok=($s2.intent -eq "booking_need_date"); intent=$s2.intent }
+[void](Send-Chat $sess $page "2026-07-15 10:00")
+$s4 = Send-Chat $sess $page (U "مراجعة عامة")
+$results += [pscustomobject]@{ test="booking_national_id"; ok=($s4.intent -eq "booking_need_national_id"); intent=$s4.intent }
+$logPath = "C:\xampp\htdocs\hospital-chatbot\storage\logs\email-otp.log"
+$beforeCount = @(Get-Content $logPath -Encoding UTF8 -ErrorAction SilentlyContinue).Count
+$s5 = Send-Chat $sess $page "401234567"
+$results += [pscustomobject]@{ test="booking_otp_sent"; ok=($s5.intent -eq "booking_email_code_sent"); intent=$s5.intent }
+$sw = Send-Chat $sess $page "999999"
+$results += [pscustomobject]@{ test="otp_wrong"; ok=($sw.intent -eq "booking_otp_invalid"); intent=$sw.intent }
+$otpCode = $null
+$logLines = @(Get-Content $logPath -Encoding UTF8 -ErrorAction SilentlyContinue)
+if ($logLines.Count -gt $beforeCount) {
+    foreach ($line in $logLines[$beforeCount..($logLines.Count - 1)]) {
+        $m = [regex]::Match($line, '\b\d{6}\b')
+        if ($m.Success) { $otpCode = $m.Value; break }
+    }
 }
-
-$bookingOk = $final -and $final.intent -eq "appointment_booked"
-$finalIntent = if ($final) { $final.intent } else { "missing" }
-$finalReply = if ($final) { $final.reply } else { "missing" }
-$results += [pscustomobject]@{ test = "booking_partial_doctor"; ok = ($step2.intent -eq "booking_need_date"); intent = $step2.intent; reply = $step2.reply }
-$results += [pscustomobject]@{ test = "otp_wrong"; ok = ($wrong.intent -eq "booking_otp_invalid"); intent = $wrong.intent; reply = $wrong.reply }
-$results += [pscustomobject]@{ test = "booking_created"; ok = $bookingOk; intent = $finalIntent; reply = $finalReply }
-
-if ($bookingOk -and $final.data.appointment.appointment_id) {
-    $appointmentId = [int]$final.data.appointment.appointment_id
-    & C:\xampp\mysql\bin\mysql.exe -uroot ahli_hospital -e "DELETE FROM Appointment WHERE appointment_id = $appointmentId; DELETE FROM Patient WHERE email = '$email';" | Out-Null
+if (-not $otpCode) {
+    $cm = [regex]::Match($s5.reply, '\b\d{6}\b')
+    if ($cm.Success) { $otpCode = $cm.Value }
 }
-
-$emergencyMessage = U "\u0639\u0646\u062f\u064a \u0623\u0644\u0645 \u0635\u062f\u0631 \u0634\u062f\u064a\u062f \u0648\u0645\u0634 \u0642\u0627\u062f\u0631 \u0627\u062a\u0646\u0641\u0633"
-$emergency = Send-Chat -Session (New-Object Microsoft.PowerShell.Commands.WebRequestSession) -PageId "eval-emergency" -Message $emergencyMessage
-$results += [pscustomobject]@{ test = "emergency"; ok = ($emergency.intent -eq "medical_emergency"); intent = $emergency.intent; reply = $emergency.reply }
-
+$final = $null; $resched = $null
+if ($otpCode) {
+    $final = Send-Chat $sess $page $otpCode
+    if ($final -and $final.intent -eq "appointment_booked") {
+        $resched = Send-Chat $sess $page (U "بدي اغير الموعد للساعه 11:00")
+    }
+}
+$fi = if ($final) { $final.intent } else { "missing" }
+$ri = if ($resched) { $resched.intent } else { "missing" }
+$results += [pscustomobject]@{ test="booking_created"; ok=($fi -eq "appointment_booked"); intent=$fi }
+$results += [pscustomobject]@{ test="booking_rescheduled"; ok=($ri -eq "appointment_rescheduled"); intent=$ri }
+if ($final -and $final.data.appointment.appointment_id) {
+    $aid = [int]$final.data.appointment.appointment_id
+    & "C:\xampp\mysql\bin\mysql.exe" -uroot ahli_hospital -e "DELETE FROM Appointment WHERE appointment_id = $aid;" 2>$null
+}
 $results | Format-Table -AutoSize
-
-if (($results | Where-Object { -not $_.ok }).Count -gt 0) {
-    exit 1
-}
+$failed = @($results | Where-Object { -not $_.ok })
+Write-Host ("TOTAL: {0} | PASSED: {1} | FAILED: {2}" -f $results.Count, ($results.Count - $failed.Count), $failed.Count)
+if ($failed.Count -gt 0) { $failed | ForEach-Object { Write-Host ("  FAIL: {0} -> {1}" -f $_.test, $_.intent) }; exit 1 }

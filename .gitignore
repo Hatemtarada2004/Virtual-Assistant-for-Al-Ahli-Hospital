@@ -1,5 +1,6 @@
 # Local environment and secrets
 app/config/env.php
+app/config/env.local.php
 .env
 .env.*
 !.env.example
@@ -35,3 +36,17 @@ Thumbs.db
 *.log
 *.tmp
 *.bak
+
+# Runtime / generated files
+storage/cookies.txt
+storage/last-run.txt
+storage/generated_kb_smoke/
+
+# Temporary test scripts
+t50.php
+t5conv.php
+public/test_bio.php
+
+# Generated test reports
+scripts/chat-1000-report*.json
+scripts/chat-2000-report*.json
